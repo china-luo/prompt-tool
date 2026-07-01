@@ -5,7 +5,8 @@ import { buildIndex, makeLocalChineseFallback, REPO_DIR, splitBlocks } from "../
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, "..");
-const DIST_API_DIR = path.join(ROOT_DIR, "dist", "api", "prompts");
+const STATIC_DIST_DIR = process.argv[2] || process.env.STATIC_DIST_DIR || "dist";
+const DIST_API_DIR = path.join(ROOT_DIR, STATIC_DIST_DIR, "api", "prompts");
 
 async function writeJson(filePath, payload) {
   await fs.mkdir(path.dirname(filePath), { recursive: true });

@@ -1,5 +1,6 @@
 node_modules/
 dist/
+dist-pages/
 .playwright-cli/
 output/
 data/system_prompts_leaks/
