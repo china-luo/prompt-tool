@@ -47,7 +47,8 @@ body {
 }
 
 button,
-input {
+input,
+textarea {
   font: inherit;
 }
 
@@ -584,13 +585,69 @@ h1 {
   border-bottom: 1px solid var(--line-soft);
 }
 
-.language-head span {
+.language-head > span {
   background: rgba(255, 255, 255, 0.96);
   color: var(--muted);
   padding: 12px 18px;
   font-size: 0.82rem;
   font-weight: 760;
   backdrop-filter: blur(18px);
+}
+
+.translation-head-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.translation-editor-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+
+.translation-save-state {
+  max-width: 220px;
+  color: var(--faint);
+  font-style: normal;
+  font-size: 0.76rem;
+  font-weight: 620;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.translation-save-state.saved {
+  color: #1d7f43;
+}
+
+.translation-save-state.error {
+  color: var(--danger);
+}
+
+.ghost-action,
+.save-translation-button {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 760;
+}
+
+.ghost-action {
+  border: 1px solid var(--line-soft);
+  background: #ffffff;
+  color: var(--muted);
+}
+
+.save-translation-button {
+  border: 1px solid rgba(0, 113, 227, 0.22);
+  background: var(--accent);
+  color: #ffffff;
 }
 
 .translation-row {
@@ -608,6 +665,35 @@ h1 {
   line-height: 1.72;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.translation-editor-cell {
+  min-width: 0;
+  background: var(--surface);
+  padding: 10px;
+}
+
+.translation-textarea {
+  display: block;
+  width: 100%;
+  min-height: 132px;
+  max-height: 52dvh;
+  resize: vertical;
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  background: #fbfbfd;
+  color: var(--ink);
+  padding: 12px 14px;
+  line-height: 1.72;
+  outline: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.translation-textarea:focus {
+  border-color: rgba(0, 113, 227, 0.42);
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+  background: #ffffff;
 }
 
 .original-text {

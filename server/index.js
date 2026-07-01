@@ -75,7 +75,7 @@ const PURPOSES = [
 let indexCache = null;
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: "20mb" }));
 
 function run(command, args, options = {}) {
   return new Promise((resolve, reject) => {
@@ -644,6 +644,23 @@ async function readJsonIfExists(filePath) {
   }
 }
 
+async function getPromptTranslationContext(promptId) {
+  const index = indexCache || (await buildIndex());
+  const item = index.items.find((candidate) => candidate.id === promptId);
+  if (!item) {
+    return null;
+  }
+
+  const content = await fs.readFile(path.join(REPO_DIR, item.relativePath), "utf8");
+  const contentHash = createHash("sha1").update(content).digest("hex").slice(0, 12);
+  return {
+    item,
+    content,
+    blocks: splitBlocks(content),
+    cachePath: path.join(TRANSLATION_CACHE_DIR, `${item.id}-${contentHash}-full.json`)
+  };
+}
+
 async function mapWithConcurrency(items, limit, mapper) {
   const results = new Array(items.length);
   let nextIndex = 0;
@@ -764,25 +781,20 @@ app.get("/api/prompts", async (_request, response) => {
 
 app.get("/api/prompts/:id/translate", async (request, response) => {
   try {
-    const index = indexCache || (await buildIndex());
-    const item = index.items.find((candidate) => candidate.id === request.params.id);
-    if (!item) {
+    const context = await getPromptTranslationContext(request.params.id);
+    if (!context) {
       response.status(404).json({ message: "未找到对应提示词" });
       return;
     }
 
-    const content = await fs.readFile(path.join(REPO_DIR, item.relativePath), "utf8");
-    const contentHash = createHash("sha1").update(content).digest("hex").slice(0, 12);
-    const cachePath = path.join(TRANSLATION_CACHE_DIR, `${item.id}-${contentHash}-full.json`);
-    const cached = await readJsonIfExists(cachePath);
+    const cached = await readJsonIfExists(context.cachePath);
     if (cached) {
       response.json({ ...cached, cached: true });
       return;
     }
 
-    const blocks = splitBlocks(content);
-    const shouldUseExternalTranslation = blocks.length <= EXTERNAL_TRANSLATION_BLOCK_LIMIT;
-    const translatedBlocks = await mapWithConcurrency(blocks, TRANSLATION_CONCURRENCY, async (block) => {
+    const shouldUseExternalTranslation = context.blocks.length <= EXTERNAL_TRANSLATION_BLOCK_LIMIT;
+    const translatedBlocks = await mapWithConcurrency(context.blocks, TRANSLATION_CONCURRENCY, async (block) => {
       try {
         return {
           original: block.original,
@@ -800,8 +812,8 @@ app.get("/api/prompts/:id/translate", async (request, response) => {
     });
 
     const payload = {
-      id: item.id,
-      relativePath: item.relativePath,
+      id: context.item.id,
+      relativePath: context.item.relativePath,
       generatedAt: new Date().toISOString(),
       truncated: false,
       totalBlocks: translatedBlocks.length,
@@ -810,11 +822,62 @@ app.get("/api/prompts/:id/translate", async (request, response) => {
     };
 
     await fs.mkdir(TRANSLATION_CACHE_DIR, { recursive: true });
-    await fs.writeFile(cachePath, JSON.stringify(payload, null, 2), "utf8");
+    await fs.writeFile(context.cachePath, JSON.stringify(payload, null, 2), "utf8");
     response.json({ ...payload, cached: false });
   } catch (error) {
     response.status(500).json({
       message: "生成中文对照失败",
+      detail: error.message
+    });
+  }
+});
+
+app.put("/api/prompts/:id/translate", async (request, response) => {
+  try {
+    const context = await getPromptTranslationContext(request.params.id);
+    if (!context) {
+      response.status(404).json({ message: "未找到对应提示词" });
+      return;
+    }
+
+    const incomingBlocks = request.body?.blocks;
+    if (!Array.isArray(incomingBlocks)) {
+      response.status(400).json({ message: "blocks must be an array" });
+      return;
+    }
+
+    const savedBlocks = context.blocks.map((sourceBlock, index) => {
+      const editedBlock = incomingBlocks[index] || {};
+      return {
+        original: sourceBlock.original,
+        zh: typeof editedBlock.zh === "string" ? editedBlock.zh : "",
+        ok: editedBlock.ok !== false
+      };
+    });
+
+    const now = new Date().toISOString();
+    const payload = {
+      id: context.item.id,
+      relativePath: context.item.relativePath,
+      generatedAt: now,
+      editedAt: now,
+      manuallyEdited: true,
+      truncated: false,
+      totalBlocks: savedBlocks.length,
+      failedBlocks: savedBlocks.filter((block) => !block.ok).length,
+      blocks: savedBlocks
+    };
+
+    await fs.mkdir(TRANSLATION_CACHE_DIR, { recursive: true });
+    await fs.writeFile(context.cachePath, JSON.stringify(payload, null, 2), "utf8");
+    response.json({
+      ...payload,
+      saved: true,
+      cachePath: path.relative(ROOT_DIR, context.cachePath).replace(/\\/g, "/")
+    });
+  } catch (error) {
+    response.status(500).json({
+      message: "保存中文译文失败",
       detail: error.message
     });
   }

@@ -87,7 +87,41 @@ function EmptyState({ title, detail }) {
   );
 }
 
-function BilingualPreview({ prompt, translation, mode }) {
+function BilingualPreview({ prompt, translation, mode, canEditTranslation, onSaveTranslation }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftBlocks, setDraftBlocks] = useState([]);
+  const [saveState, setSaveState] = useState({ type: "idle", text: "" });
+
+  useEffect(() => {
+    setIsEditing(false);
+    setSaveState({ type: "idle", text: "" });
+    setDraftBlocks(translation?.blocks || []);
+  }, [prompt.id, translation]);
+
+  function updateDraft(index, value) {
+    setDraftBlocks((blocks) => {
+      const nextBlocks = [...blocks];
+      const current = nextBlocks[index] || {};
+      nextBlocks[index] = { ...current, zh: value, ok: current.ok !== false };
+      return nextBlocks;
+    });
+  }
+
+  async function saveDraft() {
+    if (!canEditTranslation) {
+      setSaveState({ type: "error", text: "静态部署无法保存，请在本地运行后编辑。" });
+      return;
+    }
+    setSaveState({ type: "saving", text: "正在保存译文..." });
+    try {
+      await onSaveTranslation(draftBlocks);
+      setIsEditing(false);
+      setSaveState({ type: "saved", text: "已保存到本地翻译缓存文件。" });
+    } catch (error) {
+      setSaveState({ type: "error", text: error.message });
+    }
+  }
+
   if (mode === "source") {
     return <pre className="source-view">{prompt.content}</pre>;
   }
@@ -133,24 +167,62 @@ function BilingualPreview({ prompt, translation, mode }) {
   }
 
   const translatedMap = new Map(translation.blocks.map((block, index) => [index, block]));
+  const draftMap = new Map(draftBlocks.map((block, index) => [index, block]));
 
   return (
     <div className="bilingual-view">
       <div className="language-head">
         <span>English Original</span>
-        <span>
-          中文对照
-          {translation.failedBlocks ? `，${translation.failedBlocks} 段失败` : ""}
+        <span className="translation-head-actions">
+          <span>
+            {"\u4e2d\u6587\u5bf9\u7167"}
+            {translation.failedBlocks ? "\uff0c" + translation.failedBlocks + " \u6bb5\u5931\u8d25" : ""}
+          </span>
+          <span className="translation-editor-actions">
+            {saveState.text && <em className={"translation-save-state " + saveState.type}>{saveState.text}</em>}
+            {isEditing ? (
+              <>
+                <button type="button" className="ghost-action" onClick={() => setIsEditing(false)} disabled={saveState.type === "saving"}>
+                  {"\u53d6\u6d88"}
+                </button>
+                <button type="button" className="save-translation-button" onClick={saveDraft} disabled={saveState.type === "saving"}>
+                  {saveState.type === "saving" ? "\u4fdd\u5b58\u4e2d" : "\u4fdd\u5b58\u8bd1\u6587"}
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                className="ghost-action"
+                onClick={() => setIsEditing(true)}
+                disabled={!translation.blocks.length}
+                title={canEditTranslation ? "\u7f16\u8f91\u4e2d\u6587\u8bd1\u6587" : "\u9759\u6001\u90e8\u7f72\u65e0\u6cd5\u4fdd\u5b58\uff0c\u8bf7\u5728\u672c\u5730\u8fd0\u884c\u540e\u7f16\u8f91"}
+              >
+                {"\u7f16\u8f91\u4e2d\u6587"}
+              </button>
+            )}
+          </span>
         </span>
       </div>
       {sourceBlocks.map((block, index) => {
         const translatedBlock = translatedMap.get(index);
+        const draftBlock = draftMap.get(index) || translatedBlock || {};
         return (
           <article className="translation-row" key={`${block.slice(0, 24)}-${index}`}>
             <p className="original-text">{translatedBlock?.original || block}</p>
-            <p className={translatedBlock?.ok === false ? "translated-text failed-copy" : "translated-text"}>
-              {translatedBlock?.zh || "这一段中文翻译尚未生成。"}
-            </p>
+            {isEditing ? (
+              <div className="translated-text translation-editor-cell">
+                <textarea
+                  className="translation-textarea"
+                  value={draftBlock.zh || ""}
+                  onChange={(event) => updateDraft(index, event.target.value)}
+                  aria-label={"\u7f16\u8f91\u7b2c " + (index + 1) + " \u6bb5\u4e2d\u6587\u8bd1\u6587"}
+                />
+              </div>
+            ) : (
+              <p className={translatedBlock?.ok === false ? "translated-text failed-copy" : "translated-text"}>
+                {translatedBlock?.zh || "\u8fd9\u4e00\u6bb5\u4e2d\u6587\u7ffb\u8bd1\u5c1a\u672a\u751f\u6210\u3002"}
+              </p>
+            )}
           </article>
         );
       })}
@@ -184,7 +256,6 @@ function App() {
       .then((payload) => {
         if (cancelled) return;
         setData(payload);
-        setSelectedId(payload.items[0]?.id || null);
         setStatus({ type: "ready", text: `已索引 ${payload.total} 个提示词文件` });
       })
       .catch((error) => {
@@ -273,8 +344,8 @@ function App() {
       if (selectedId) setSelectedId(null);
       return;
     }
-    if (!filteredItems.some((item) => item.id === selectedId)) {
-      setSelectedId(filteredItems[0].id);
+    if (selectedId && !filteredItems.some((item) => item.id === selectedId)) {
+      setSelectedId(null);
     }
   }, [data, filteredItems, selectedId]);
 
@@ -311,7 +382,7 @@ function App() {
 
       startTransition(() => {
         setData(payload.index);
-        setSelectedId(payload.index.items[0]?.id || null);
+        setSelectedId(null);
         setActivePurpose(ALL_PURPOSES);
         setActiveSource(ALL_SOURCES);
         setQuery("");
@@ -332,6 +403,26 @@ function App() {
     if (!selectedPrompt?.content) return;
     await navigator.clipboard.writeText(selectedPrompt.content);
     setStatus({ type: "ready", text: "已复制当前提示词原文" });
+  }
+
+  async function saveTranslationBlocks(blocks) {
+    if (!selectedId) return;
+    if (STATIC_API) {
+      throw new Error("GitHub Pages 静态部署无法保存，请在本地运行后编辑。");
+    }
+
+    const response = await fetch(apiUrl(`/prompts/${selectedId}/translate`), {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ blocks })
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      throw new Error(payload.detail || payload.message || "保存中文译文失败");
+    }
+
+    setTranslation(payload);
+    setStatus({ type: "ready", text: `中文译文已保存到 ${payload.cachePath}` });
   }
 
   function choosePurpose(purposeKey) {
@@ -535,7 +626,13 @@ function App() {
               {selectedPrompt.recentLabel && (
                 <div className="recent-note">README 最近更新：{selectedPrompt.recentLabel}</div>
               )}
-              <BilingualPreview prompt={selectedPrompt} translation={translation} mode={previewMode} />
+              <BilingualPreview
+                prompt={selectedPrompt}
+                translation={translation}
+                mode={previewMode}
+                canEditTranslation={!STATIC_API}
+                onSaveTranslation={saveTranslationBlocks}
+              />
             </>
           ) : (
             <EmptyState title="选择一个提示词" detail="左侧列表会显示按用途筛选后的文件，点击即可预览内容。" />
