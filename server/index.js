@@ -5,7 +5,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.resolve(__dirname, "..");
 const REPO_URL = "https://github.com/asgeirtj/system_prompts_leaks.git";
 const REPO_DIR = path.join(ROOT_DIR, "data", "system_prompts_leaks");
@@ -100,8 +101,11 @@ async function pathExists(targetPath) {
 }
 
 async function ensureRepo() {
-  if (await pathExists(REPO_DIR)) {
+  if (await pathExists(path.join(REPO_DIR, ".git"))) {
     return;
+  }
+  if (await pathExists(REPO_DIR)) {
+    await fs.rm(REPO_DIR, { recursive: true, force: true });
   }
   await fs.mkdir(path.dirname(REPO_DIR), { recursive: true });
   await run("git", ["clone", REPO_URL, REPO_DIR]);
@@ -864,6 +868,10 @@ app.use(async (_request, response) => {
   response.status(404).send("Run npm run build first, or use npm run dev for Vite.");
 });
 
-app.listen(PORT, "127.0.0.1", () => {
-  console.log(`Prompt API listening on http://127.0.0.1:${PORT}`);
-});
+export { buildIndex, makeLocalChineseFallback, REPO_DIR, splitBlocks };
+
+if (process.argv[1] === __filename) {
+  app.listen(PORT, "127.0.0.1", () => {
+    console.log(`Prompt API listening on http://127.0.0.1:${PORT}`);
+  });
+}

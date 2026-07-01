@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "concurrently \"node server/index.js\" \"vite --host 127.0.0.1\"",
     "build": "vite build",
+    "build:pages": "vite build --base=/prompt-tool/ && node scripts/build-static-api.mjs",
     "start": "node server/index.js"
   },
   "dependencies": {

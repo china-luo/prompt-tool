@@ -18,6 +18,27 @@ import "./styles.css";
 
 const ALL_PURPOSES = "全部用途";
 const ALL_SOURCES = "全部来源";
+const STATIC_API = import.meta.env.VITE_STATIC_API === "true";
+const API_ROOT = STATIC_API ? `${import.meta.env.BASE_URL}api` : "/api";
+
+function apiUrl(path) {
+  if (!STATIC_API) {
+    return `${API_ROOT}${path}`;
+  }
+  if (path === "/prompts") {
+    return `${API_ROOT}/prompts/index.json`;
+  }
+  const translateMatch = path.match(/^\/prompts\/([^/]+)\/translate$/);
+  if (translateMatch) {
+    return `${API_ROOT}/prompts/${translateMatch[1]}/translate.json`;
+  }
+  const promptMatch = path.match(/^\/prompts\/([^/]+)$/);
+  if (promptMatch) {
+    return `${API_ROOT}/prompts/${promptMatch[1]}.json`;
+  }
+  return `${API_ROOT}${path}`;
+}
+
 const dateFormatter = new Intl.DateTimeFormat("zh-CN", {
   year: "numeric",
   month: "2-digit",
@@ -155,7 +176,7 @@ function App() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/prompts")
+    fetch(apiUrl("/prompts"))
       .then((response) => {
         if (!response.ok) throw new Error("读取索引失败");
         return response.json();
@@ -184,7 +205,7 @@ function App() {
     let cancelled = false;
     setSelectedPrompt(null);
     setTranslation(null);
-    fetch(`/api/prompts/${selectedId}`)
+    fetch(apiUrl(`/prompts/${selectedId}`))
       .then((response) => {
         if (!response.ok) throw new Error("读取提示词内容失败");
         return response.json();
@@ -205,7 +226,7 @@ function App() {
 
     let cancelled = false;
     setTranslation(null);
-    fetch(`/api/prompts/${selectedId}/translate`)
+    fetch(apiUrl(`/prompts/${selectedId}/translate`))
       .then((response) => {
         if (!response.ok) throw new Error("生成中文对照失败");
         return response.json();
@@ -278,6 +299,10 @@ function App() {
   }, [data]);
 
   async function updateRepository() {
+    if (STATIC_API) {
+      setStatus({ type: "ready", text: "GitHub Pages 静态部署：重新运行 Actions 可刷新最新提示词" });
+      return;
+    }
     setStatus({ type: "loading", text: "正在拉取远程仓库并重新索引" });
     try {
       const response = await fetch("/api/update", { method: "POST" });

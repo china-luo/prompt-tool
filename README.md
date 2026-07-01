@@ -24,3 +24,11 @@ http://127.0.0.1:4177
 ```
 
 首次启动会自动克隆提示词仓库到 `data/system_prompts_leaks`。
+
+## GitHub Pages 部署
+
+推送到 `main` 后，GitHub Actions 会自动构建并部署到 GitHub Pages。
+
+静态部署不运行 Express 服务。构建流程会在 Actions 中克隆上游提示词仓库，并生成 `dist/api` 静态 JSON 文件供前端读取。
+
+如需刷新 GitHub Pages 上的提示词数据，进入仓库的 Actions 页面，手动重新运行 `Deploy to GitHub Pages` 工作流即可。
