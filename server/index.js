@@ -16,7 +16,8 @@ const TEXT_EXTENSIONS = new Set([".md", ".txt", ".xml", ".json"]);
 const EXCLUDED_DIRS = new Set([".git", ".github"]);
 const EXCLUDED_FILES = new Set(["README.md", "LICENSE"]);
 const TRANSLATION_CONCURRENCY = 5;
-const TRANSLATION_CHUNK_SIZE = 520;
+const TRANSLATION_CHUNK_SIZE = 1400;
+const GOOGLE_TRANSLATE_PROXY = process.env.GOOGLE_TRANSLATE_PROXY || "";
 
 const PURPOSES = [
   {
@@ -525,11 +526,26 @@ async function translateViaGoogle(text) {
     url.searchParams.set("dt", "t");
     url.searchParams.set("q", chunk);
 
-    const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
-    if (!response.ok) {
-      throw new Error(`google translation request failed: ${response.status}`);
+    let payload;
+    if (GOOGLE_TRANSLATE_PROXY) {
+      const { stdout } = await run("curl.exe", [
+        "-L",
+        "--silent",
+        "--show-error",
+        "--max-time",
+        "45",
+        "--proxy",
+        GOOGLE_TRANSLATE_PROXY,
+        url.toString()
+      ]);
+      payload = JSON.parse(stdout);
+    } else {
+      const response = await fetch(url, { signal: AbortSignal.timeout(12000) });
+      if (!response.ok) {
+        throw new Error(`google translation request failed: ${response.status}`);
+      }
+      payload = await response.json();
     }
-    const payload = await response.json();
     translated.push((payload?.[0] || []).map((part) => part?.[0] || "").join("").trim() || chunk);
   }
 
@@ -939,7 +955,7 @@ app.use(async (_request, response) => {
   response.status(404).send("Run npm run build first, or use npm run dev for Vite.");
 });
 
-export { buildIndex, makeLocalChineseFallback, REPO_DIR, splitBlocks };
+export { buildIndex, makeLocalChineseFallback, REPO_DIR, splitBlocks, translateViaGoogle };
 
 if (process.argv[1] === __filename) {
   app.listen(PORT, "127.0.0.1", () => {
