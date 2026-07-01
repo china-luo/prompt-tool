@@ -17,7 +17,6 @@ const EXCLUDED_DIRS = new Set([".git", ".github"]);
 const EXCLUDED_FILES = new Set(["README.md", "LICENSE"]);
 const TRANSLATION_CONCURRENCY = 5;
 const TRANSLATION_CHUNK_SIZE = 520;
-const EXTERNAL_TRANSLATION_BLOCK_LIMIT = 24;
 
 const PURPOSES = [
   {
@@ -515,19 +514,26 @@ function splitTranslationRequest(text, maxLength = TRANSLATION_CHUNK_SIZE) {
 }
 
 async function translateViaGoogle(text) {
-  const url = new URL("https://translate.googleapis.com/translate_a/single");
-  url.searchParams.set("client", "gtx");
-  url.searchParams.set("sl", "auto");
-  url.searchParams.set("tl", "zh-CN");
-  url.searchParams.set("dt", "t");
-  url.searchParams.set("q", text);
+  const chunks = splitTranslationRequest(text);
+  const translated = [];
 
-  const response = await fetch(url, { signal: AbortSignal.timeout(6000) });
-  if (!response.ok) {
-    throw new Error(`translation request failed: ${response.status}`);
+  for (const chunk of chunks) {
+    const url = new URL("https://translate.googleapis.com/translate_a/single");
+    url.searchParams.set("client", "gtx");
+    url.searchParams.set("sl", "auto");
+    url.searchParams.set("tl", "zh-CN");
+    url.searchParams.set("dt", "t");
+    url.searchParams.set("q", chunk);
+
+    const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    if (!response.ok) {
+      throw new Error(`google translation request failed: ${response.status}`);
+    }
+    const payload = await response.json();
+    translated.push((payload?.[0] || []).map((part) => part?.[0] || "").join("").trim() || chunk);
   }
-  const payload = await response.json();
-  return (payload?.[0] || []).map((part) => part?.[0] || "").join("").trim();
+
+  return translated.join("\n").trim();
 }
 
 async function translateViaMyMemory(text) {
@@ -626,10 +632,10 @@ async function translateText(text) {
   }
 
   try {
-    return await translateViaMyMemory(text);
+    return await translateViaGoogle(text);
   } catch {
     try {
-      return await translateViaGoogle(text);
+      return await translateViaMyMemory(text);
     } catch {
       return makeLocalChineseFallback(text);
     }
@@ -787,18 +793,18 @@ app.get("/api/prompts/:id/translate", async (request, response) => {
       return;
     }
 
-    const cached = await readJsonIfExists(context.cachePath);
-    if (cached) {
+    const shouldRefresh = request.query.refresh === "1" || request.query.refresh === "true";
+    const cached = shouldRefresh ? null : await readJsonIfExists(context.cachePath);
+    if (cached?.manuallyEdited || cached?.translationProvider === "google") {
       response.json({ ...cached, cached: true });
       return;
     }
 
-    const shouldUseExternalTranslation = context.blocks.length <= EXTERNAL_TRANSLATION_BLOCK_LIMIT;
     const translatedBlocks = await mapWithConcurrency(context.blocks, TRANSLATION_CONCURRENCY, async (block) => {
       try {
         return {
           original: block.original,
-          zh: shouldUseExternalTranslation ? await translateText(block.original) : makeLocalChineseFallback(block.original),
+          zh: await translateText(block.original),
           ok: true
         };
       } catch (error) {
@@ -815,6 +821,7 @@ app.get("/api/prompts/:id/translate", async (request, response) => {
       id: context.item.id,
       relativePath: context.item.relativePath,
       generatedAt: new Date().toISOString(),
+      translationProvider: "google",
       truncated: false,
       totalBlocks: translatedBlocks.length,
       failedBlocks: translatedBlocks.filter((block) => !block.ok).length,
@@ -862,6 +869,7 @@ app.put("/api/prompts/:id/translate", async (request, response) => {
       generatedAt: now,
       editedAt: now,
       manuallyEdited: true,
+      translationProvider: "manual",
       truncated: false,
       totalBlocks: savedBlocks.length,
       failedBlocks: savedBlocks.filter((block) => !block.ok).length,

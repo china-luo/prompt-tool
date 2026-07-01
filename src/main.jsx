@@ -87,7 +87,7 @@ function EmptyState({ title, detail }) {
   );
 }
 
-function BilingualPreview({ prompt, translation, mode, canEditTranslation, onSaveTranslation }) {
+function BilingualPreview({ prompt, translation, mode, canEditTranslation, onSaveTranslation, onRefreshTranslation }) {
   const [isEditing, setIsEditing] = useState(false);
   const [draftBlocks, setDraftBlocks] = useState([]);
   const [saveState, setSaveState] = useState({ type: "idle", text: "" });
@@ -190,15 +190,26 @@ function BilingualPreview({ prompt, translation, mode, canEditTranslation, onSav
                 </button>
               </>
             ) : (
-              <button
-                type="button"
-                className="ghost-action"
-                onClick={() => setIsEditing(true)}
-                disabled={!translation.blocks.length}
-                title={canEditTranslation ? "\u7f16\u8f91\u4e2d\u6587\u8bd1\u6587" : "\u9759\u6001\u90e8\u7f72\u65e0\u6cd5\u4fdd\u5b58\uff0c\u8bf7\u5728\u672c\u5730\u8fd0\u884c\u540e\u7f16\u8f91"}
-              >
-                {"\u7f16\u8f91\u4e2d\u6587"}
-              </button>
+              <>
+                <button
+                  type="button"
+                  className="ghost-action"
+                  onClick={onRefreshTranslation}
+                  disabled={!translation.blocks.length}
+                  title={canEditTranslation ? "\u4f7f\u7528 Google \u7ffb\u8bd1\u91cd\u65b0\u751f\u6210\u4e2d\u6587\u8bd1\u6587" : "\u9759\u6001\u90e8\u7f72\u65e0\u6cd5\u91cd\u65b0\u751f\u6210\uff0c\u8bf7\u5728\u672c\u5730\u8fd0\u884c\u540e\u64cd\u4f5c"}
+                >
+                  {"Google \u91cd\u8bd1"}
+                </button>
+                <button
+                  type="button"
+                  className="ghost-action"
+                  onClick={() => setIsEditing(true)}
+                  disabled={!translation.blocks.length}
+                  title={canEditTranslation ? "\u7f16\u8f91\u4e2d\u6587\u8bd1\u6587" : "\u9759\u6001\u90e8\u7f72\u65e0\u6cd5\u4fdd\u5b58\uff0c\u8bf7\u5728\u672c\u5730\u8fd0\u884c\u540e\u7f16\u8f91"}
+                >
+                  {"\u7f16\u8f91\u4e2d\u6587"}
+                </button>
+              </>
             )}
           </span>
         </span>
@@ -425,6 +436,29 @@ function App() {
     setStatus({ type: "ready", text: `中文译文已保存到 ${payload.cachePath}` });
   }
 
+  async function refreshTranslationWithGoogle() {
+    if (!selectedId) return;
+    if (STATIC_API) {
+      setStatus({ type: "error", text: "GitHub Pages 静态部署无法重译，请在本地运行后使用 Google 重译。" });
+      return;
+    }
+
+    setTranslation(null);
+    setStatus({ type: "loading", text: "正在使用 Google 翻译重新生成中文译文" });
+    try {
+      const response = await fetch(apiUrl(`/prompts/${selectedId}/translate?refresh=1`));
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.detail || payload.message || "Google 重译失败");
+      }
+      setTranslation(payload);
+      setStatus({ type: "ready", text: "已使用 Google 翻译重新生成中文译文" });
+    } catch (error) {
+      setTranslation({ error: error.message, blocks: [] });
+      setStatus({ type: "error", text: error.message });
+    }
+  }
+
   function choosePurpose(purposeKey) {
     setActivePurpose(purposeKey);
     setActiveSource(ALL_SOURCES);
@@ -632,6 +666,7 @@ function App() {
                 mode={previewMode}
                 canEditTranslation={!STATIC_API}
                 onSaveTranslation={saveTranslationBlocks}
+                onRefreshTranslation={refreshTranslationWithGoogle}
               />
             </>
           ) : (
