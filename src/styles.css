@@ -108,6 +108,14 @@ p {
   font-weight: 700;
 }
 
+.brand-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.16);
+}
+
 h1 {
   max-width: 860px;
   margin-top: 8px;

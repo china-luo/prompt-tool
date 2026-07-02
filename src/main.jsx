@@ -11,7 +11,6 @@ import {
   MagnifyingGlass,
   Rows,
   SidebarSimple,
-  Sparkle,
   TextColumns
 } from "@phosphor-icons/react";
 import "./styles.css";
@@ -469,7 +468,7 @@ function App() {
       <section className="hero-card">
         <div>
           <div className="eyebrow">
-            <Sparkle size={16} weight="fill" />
+            <img src={`${import.meta.env.BASE_URL}brand-icon.png`} alt="" className="brand-mark" />
             <span>System Prompts Leaks</span>
           </div>
           <h1>系统提示词浏览器</h1>
