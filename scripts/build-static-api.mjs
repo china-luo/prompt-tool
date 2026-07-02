@@ -23,6 +23,27 @@ async function readJsonIfExists(filePath) {
   }
 }
 
+async function readCachedTranslation(item, contentHash, blockCount) {
+  const exactCache = await readJsonIfExists(path.join(TRANSLATION_CACHE_DIR, `${item.id}-${contentHash}-full.json`));
+  if (exactCache?.translationProvider === "google" && exactCache?.blocks?.length === blockCount) {
+    return exactCache;
+  }
+
+  try {
+    const files = await fs.readdir(TRANSLATION_CACHE_DIR);
+    const fallbackFile = files.find((file) => file.startsWith(`${item.id}-`) && file.endsWith("-full.json"));
+    if (!fallbackFile) {
+      return null;
+    }
+    const fallbackCache = await readJsonIfExists(path.join(TRANSLATION_CACHE_DIR, fallbackFile));
+    return fallbackCache?.translationProvider === "google" && fallbackCache?.blocks?.length === blockCount
+      ? fallbackCache
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 const index = await buildIndex();
 await writeJson(path.join(DIST_API_DIR, "index.json"), index);
 
@@ -32,8 +53,7 @@ for (const item of index.items) {
 
   const sourceBlocks = splitBlocks(content);
   const contentHash = createHash("sha1").update(content).digest("hex").slice(0, 12);
-  const cachePath = path.join(TRANSLATION_CACHE_DIR, `${item.id}-${contentHash}-full.json`);
-  const cachedTranslation = await readJsonIfExists(cachePath);
+  const cachedTranslation = await readCachedTranslation(item, contentHash, sourceBlocks.length);
   const blocks =
     cachedTranslation?.translationProvider === "google" && cachedTranslation?.blocks?.length === sourceBlocks.length
       ? cachedTranslation.blocks
