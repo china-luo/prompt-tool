@@ -1,0 +1,331 @@
+{
+  "id": "69da9d4275f3cfb7",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/run-skill-generator/SKILL.md",
+  "generatedAt": "2026-07-01T09:41:11.839Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 64,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "---\nname: run-skill-generator\ndescription: Teach /run and /verify how to build and launch your project by creating a per-project run skill with a driver script.\n---",
+      "zh": "---\n名称：运行技能生成器\n描述：通过使用驱动程序脚本创建每个项目的运行技能来教导 /run 和 /verify 如何构建和启动项目。\n---",
+      "ok": true
+    },
+    {
+      "original": "Your job is to produce a **skill** at `<unit>/.claude/skills/run-<unit-name>/`\nthat lets a future agent build, launch, and **drive** this project from\na clean machine.",
+      "zh": "你的工作是在`<unit>/.claude/skills/run-<unit-name>/`处产生**技能**\n让未来的代理构建、启动并**驱动**该项目\n一台干净的机器。",
+      "ok": true
+    },
+    {
+      "original": "The skill has two parts that live together:",
+      "zh": "该技能由两个共同组成的部分组成：",
+      "ok": true
+    },
+    {
+      "original": "```\n<unit>/.claude/skills/run-<unit-name>/\n  SKILL.md      ← agent-facing instructions — SHORT. Points at the driver.\n  driver.mjs    ← (or driver.py, smoke.sh, … — or none: web apps use\n                   chromium-cli off-the-shelf, and the heredoc in\n                   SKILL.md is the script)\n```",
+      "zh": "````\n<单位>/.claude/skills/run-<单位名称>/\n  SKILL.md ← 面向代理的说明 — 简短。指着司机。\n  driver.mjs ← （或 driver.py、smoke.sh、... — 或无：Web 应用程序使用\n                   chromium-cli 现成的，以及heredoc\n                   SKILL.md 是脚本）\n````",
+      "ok": true
+    },
+    {
+      "original": "That almost always means **writing code**, not just prose. If the app\nhas any interactive surface (GUI, TUI, long-running server, REPL), the\nfuture agent needs a programmatic way to poke it. A markdown file by\nitself cannot click a button — but sometimes the button-clicker\nalready exists: for web apps it's `chromium-cli`, for servers it's\n`curl`. You build (or script) that harness now, commit it alongside\nthe skill, and the `SKILL.md` documents how to use it.",
+      "zh": "这几乎总是意味着**编写代码**，而不仅仅是散文。如果应用程序\n具有任何交互界面（GUI、TUI、长时间运行的服务器、REPL），\n未来的智能体需要一种编程方式来戳它。一个 Markdown 文件\n本身无法单击按钮 - 但有时按钮单击器\n已经存在：对于网络应用程序来说是“chromium-cli”，对于服务器来说是\n`卷曲`。您现在构建（或编写脚本）该工具，并一起提交\n技能，以及“SKILL.md”文档如何使用它。",
+      "ok": true
+    },
+    {
+      "original": "## Definition of done",
+      "zh": "## 完成的定义",
+      "ok": true
+    },
+    {
+      "original": "You are done when **all** of these are true:",
+      "zh": "当**所有**都为真时，您就完成了：",
+      "ok": true
+    },
+    {
+      "original": "1. **You launched the app in this container and interacted with it** —\n   not its test suite, the actual running app. For anything with a GUI,\n   that means you have a screenshot file on disk that you took.\n2. **The interaction harness is committed** next to the skill. A driver\n   script, a REPL wrapper, a smoke test, or the `chromium-cli` heredoc\n   inline in `SKILL.md` — whatever you used to drive the app in step 1.\n   (Graduated into `scripts/`/`e2e/`? — fine, point at it. Web app with\n   `chromium-cli` off-the-shelf? — the inline script is the harness; no\n   separate file.)\n3. **The `SKILL.md` documents the harness** as the primary agent path —\n   the section a future agent reads first is \"run this driver / pipe\n   these commands to `chromium-cli`,\" not \"run `npm start` and a window\n   opens.\"\n4. **Every code block in `SKILL.md` is a command you ran that worked.**\n   This session. This container. Not from the README, not inferred.",
+      "zh": "1. **您在此容器中启动了应用程序并与其交互** —\n   不是它的测试套件，而是实际运行的应用程序。对于任何带有 GUI 的东西，\n   这意味着您在磁盘上有一个您拍摄的屏幕截图文件。\n2. **交互工具被提交**在技能旁边。一名司机\n   脚本、REPL 包装器、冒烟测试或“chromium-cli”heredoc\n   内联在“SKILL.md”中——无论您在步骤 1 中用于驱动应用程序的内容。\n   （毕业到 `scripts/`/`e2e/`？ - 好吧，指向它。Web 应用程序\n   “chromium-cli”现成的？ — 内联脚本是工具；不\n   单独的文件。）\n3. **`SKILL.md` 将线束**记录为主要代理路径 —\n   未来的代理首先阅读的部分是“运行此驱动程序/管道\n   这些命令是“chromium-cli”，而不是“运行“npm start”和一个窗口\n   打开。”\n4. **“SKILL.md”中的每个代码块都是您运行的有效命令。**\n   本次会议。这个容器。不是从 README 中，不是推断出来的。",
+      "ok": true
+    },
+    {
+      "original": "If you're about to write the skill and you don't have (1), **stop.** You\nare about to paraphrase existing docs. That document already exists —\nit's called the README, and the whole reason you're here is that it\nwasn't enough.",
+      "zh": "如果您要编写技能但没有 (1)，**停止。** 您\n即将解释现有文档。该文件已经存在 -\n它被称为自述文件，您来到这里的全部原因是它\n还不够。",
+      "ok": true
+    },
+    {
+      "original": "## The deliverables are code AND docs",
+      "zh": "## 可交付成果是代码和文档",
+      "ok": true
+    },
+    {
+      "original": "Typical output is a skill directory containing both:",
+      "zh": "典型的输出是包含以下两者的技能目录：",
+      "ok": true
+    },
+    {
+      "original": "```\n<unit>/.claude/skills/run-<unit>/\n  SKILL.md         ← SHORT. Points at the driver. Has the frontmatter\n                     that lets Claude auto-load it when someone asks\n                     to \"run <unit>\" or \"screenshot <unit>\".\n  driver.mjs       ← (or driver.py, smoke.sh, … — or none: web apps\n                     use chromium-cli off-the-shelf, and the heredoc\n                     in SKILL.md is the script)\n```",
+      "zh": "````\n<单位>/.claude/skills/run-<单位>/\n  技能.md ← 简短。指着司机。有前面的内容\n                     当有人询问时，克劳德可以自动加载它\n                     到“运行<单元>”或“屏幕截图<单元>”。\n  driver.mjs ← （或 driver.py、smoke.sh、... — 或无：网络应用程序\n                     使用现成的 chromium-cli 和heredoc\n                     SKILL.md 中是脚本）\n````",
+      "ok": true
+    },
+    {
+      "original": "The driver lives **inside the skill directory** by default. They are a\npair — the skill's instructions and the code that implements them. A\ndriver that lives here is allowed to be a bit messier than production\ncode; it's agent tooling, not product surface.",
+      "zh": "默认情况下，驱动程序位于**技能目录**内。他们是一个\n对——技能的指令和实现它们的代码。一个\n住在这里的驱动程序可以比生产环境更混乱一些\n代码；这是代理工具，而不是产品表面。",
+      "ok": true
+    },
+    {
+      "original": "**Graduation:** if the driver grows into something the project's own\ntest suite wants to reuse — shared launch helpers, a real e2e harness —\nmove it to `scripts/` or `e2e/` and update `SKILL.md` to reference the\nnew path. The skill stays; the driver finds a better home.",
+      "zh": "**毕业：**如果驱动程序成长为项目自己的东西\n测试套件想要重用——共享启动助手，真正的 e2e 工具——\n将其移至“scripts/”或“e2e/”并更新“SKILL.md”以引用\n新路径。技能保留；司机找到了更好的家。",
+      "ok": true
+    },
+    {
+      "original": "The exact shape depends on the project, but the principle is constant:\n**the driver is the deliverable.** The `SKILL.md` is its man page. For\na web app, the driver already exists — `chromium-cli`\n([examples/playwright.md](examples/playwright.md)) — and the skill is\nthe script that runs it. For a desktop app\n([examples/electron.md](examples/electron.md)), the driver is a custom\nREPL under tmux that exposes `launch`/`ss`/`click`/`eval`. For a server,\nthe driver is `curl`. Whatever shape it takes, without something that\nreaches into the running app, the skill is a description of a window\nnobody can touch.",
+      "zh": "确切的形状取决于项目，但原则是不变的：\n**驱动程序是可交付成果。** `SKILL.md` 是其手册页。对于\n一个网络应用程序，驱动程序已经存在 - `chromium-cli`\n([examples/playwright.md](examples/playwright.md)) — 技能是\n运行它的脚本。对于桌面应用程序\n([examples/electron.md](examples/electron.md))，驱动程序是自定义的\ntmux 下的 REPL 公开 `launch`/`ss`/`click`/`eval`。对于服务器来说，\n驱动程序是“curl”。无论它采取什么形状，没有任何东西\n进入正在运行的应用程序，技能是一个窗口的描述\n没有人可以碰。",
+      "ok": true
+    },
+    {
+      "original": "## Where the skill goes",
+      "zh": "## 技能去向",
+      "ok": true
+    },
+    {
+      "original": "The skill lives at `<unit>/.claude/skills/run-<unit-name>/`, where\n`<unit>` is the directory for **one deployable thing** — an app, a\nservice, a library.",
+      "zh": "该技能位于“<unit>/.claude/skills/run-<unit-name>/”，其中\n`<unit>` 是 **一个可部署事物** 的目录 - 一个应用程序、一个\n服务，图书馆。",
+      "ok": true
+    },
+    {
+      "original": "Claude Code **natively discovers** skills from nested `.claude/skills/`\ndirectories: an agent working anywhere inside `<unit>` will see\n`/run-<unit-name>` as an available skill, and it auto-loads when the\nrequest matches its description (e.g. \"run the desktop app,\" \"take a\nscreenshot of billing\").",
+      "zh": "克劳德代码**从嵌套的`.claude/skills/`中本地发现**技能\n目录：在“<unit>”内任何地方工作的代理都会看到\n`/run-<unit-name>` 作为可用技能，并且当\n请求与其描述相符（例如“运行桌面应用程序”、“采取\n账单截图”）。",
+      "ok": true
+    },
+    {
+      "original": "- **Single-project repo:** `.claude/skills/run-<repo-name>/` at repo root.\n- **Large repo with many apps:** one per app, colocated —\n  `apps/billing/.claude/skills/run-billing/`,\n  `apps/desktop/.claude/skills/run-desktop/`.\n- **App with multiple binaries:** still **one** skill at the app's\n  root with a section per binary. They share setup. Start from the\n  closest single-binary example and add a `## Run: <name>` section\n  per binary.",
+      "zh": "- **单项目存储库：** `.claude/skills/run-<repo-name>/` 位于存储库根目录。\n- **包含许多应用程序的大型存储库：** 每个应用程序一个，位于同一位置 —\n  `apps/billing/.claude/skills/run-billing/`,\n  `apps/desktop/.claude/skills/run-desktop/`。\n- **具有多个二进制文件的应用程序：**仍然是应用程序的**一项**技能\n  每个二进制文件的根目录。他们共享设置。从\n  最接近的单二进制示例并添加 `## Run: <name>` 部分\n  每个二进制文件。",
+      "ok": true
+    },
+    {
+      "original": "If you're not sure where the unit boundary is, **ask the user.**",
+      "zh": "如果您不确定单元边界在哪里，**询问用户。**",
+      "ok": true
+    },
+    {
+      "original": "Slugify the directory name: lowercase, dashes for spaces, no slashes\n(`run-billing-api`, not `run-billing/api`). The directory name and\nthe frontmatter `name:` should match — that's the slash command.",
+      "zh": "Slugify 目录名称：小写，破折号表示空格，没有斜杠\n（“run-billing-api”，而不是“run-billing/api”）。目录名称和\nfrontmatter `name:` 应该匹配——这是斜杠命令。",
+      "ok": true
+    },
+    {
+      "original": "## Process",
+      "zh": "＃＃ 过程",
+      "ok": true
+    },
+    {
+      "original": "### 0. Find any existing skill about running this app",
+      "zh": "### 0. 查找有关运行此应用程序的任何现有技能",
+      "ok": true
+    },
+    {
+      "original": "List the project's skills with their descriptions (same probe `/run`\nuses — users name these variously, so match on description, not name):",
+      "zh": "列出项目的技能及其描述（相同的探针“/run”\n使用——用户对这些名称有不同的命名，因此匹配描述，而不是名称）：",
+      "ok": true
+    },
+    {
+      "original": "```bash\nd=$PWD; while :; do\n  grep -Hm1 '^description:' \"$d\"/.claude/skills/*/SKILL.md 2>/dev/null\n  [ -e \"$d/.git\" ] || [ \"$d\" = / ] && break\n  d=$(dirname \"$d\")\ndone\n```",
+      "zh": "````bash\nd=$PWD；尽管 ：;做\n  grep -Hm1 '^描述：' \"$d\"/.claude/skills/*/SKILL.md 2>/dev/null\n  [ -e \"$d/.git\" ] || [“$d”= / ] && 中断\n  d=$(目录名“$d”)\n完成\n````",
+      "ok": true
+    },
+    {
+      "original": "If one is about launching/driving this app — whatever it's named —\n**refine, don't rewrite**: verify its claims, fix what's wrong, add\nwhat's missing, preserve what works. Re-run the driver if there is\none. Keep its existing name.",
+      "zh": "如果一个人想要启动/驱动这个应用程序——无论它叫什么名字——\n**精炼，不要重写**：验证其声明，修复错误，添加\n缺少什么，保留有效的。如果有则重新运行驱动程序\n一。保留其现有名称。",
+      "ok": true
+    },
+    {
+      "original": "(Also check for a legacy `.claude/run.md` — earlier versions of this\ntool produced those. If you find one, migrate it: the body becomes\nthe skill's `SKILL.md` content, any referenced scripts move into the\nskill dir, and delete the old file.)",
+      "zh": "（还要检查遗留的`.claude/run.md` - 这个的早期版本\n工具产生了那些。如果你找到了，就迁移它：身体变成\n该技能的“SKILL.md”内容，任何引用的脚本都会移至\n技能目录，然后删除旧文件。）",
+      "ok": true
+    },
+    {
+      "original": "If none exists, decide where to create it (see above) and continue.",
+      "zh": "如果不存在，请决定在哪里创建它（见上文）并继续。",
+      "ok": true
+    },
+    {
+      "original": "### 1. Discover — and treat every claim as disprovable",
+      "zh": "### 1. 发现并对待每一个主张都是不可证伪的",
+      "ok": true
+    },
+    {
+      "original": "Figure out what you're authoring for:",
+      "zh": "弄清楚您创作的目的：",
+      "ok": true
+    },
+    {
+      "original": "- Manifest right here (`package.json`, `go.mod`, `pyproject.toml`…) and\n  it's one self-contained thing → this is the unit.\n- Looks like a mega-repo root (`apps/`, `packages/`, `services/`) →\n  **ask which one.** List candidates, let them pick, `cd` there.\n- Genuinely ambiguous → ask.",
+      "zh": "- 清单就在这里（`package.json`、`go.mod`、`pyproject.toml`...）和\n  这是一个独立的东西 → 这是一个单元。\n- 看起来像一个大型仓库根（`apps/`、`packages/`、`services/`）→\n  **询问哪一个。** 列出候选人，让他们选择，那里有“cd”。\n- 确实模棱两可→询问。",
+      "ok": true
+    },
+    {
+      "original": "Survey the usual places: `README.md`, `package.json` scripts,\n`Dockerfile`, `Makefile`, `.github/workflows/`, `CONTRIBUTING.md`. CI\nconfigs are often more accurate than READMEs.",
+      "zh": "调查常用的地方：`README.md`、`package.json`脚本、\n`Dockerfile`、`Makefile`、`.github/workflows/`、`CONTRIBUTING.md`。 CI\n配置通常比自述文件更准确。",
+      "ok": true
+    },
+    {
+      "original": "**Every claim in existing docs is a hypothesis.** Especially the\nnegative ones:",
+      "zh": "**现有文档中的每个主张都是一个假设。**尤其是\n消极的：",
+      "ok": true
+    },
+    {
+      "original": "| When docs say… | What you do |\n|---|---|\n| \"Requires macOS/Windows\" | Launch it on Linux anyway. Apps rarely refuse to start — they crash on a missing `.so`, which `apt-get` fixes. Native modules for *your host's* keychain/notifications may no-op; the core usually runs. |\n| \"Requires a GPU\" | Try software rendering. Electron/Chrome fall back with `--disable-gpu`. |\n| \"Requires a paid account / feature flag\" | The gate is code you can read. Find it (env var? build define? SSR-embedded JSON?) and patch it for your local run. Document the patch. |\n| \"Run `npm start`\" | That's the human path (spawns a window, waits forever). Find or build the *programmatic* path — `electron-forge start` to build then launch via Playwright, or equivalent. |",
+      "zh": "|当文档说... |你做什么|\n|---|---|\n| “需要 macOS/Windows” |无论如何在 Linux 上启动它。应用程序很少拒绝启动——它们会因缺少“.so”而崩溃，“apt-get”可以修复该问题。 *您的主机的*钥匙串/通知的本机模块可能无操作；核心通常运行。 |\n| “需要 GPU”|尝试软件渲染。 Electron/Chrome 使用 `--disable-gpu` 进行回退。 |\n| “需要付费帐户/功能标志” |门是您可以阅读的代码。找到它（env var？构建定义？SSR 嵌入的 JSON？）并为本地运行修补它。记录补丁。 |\n| “运行`npm start`”|这就是人类的道路（产生一个窗口，永远等待）。查找或构建“程序化”路径——“Electron-forge start”来构建，然后通过 Playwright 或同等方式启动。 |",
+      "ok": true
+    },
+    {
+      "original": "\"Not supported on Linux\" in a README written by a macOS developer\nmeans \"I never tried.\" You're about to try. **If you give up here, the\nskill you write is the README with extra steps.**",
+      "zh": "macOS 开发人员编写的自述文件中显示“Linux 上不支持”\n意思是“我从未尝试过”。你正要尝试一下。 **如果你在这里放弃，\n您编写的技能是带有额外步骤的自述文件。**",
+      "ok": true
+    },
+    {
+      "original": "### 2. Execute — and BUILD the harness you need",
+      "zh": "### 2. 执行 — 并构建您需要的工具",
+      "ok": true
+    },
+    {
+      "original": "You're in a headless Linux container. The app is going to fight you.\nThat fight is the content of the skill.",
+      "zh": "您处于无头 Linux 容器中。该应用程序将与你战斗。\n那战斗就是技能的内容。",
+      "ok": true
+    },
+    {
+      "original": "Keep a running `NOTES.md` as you go. Every error → every fix → every\ncommand that finally worked. This scratchpad becomes the\nTroubleshooting section.",
+      "zh": "随时保持正在运行的“NOTES.md”。每个错误→每个修复→每个\n命令终于起作用了。该暂存器成为\n故障排除部分。",
+      "ok": true
+    },
+    {
+      "original": "**Work up to a real interaction:**",
+      "zh": "**进行真正的互动：**",
+      "ok": true
+    },
+    {
+      "original": "- **Install + build.** When something's missing, note the exact\n  `apt-get` / `npm install` that fixed it.\n- **Launch the app.** Not the test suite — the app. A desktop GUI\n  (Electron, native) needs `xvfb-run` and a handful of `lib*`\n  packages; a web app driven by `chromium-cli` runs headless and\n  needs neither. Launch timeouts and cryptic crashes are normal at\n  this stage. Read the stack trace, install the missing thing, try\n  again.\n- **Build a harness to drive it.** You need a handle on the running\n  app that lets you send input and observe output programmatically.\n  The shape depends on the project (see table below).",
+      "zh": "- **安装 + 构建。** 当缺少某些内容时，请记下确切的内容\n  `apt-get` / `npm install` 修复了它。\n- **启动应用程序。** 不是测试套件 - 应用程序。桌面图形用户界面\n  （Electron，原生）需要 `xvfb-run` 和一些 `lib*`\n  包裹；由“chromium-cli”驱动的网络应用程序无头运行\n  两者都不需要。启动超时和神秘崩溃是正常的\n  这个阶段。阅读堆栈跟踪，安装缺少的东西，尝试\n  再次。\n- **制作一个安全带来驱动它。** 你需要一个跑步手柄\n  应用程序可让您以编程方式发送输入并观察输出。\n  形状取决于项目（见下表）。",
+      "ok": true
+    },
+    {
+      "original": "**Cover the layer(s) PRs actually touch.** A tmux driver that pokes\n  the CLI's user surface is the right handle for UI changes — and the\n  wrong one for a PR that touches one internal function. For the\n  latter an agent wants `NODE_ENV=test bun run script.ts` (or\n  equivalent): import the function, call it, observe. If most PRs\n  here touch internals, that direct-invocation path is the driver's\n  main entry point, and the tmux launch is secondary. Look at recent\n  merged PRs: what layer do they touch? Cover that.",
+      "zh": "**覆盖 PR 实际接触的层。** 戳戳的 tmux 驱动程序\n  CLI 的用户界面是 UI 更改的正确手柄 - 并且\n  对于涉及一项内部功能的 PR 来说是错误的。对于\n  后者需要“NODE_ENV=test Bun run script.ts”（或者\n  等价）：导入函数，调用它，观察。如果大多数 PR\n  这里触摸内部，直接调用路径是驱动程序的\n  主要入口点，tmux 启动是次要的。看看最近的\n  合并的 PR：它们触及哪一层？盖住那个。",
+      "ok": true
+    },
+    {
+      "original": "For a **web** app, `chromium-cli` is the driver — you script it,\n  you don't write it (see [examples/playwright.md](examples/playwright.md)).\n  For a **desktop** GUI (Electron), write a REPL driver (stdin\n  commands → click/type/screenshot), run it inside tmux, and use\n  `send-keys` / `capture-pane`. You will iterate on that driver — it\n  starts minimal (`launch`, `ss`, `quit`) and grows whatever commands\n  you need to reach the interesting part of the app.\n- **Do one real user flow end-to-end.** Click the button. Fill the\n  form. See the result in the DOM. Take a screenshot. **Actually look\n  at the screenshot.** If it's blank or showing an error page, you're\n  not done.\n- **Then run the tests.** Unit tests are a sanity check, not the main\n  event.\n- **Stop cleanly.**",
+      "zh": "对于 **web** 应用程序，“chromium-cli”是驱动程序 - 您可以编写脚本，\n  你不写它（参见[examples/playwright.md](examples/playwright.md)）。\n  对于 **桌面** GUI (Electron)，编写 REPL 驱动程序 (stdin\n  命令 → 单击/输入/屏幕截图），在 tmux 中运行它，然后使用\n  `发送密钥`/`捕获窗格`。您将迭代该驱动程序 - 它\n  启动最小的（`launch`、`ss`、`quit`）并增长任何命令\n  您需要到达应用程序的有趣部分。\n- **端到端执行一个真实的用户流。** 单击按钮。填写\n  形式。在 DOM 中查看结果。截图一下。 **实际上看\n  在屏幕截图中。** 如果它是空白或显示错误页面，则您是\n  没有完成。\n- **然后运行测试。** 单元测试是健全性检查，而不是主要的\n  事件。\n- **干净地停下来。**",
+      "ok": true
+    },
+    {
+      "original": "**Obstacles are content.** You will hit weird ones — coordinate systems\nthat don't line up, APIs that return empty on this Electron version,\nfeature gates that hide the thing you need to test. Each of these gets\na bullet in Gotchas and (often) a helper in your driver. The gold\nstandard is a Gotchas section full of things nobody could have guessed.",
+      "zh": "**障碍就是内容。**你会遇到奇怪的障碍——坐标系\n不排队，在此 Electron 版本上返回空的 API，\n隐藏您需要测试的内容的功能门。其中每一个都得到\n陷阱中的一颗子弹和（通常）驱动程序中的助手。黄金\n标准是一个陷阱部分，里面充满了没人能猜到的东西。",
+      "ok": true
+    },
+    {
+      "original": "**The driver script gets committed alongside the skill.** It is not\nscaffolding. It is the way future agents (and humans) will drive this\napp. It defaults to living inside the skill directory (for a web app\nusing `chromium-cli`, that means inline in `SKILL.md` — the heredoc\nis the script). If it outgrows that — if the project's real test\nsuite wants to import from it — move it to `scripts/` or `e2e/` and\nupdate `SKILL.md` to point there.",
+      "zh": "**驱动程序脚本与技能一起提交。**它不是\n脚手架。这是未来智能体（和人类）推动这一发展的方式\n应用程序。它默认位于技能目录中（对于网络应用程序\n使用“chromium-cli”，这意味着内联在“SKILL.md”中 - 此处文档\n是脚本）。如果它超出了这个范围——如果该项目是真正的考验\n套件想要从中导入 - 将其移动到 `scripts/` 或 `e2e/` 并\n更新“SKILL.md”以指向那里。",
+      "ok": true
+    },
+    {
+      "original": "### 3. Write SKILL.md",
+      "zh": "### 3.编写SKILL.md",
+      "ok": true
+    },
+    {
+      "original": "Short. Point at the driver. Use [template.md](template.md) as the\nstarting structure — it has the frontmatter shape.",
+      "zh": "短的。指着司机。使用 [template.md](template.md) 作为\n起始结构——它具有 frontmatter 形状。",
+      "ok": true
+    },
+    {
+      "original": "**The frontmatter matters.** The `name:` becomes the slash command\n(`/run-billing`). The `description:` is what Claude scans to decide\nwhether to auto-load this skill — put the **verbs an agent would\nactually type** in it: \"run,\" \"start,\" \"build,\" \"test,\" \"screenshot.\"\nGeneric descriptions (\"helpful utilities for billing\") won't match.",
+      "zh": "**前面的内容很重要。** `name:` 成为斜杠命令\n（`/运行计费`）。 “描述：”是克劳德扫描并决定的内容\n是否自动加载此技能 - 输入代理将使用的 **动词\n实际上在其中输入**：“运行”、“开始”、“构建”、“测试”、“屏幕截图”。\n通用描述（“计费实用程序”）不匹配。",
+      "ok": true
+    },
+    {
+      "original": "Body structure:",
+      "zh": "车身结构：",
+      "ok": true
+    },
+    {
+      "original": "1. One-paragraph intro: what this app is, how it's driven —\n   `<driver-path>` under xvfb/tmux for desktop, `chromium-cli` for\n   web, `curl` for a server.\n2. **Prerequisites** — the exact `apt-get install` line you ran.\n3. **Build** — the exact commands, in order. Include any patches you\n   had to apply (feature gates, config overrides) with the exact `sed`\n   or edit.\n4. **Run (agent path)** — FIRST. How to launch the driver, what\n   commands it accepts, where screenshots land. If it's a REPL, show\n   the tmux wrapping. This is the section the next agent will actually\n   use.\n5. **Run (human path)** — SECOND, if different. `npm start` → window\n   opens → Ctrl-C. Brief. Note that it's useless headless.\n6. **Gotchas** — the battle scars. The things that look like they\n   should work but don't, and the workaround. If this section is\n   generic, you didn't fight hard enough.\n7. **Troubleshooting** — symptom → fix. Only errors you actually hit.",
+      "zh": "1. 一段介绍：这个应用程序是什么，它是如何驱动的 —\n   对于桌面，xvfb/tmux 下的“<driver-path>”，对于桌面，“chromium-cli”\n   web，“curl”用于服务器。\n2. **先决条件** — 您运行的确切“apt-get install”行。\n3. **构建** — 确切的命令（按顺序）。包括您的任何补丁\n   必须使用确切的“sed”来应用（功能门、配置覆盖）\n   或编辑。\n4. **运行（代理路径）** — 首先。如何启动驱动程序，什么\n   它接受的命令是屏幕截图所在的位置。如果是 REPL，则显示\n   tmux 包装。这是下一个代理实际上将要执行的部分\n   使用。\n5. **运行（人类路径）** — 第二，如果不同的话。 `npm start` → 窗口\n   打开 → Ctrl-C。简短的。请注意，无头是没有用的。\n6. **陷阱**——战斗的伤痕。那些看起来像它们的东西\n   应该有效但无效，以及解决方法。如果这部分是\n   很一般，你战斗的不够努力。\n7. **故障排除** — 症状 → 修复。仅显示您实际遇到的错误。",
+      "ok": true
+    },
+    {
+      "original": "Keep it **verified** (you ran it), **prescriptive** (one path, not\noptions), **honest** (flaky? slow? say so).",
+      "zh": "保持**验证**（您运行了它），**规定性**（一条路径，而不是\n选项），**诚实**（不稳定？慢？这么说）。",
+      "ok": true
+    },
+    {
+      "original": "**Paths in SKILL.md are relative to `<unit>/`,** not to the skill\ndirectory. State this at the top if there's any ambiguity. When the\ndriver lives inside the skill, its path from `<unit>` is\n`.claude/skills/run-<unit-name>/driver.mjs` — it's long, but explicit.",
+      "zh": "**SKILL.md 中的路径相对于 `<unit>/`，** 与技能无关\n目录。如果有任何歧义，请在顶部说明。当\ndriver 存在于技能内部，它从 `<unit>` 开始的路径是\n`.claude/skills/run-<unit-name>/driver.mjs` — 它很长，但很明确。",
+      "ok": true
+    },
+    {
+      "original": "### 4. Verify",
+      "zh": "### 4. 验证",
+      "ok": true
+    },
+    {
+      "original": "Fresh shell, `cd` into the unit, follow the skill's `SKILL.md`\nline-by-line without deviating. Any improvisation = a gap. Fix it.",
+      "zh": "新鲜外壳，`cd`进入单元，按照技能的`SKILL.md`\n逐行不偏离。任何即兴发挥=差距。修复它。",
+      "ok": true
+    },
+    {
+      "original": "## Project-type patterns",
+      "zh": "## 项目类型模式",
+      "ok": true
+    },
+    {
+      "original": "Pick a starting shape for your driver. These examples are shared with\nthe `/run` skill (same per-project-type patterns are used as the\nfallback when no project-specific run skill exists) — if you're\nauthoring a new one, the example is your starting template.",
+      "zh": "为您的一号木选择一个起始形状。这些例子分享给\n`/run` 技能（使用与每个项目类型相同的模式\n当不存在特定于项目的运行技能时的后备） - 如果您\n创作一个新模板，该示例是您的起始模板。",
+      "ok": true
+    },
+    {
+      "original": "| Project type | Driver shape | Example |\n|---|---|---|\n| Web server / API | Background-launch + `curl`-based smoke script | [examples/server.md](examples/server.md) |\n| CLI tool | Representative-args smoke script, check exit codes + output | [examples/cli.md](examples/cli.md) |\n| TUI / interactive terminal | tmux wrapper: `send-keys` / `capture-pane` | [examples/tui.md](examples/tui.md) |\n| Electron / desktop GUI | Playwright `_electron` REPL driver under xvfb, screenshots, tmux-wrapped | [examples/electron.md](examples/electron.md) |\n| Browser-driven | dev server + `chromium-cli` script | [examples/playwright.md](examples/playwright.md) |\n| Library / SDK | Import-and-call smoke script | [examples/library.md](examples/library.md) |",
+      "zh": "|项目类型 |驾驶员形状 |示例|\n|---|---|---|\n|网络服务器/API |后台启动 + 基于 `curl` 的烟雾脚本 | [示例/服务器.md](示例/服务器.md) |\n| CLI 工具 |代表-args烟雾脚本，检查退出代码+输出| [示例/cli.md](示例/cli.md) |\n| TUI/交互终端| tmux 包装器：`send-keys` / `capture-pane` | [示例/tui.md](示例/tui.md) |\n|电子/桌面 GUI | xvfb 下的剧作家“_ Electron” REPL 驱动程序，屏幕截图，tmux 包装 | [示例/电子.md](示例/电子.md) |\n|浏览器驱动|开发服务器 + `chromium-cli` 脚本 | [示例/playwright.md](示例/playwright.md) |\n|库/SDK |导入并调用烟雾脚本 | [示例/library.md](示例/library.md) |",
+      "ok": true
+    },
+    {
+      "original": "For a web app, start from [examples/playwright.md](examples/playwright.md)\n— drive it with `chromium-cli`, no custom driver needed. For a\ndesktop app, start from [examples/electron.md](examples/electron.md)\n— it has the full `_electron` REPL driver skeleton, the tmux wrapping,\nand the catalog of obstacles you'll hit.",
+      "zh": "对于网络应用程序，请从 [examples/playwright.md](examples/playwright.md) 开始\n— 使用“chromium-cli”驱动它，无需自定义驱动程序。对于一个\n桌面应用程序，从 [examples/electron.md](examples/electron.md) 开始\n— 它具有完整的 `_ Electron` REPL 驱动程序框架，tmux 包装，\n以及您将遇到的障碍的目录。",
+      "ok": true
+    },
+    {
+      "original": "## What to include",
+      "zh": "## 包含哪些内容",
+      "ok": true
+    },
+    {
+      "original": "- **Prerequisites** — OS packages, runtimes, tools. Ubuntu `apt-get`\n  lines. The exact ones.\n- **Setup** — install deps, configure, any patches.\n- **Build** — compile/bundle.\n- **Run (agent path)** — the driver. Commands. Screenshot location.\n- **Direct invocation** — if callable: how to import and run internal\n  code without the full app. The env var / flag that bypasses init\n  guards. Many PRs need only this.\n- **Run (human path)** — if meaningfully different.\n- **Test** — the test suite command.\n- **Gotchas** — non-obvious traps you hit.\n- **Troubleshooting** — error → fix.\n- **The driver itself** — committed in the skill dir (or graduated\n  to `scripts/`/`e2e/`), or inline in `SKILL.md` for `chromium-cli`\n  web apps; referenced from `SKILL.md` either way.",
+      "zh": "- **先决条件** — 操作系统包、运行时、工具。 Ubuntu `apt-get`\n  线。确切的那些。\n- **安装** — 安装 deps、配置、任何补丁。\n- **构建** — 编译/捆绑。\n- **运行（代理路径）** — 驱动程序。命令。截图位置。\n- **直接调用** — 如果可调用：如何导入和运行内部\n  没有完整应用程序的代码。绕过 init 的环境变量/标志\n  警卫。很多 PR 只需要这个。\n- **运行（人类路径）** - 如果有意义的不同。\n- **测试** — 测试套件命令。\n- **陷阱** — 你遇到的不明显的陷阱。\n- **故障排除** — 错误 → 修复。\n- **驱动程序本身** — 在技能目录中提交（或已毕业\n  到`scripts/`/`e2e/`)，或者内联到`chromium-cli`的`SKILL.md`中\n  网络应用程序；无论哪种方式都从“SKILL.md”引用。",
+      "ok": true
+    },
+    {
+      "original": "## What to leave out",
+      "zh": "## 省略什么",
+      "ok": true
+    },
+    {
+      "original": "- **Anything you didn't run.** If the README says `yarn start:prod` and\n  you never ran it, it's not in the skill. Full stop.\n- **Documented happy paths for platforms you're not on.** You're in a\n  Linux container. A macOS-only section you can't verify is\n  speculation. Mention it exists; don't elaborate.\n- **Exhaustive options.** One working path.\n- **Architecture prose.** That's other docs.\n- **Generic troubleshooting.** \"If the build fails, check your Node\n  version\" — useless. Only include errors you actually hit and fixed.",
+      "zh": "- **您未运行的任何内容。** 如果自述文件显示“yarn start:prod”并且\n  你从来没有跑过它，这不属于技能范围。句号。\n- **记录了您不在的平台上的快乐路径。**您处于一个\n  Linux 容器。您无法验证的仅限 macOS 的部分是\n  猜测。提及它的存在；不详细说明。\n- **详尽的选项。** 一条工作路径。\n- **建筑散文。** 那是其他文档。\n- **一般故障排除。**“如果构建失败，请检查您的节点\n  版本”——没用。仅包含您实际遇到并修复的错误。",
+      "ok": true
+    },
+    {
+      "original": "## Red flags — you are about to ship the wrong thing",
+      "zh": "## 危险信号 — 您将要运送错误的东西",
+      "ok": true
+    },
+    {
+      "original": "Stop and reconsider if:",
+      "zh": "如果出现以下情况，请停止并重新考虑：",
+      "ok": true
+    },
+    {
+      "original": "- **You haven't taken a screenshot** of a GUI app. You didn't run it.\n- **Your skill has no driver/smoke script** to point at, and the app\n  is interactive. The next agent has no way to drive it. (Web app\n  using `chromium-cli`? — the heredoc in `SKILL.md` is the driver;\n  no separate file needed.)\n- **Your skill reads like the README.** Same structure, same\n  commands, same caveats. You paraphrased.\n- **Your Troubleshooting section is generic.** Real execution produces\n  specific, weird errors. Generic errors = you didn't execute.\n- **You wrote \"not supported on this platform\"** without trying to\n  launch it. The README author was on a Mac. You are not. Try.\n- **Everything worked first try.** Either this project is trivially\n  simple, or you ran the test suite and called it done.",
+      "zh": "- **您尚未截取 GUI 应用程序的屏幕截图**。你没有运行它。\n- **你的技能没有驱动程序/烟雾脚本**可以指向，并且应用程序\n  是互动的。下一个特工没有办法驾驶它。 （网络应用程序\n  使用“chromium-cli”？ — `SKILL.md` 中的heredoc是驱动程序；\n  不需要单独的文件。）\n- **你的技能读起来就像自述文件。** 相同的结构，相同的\n  命令，相同的警告。你转述了。\n- **您的故障排除部分是通用的。** 实际执行会产生\n  具体的、奇怪的错误。一般错误 = 你没有执行。\n- **您写了“此平台不支持”**，但没有尝试\n  启动它。 README 作者使用的是 Mac。你不是。尝试。\n- **第一次尝试一切正常。** 这个项目要么微不足道\n  很简单，或者您运行测试套件并称其完成。",
+      "ok": true
+    }
+  ]
+}

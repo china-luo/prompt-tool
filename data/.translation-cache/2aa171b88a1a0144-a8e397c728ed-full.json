@@ -1,0 +1,51 @@
+{
+  "id": "2aa171b88a1a0144",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/run-skill-generator/examples/cli.md",
+  "generatedAt": "2026-07-01T09:30:04.027Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 8,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "# Example: CLI tool",
+      "zh": "# 示例：CLI 工具",
+      "ok": true
+    },
+    {
+      "original": "CLIs are the simplest case — there's usually no background process to\nmanage, no ports, no lifecycle. The skill focuses on **installation**,\n**representative invocations**, and **testing**.",
+      "zh": "CLI 是最简单的情况 — 通常没有后台进程\n管理，没有端口，没有生命周期。技能重点是**安装**，\n**代表性调用**和**测试**。",
+      "ok": true
+    },
+    {
+      "original": "## What matters",
+      "zh": "## 重要的是",
+      "ok": true
+    },
+    {
+      "original": "- **How to get the binary on `PATH`.** Installed globally? Run via\n  `npx`/`uv run`? Built to `./target/release/foo`? Be explicit.\n- **Two or three example invocations** that cover the main use cases.\n  Include expected output so a reader can tell it worked.\n- **Exit codes** if they're meaningful (e.g. linter returns 1 on findings).\n- **Stdin behavior** if the tool reads from stdin.",
+      "zh": "- **如何获取`PATH`上的二进制文件。**全局安装？运行通过\n  `npx`/`uv run`？构建为“./target/release/foo”？明确一点。\n- **两个或三个示例调用**，涵盖主要用例。\n  包括预期的输出，以便读者可以知道它有效。\n- **退出代码**，如果它们有意义（例如 linter 在发现结果时返回 1）。\n- **标准输入行为**（如果工具从标准输入读取）。",
+      "ok": true
+    },
+    {
+      "original": "## Example snippet",
+      "zh": "## 示例片段",
+      "ok": true
+    },
+    {
+      "original": "> ---\n> name: run-mytool\n> description: Build, install, and run mytool. Use when asked to run mytool, test it, or verify it's installed correctly.\n> ---\n>\n> ## Setup\n>\n> ```bash\n> pip install -e .\n> ```\n>\n> This puts `mytool` on PATH. Verify:\n>\n> ```bash\n> mytool --version\n> # → mytool 0.3.1\n> ```\n>\n> ## Run\n>\n> Process a single file:\n>\n> ```bash\n> mytool process input.json\n> # → Processed 42 records, wrote output.json\n> ```\n>\n> Read from stdin, write to stdout:\n>\n> ```bash\n> cat input.json | mytool process -\n> ```\n>\n> Lint a directory (exits non-zero on problems):\n>\n> ```bash\n> mytool lint ./src\n> echo $?  # 0 if clean, 1 if issues found\n> ```\n>\n> ## Test\n>\n> ```bash\n> pytest\n> ```",
+      "zh": "> ---\n> 名称：运行-mytool\n> 描述：构建、安装和运行 mytool。当要求运行 mytool、测试它或验证它是否正确安装时使用。\n> ---\n>\n> ## 设置\n>\n> ```bash\n> pip install -e 。\n> ```\n>\n> 这会将 `mytool` 放在 PATH 上。验证：\n>\n> ```bash\n> mytool --版本\n> # → mytool 0.3.1\n> ```\n>\n> ## 运行\n>\n> 处理单个文件：\n>\n> ```bash\n> mytool 处理 input.json\n> # → 处理了42条记录，写入output.json\n> ```\n>\n> 从 stdin 读取，写入 stdout：\n>\n> ```bash\n> 猫输入.json |我的工具进程-\n> ```\n>\n> Lint 目录（出现问题时退出非零）：\n>\n> ```bash\n> mytool lint ./src\n> 回声 $?  # 0 如果干净，1 如果发现问题\n> ```\n>\n> ## 测试\n>\n> ```bash\n> py测试\n> ```",
+      "ok": true
+    },
+    {
+      "original": "## Keep it short",
+      "zh": "## 保持简短",
+      "ok": true
+    },
+    {
+      "original": "A CLI's run skill can be very compact. Don't pad it with every flag —\nthe `--help` output covers that. Just show enough that an agent can\n(a) build it, (b) confirm it works, (c) run the tests.",
+      "zh": "CLI 的运行技巧可以非常紧凑。不要用每个标志来填充它 -\n`--help` 输出涵盖了这一点。只需展示足够的信息即可让代理商可以\n(a) 构建它，(b) 确认它有效，(c) 运行测试。",
+      "ok": true
+    }
+  ]
+}

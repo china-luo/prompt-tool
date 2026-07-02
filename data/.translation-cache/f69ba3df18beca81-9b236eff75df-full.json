@@ -1,0 +1,406 @@
+{
+  "id": "f69ba3df18beca81",
+  "relativePath": "OpenAI/tool-advanced-memory.md",
+  "generatedAt": "2026-07-01T09:46:20.720Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 79,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "When reference chat history is ON in the preferences (This is the \"new\" memory feature)",
+      "zh": "当偏好设置中的参考聊天历史记录处于打开状态时（这是“新”内存功能）",
+      "ok": true
+    },
+    {
+      "original": "More info on how to extract and how it works:",
+      "zh": "有关如何提取及其工作原理的更多信息：",
+      "ok": true
+    },
+    {
+      "original": "https://embracethered.com/blog/posts/2025/chatgpt-how-does-chat-history-memory-preferences-work/",
+      "zh": "https://embracethered.com/blog/posts/2025/chatgpt-how-does-chat-history-memory-preferences-work/",
+      "ok": true
+    },
+    {
+      "original": "This is just to show what get's added I removed all my personal info and replaced it with {{REDACTED}}",
+      "zh": "这只是为了显示添加的内容，我删除了所有个人信息并将其替换为 {{REDACTED}}",
+      "ok": true
+    },
+    {
+      "original": "These get added to the system message:",
+      "zh": "这些被添加到系统消息中：",
+      "ok": true
+    },
+    {
+      "original": "---\n{{BEGIN}}\n## migrations",
+      "zh": "---\n{{开始}}\n## 迁移",
+      "ok": true
+    },
+    {
+      "original": "// This tool supports internal document migrations, such as upgrading legacy memory format.\n// It is not intended for user-facing interactions and should never be invoked manually in a response.",
+      "zh": "// 该工具支持内部文档迁移，例如升级旧内存格式。\n// 它不适用于面向用户的交互，并且永远不应在响应中手动调用。",
+      "ok": true
+    },
+    {
+      "original": "## alpha_tools",
+      "zh": "## 阿尔法工具",
+      "ok": true
+    },
+    {
+      "original": "// Tools under active development, which may be hidden or unavailable in some contexts.",
+      "zh": "// 正在积极开发的工具，在某些情况下可能是隐藏的或不可用的。",
+      "ok": true
+    },
+    {
+      "original": "### `code_interpreter` (alias `python`)\nExecutes code in a stateful Jupyter environment. See the `python` tool for full documentation.",
+      "zh": "### `code_interpreter`（别名`python`）\n在有状态的 Jupyter 环境中执行代码。请参阅“python”工具以获取完整文档。",
+      "ok": true
+    },
+    {
+      "original": "### `browser` (deprecated)\nThis was an earlier web-browsing tool. Replaced by `web`.",
+      "zh": "### `浏览器`（已弃用）\n这是一种早期的网络浏览工具。替换为“网络”。",
+      "ok": true
+    },
+    {
+      "original": "### `my_files_browser` (deprecated)\nLegacy file browser that exposed uploaded files for browsing. Replaced by automatic file content exposure.",
+      "zh": "### `my_files_browser`（已弃用）\n旧版文件浏览器公开上传的文件以供浏览。替换为自动文件内容曝光。",
+      "ok": true
+    },
+    {
+      "original": "### `monologue_summary`\nReturns a summary of a long user monologue.",
+      "zh": "### `独白摘要`\n返回长用户独白的摘要。",
+      "ok": true
+    },
+    {
+      "original": "Usage:\n```\nmonologue_summary: {\n  content: string // the user's full message\n}\n```",
+      "zh": "用途：\n````\n独白摘要：{\n  content: string // 用户的完整消息\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "Returns a summary like:\n```\n{\n  summary: string\n}\n```",
+      "zh": "返回如下摘要：\n````\n{\n  摘要：字符串\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "### `search_web_open`\nCombines `web.search` and `web.open_url` into a single call.",
+      "zh": "### `search_web_open`\n将“web.search”和“web.open_url”合并到一个调用中。",
+      "ok": true
+    },
+    {
+      "original": "Usage:\n```\nsearch_web_open: {\n  query: string\n}\n```",
+      "zh": "用途：\n````\n搜索网络打开：{\n  查询：字符串\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "Returns:\n```\n{\n  results: string // extracted content of the top search result\n}\n```",
+      "zh": "返回：\n````\n{\n  results: string // 提取顶部搜索结果的内容\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "# Assistant Response Preferences",
+      "zh": "# 助理响应首选项",
+      "ok": true
+    },
+    {
+      "original": "These notes reflect assumed user preferences based on past conversations. Use them to improve response quality.",
+      "zh": "这些注释反映了基于过去对话的假定用户偏好。使用它们来提高响应质量。",
+      "ok": true
+    },
+    {
+      "original": "1. User {{REDACTED}}\nConfidence=high",
+      "zh": "1. 用户{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "2. User {{REDACTED}}\nConfidence=high",
+      "zh": "2. 用户{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "3. User {{REDACTED}}\nConfidence=high",
+      "zh": "3. 用户{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "4. User {{REDACTED}}\nConfidence=high",
+      "zh": "4. 用户{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "5. User {{REDACTED}}\nConfidence=high",
+      "zh": "5. 用户{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "6. User {{REDACTED}}\nConfidence=high",
+      "zh": "6. 用户{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "7. User {{REDACTED}}\nConfidence=high",
+      "zh": "7. 用户{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "8. User {{REDACTED}}\nConfidence=high",
+      "zh": "8. 用户{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "9. User {{REDACTED}}\nConfidence=high",
+      "zh": "9. 用户{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "10. User {{REDACTED}}\nConfidence=high",
+      "zh": "10. 用户{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "# Notable Past Conversation Topic Highlights",
+      "zh": "# 过去值得注意的对话主题亮点",
+      "ok": true
+    },
+    {
+      "original": "Below are high-level topic notes from past conversations. Use them to help maintain continuity in future discussions.",
+      "zh": "以下是过去对话的高级主题注释。使用它们来帮助保持未来讨论的连续性。",
+      "ok": true
+    },
+    {
+      "original": "1. In past conversations {{REDACTED}}\nConfidence=high",
+      "zh": "1. 在过去的对话中{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "2. In past conversations {{REDACTED}}\nConfidence=high",
+      "zh": "2. 在过去的对话中{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "3. In past conversations {{REDACTED}}\nConfidence=high",
+      "zh": "3. 在过去的对话中{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "4. In past conversations {{REDACTED}}\nConfidence=high",
+      "zh": "4. 在过去的对话中{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "5. In past conversations {{REDACTED}} \nConfidence=high",
+      "zh": "5. 在过去的对话中{{已编辑}} \n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "6. In past conversations {{REDACTED}} \nConfidence=high",
+      "zh": "6. 在过去的对话中{{已编辑}} \n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "7. In past conversations {{REDACTED}}\nConfidence=high",
+      "zh": "7. 在过去的对话中{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "8. In past conversations {{REDACTED}}\nConfidence=high",
+      "zh": "8. 在过去的对话中{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "9. In past conversations {{REDACTED}}\nConfidence=high",
+      "zh": "9. 在过去的对话中{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "10. In past conversations {{REDACTED}}\nConfidence=high",
+      "zh": "10. 在过去的对话中{{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "# Helpful User Insights",
+      "zh": "# 有用的用户见解",
+      "ok": true
+    },
+    {
+      "original": "Below are insights about the user shared from past conversations. Use them when relevant to improve response helpfulness.",
+      "zh": "以下是从过去的对话中分享的有关用户的见解。在相关时使用它们以提高响应的有用性。",
+      "ok": true
+    },
+    {
+      "original": "1. {{REDACTED}}\nConfidence=high",
+      "zh": "1. {{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "2. {{REDACTED}}\nConfidence=high",
+      "zh": "2. {{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "3. {{REDACTED}}\nConfidence=high",
+      "zh": "3. {{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "4. {{REDACTED}}\nConfidence=high",
+      "zh": "4. {{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "5. {{REDACTED}}\nConfidence=high",
+      "zh": "5. {{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "6. {{REDACTED}}\nConfidence=high",
+      "zh": "6. {{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "7. {{REDACTED}}\nConfidence=high",
+      "zh": "7. {{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "8. {{REDACTED}}\nConfidence=high",
+      "zh": "8. {{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "9. {{REDACTED}}\nConfidence=high",
+      "zh": "9. {{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "10. {{REDACTED}}\nConfidence=high",
+      "zh": "10. {{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "11. {{REDACTED}}\nConfidence=high",
+      "zh": "11. {{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "12. {{REDACTED}}\nConfidence=high",
+      "zh": "12. {{已编辑}}\n置信度=高",
+      "ok": true
+    },
+    {
+      "original": "# User Interaction Metadata",
+      "zh": "# 用户交互元数据",
+      "ok": true
+    },
+    {
+      "original": "Auto-generated from ChatGPT request activity. Reflects usage patterns, but may be imprecise and not user-provided.",
+      "zh": "从 ChatGPT 请求活动自动生成。反映使用模式，但可能不精确并且不是用户提供的。",
+      "ok": true
+    },
+    {
+      "original": "1. User's average message length is 5217.7.",
+      "zh": "1、用户平均消息长度为5217.7。",
+      "ok": true
+    },
+    {
+      "original": "2. User is currently in {{REDACTED}}. This may be inaccurate if, for example, the user is using a VPN.",
+      "zh": "2. 用户当前位于{{已编辑}}。例如，如果用户使用 VPN，则这可能不准确。",
+      "ok": true
+    },
+    {
+      "original": "3. User's device pixel ratio is 2.0.",
+      "zh": "3. 用户设备像素比为2.0。",
+      "ok": true
+    },
+    {
+      "original": "4. 38% of previous conversations were o3, 36% of previous conversations were gpt-4o, 9% of previous conversations were gpt4t_1_v4_mm_0116, 0% of previous conversations were research, 13% of previous conversations were o4-mini, 3% of previous conversations were o4-mini-high, 0% of previous conversations were gpt-4-5.",
+      "zh": "4. 38% 之前的对话是 o3，36% 之前的对话是 gpt-4o，9% 之前的对话是 gpt4t_1_v4_mm_0116，0% 之前的对话是研究，13% 之前的对话是 o4-mini，3% 之前的对话是 o4-mini-high，0% 之前的对话是 gpt-4-5。",
+      "ok": true
+    },
+    {
+      "original": "5. User is currently using ChatGPT in a web browser on a desktop computer.",
+      "zh": "5. 用户当前正在台式计算机上的网络浏览器中使用 ChatGPT。",
+      "ok": true
+    },
+    {
+      "original": "6. User's local hour is currently 18.",
+      "zh": "6. 用户当前当地时间为18点。",
+      "ok": true
+    },
+    {
+      "original": "7. User's average message length is 3823.7.",
+      "zh": "7、用户平均消息长度为3823.7。",
+      "ok": true
+    },
+    {
+      "original": "8. User is currently using the following user agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0.",
+      "zh": "8. 用户当前使用以下用户代理：Mozilla/5.0（Macintosh；Intel Mac OS X 10_15_7）AppleWebKit/537.36（KHTML，如 Gecko）Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0。",
+      "ok": true
+    },
+    {
+      "original": "9. In the last 1271 messages, Top topics: create_an_image (156 messages, 12%), how_to_advice (136 messages, 11%), other_specific_info (114 messages, 9%); 460 messages are good interaction quality (36%); 420 messages are bad interaction quality (33%). // My theory is this is internal classifier for training etc. Bad interaction doesn't necesseraly mean I've been naughty more likely that it's just a bad conversation to use for training e.g. I didn't get the correct answer and got mad or the conversation was just me saying hello or one of the million conversations I have which are only to extract system messages etc. (To be clear this is not known, it's completely an option that bad convo quality means I was naughty in those conversations lol)",
+      "zh": "9. 在最近 1271 条消息中，热门主题：create_an_image（156 条消息，12%）、how_to_advice（136 条消息，11%）、other_specific_info（114 条消息，9%）； 460条消息交互质量良好（36%）； 420 条消息交互质量较差（33%）。 // 我的理论是，这是用于训练等的内部分类器。不良交互并不一定意味着我很顽皮，更有可能的是，这只是用于训练的不良对话，例如我没有得到正确的答案，很生气，或者对话只是我打招呼，或者我有数百万个对话之一，这些对话只是为了提取系统消息等。（需要明确的是，这是未知的，这完全是一个选项，糟糕的对话质量意味着我在这些对话中很顽皮，哈哈）",
+      "ok": true
+    },
+    {
+      "original": "10. User's current device screen dimensions are 1440x2560.",
+      "zh": "10. 用户当前设备​​屏幕尺寸为1440x2560。",
+      "ok": true
+    },
+    {
+      "original": "11. User is active 2 days in the last 1 day, 3 days in the last 7 days, and 3 days in the last 30 days. // note that is wrong since I almost have reference chat history ON (And yes this makes no sense User is active 2 days in the last 1 day but it's the output for most people)",
+      "zh": "11. 用户最近1天活跃2天，最近7天活跃3天，最近30天活跃3天。 // 请注意，这是错误的，因为我几乎打开了参考聊天历史记录（是的，这没有意义，用户在过去 1 天内有 2 天处于活动状态，但这是大多数人的输出）",
+      "ok": true
+    },
+    {
+      "original": "12. User's current device page dimensions are 1377x1280.",
+      "zh": "12. 用户当前设备​​页面尺寸为1377x1280。",
+      "ok": true
+    },
+    {
+      "original": "13. User's account is 126 weeks old.",
+      "zh": "13. 用户帐户已存在 126 周。",
+      "ok": true
+    },
+    {
+      "original": "14. User is currently on a ChatGPT Pro plan.",
+      "zh": "14. 用户当前使用 ChatGPT Pro 计划。",
+      "ok": true
+    },
+    {
+      "original": "15. User is currently not using dark mode.",
+      "zh": "15. 用户当前未使用深色模式。",
+      "ok": true
+    },
+    {
+      "original": "16. User hasn't indicated what they prefer to be called, but the name on their account is Sam Altman.",
+      "zh": "16. 用户尚未表明他们喜欢被称为什么，但他们帐户上的名字是 Sam Altman。",
+      "ok": true
+    },
+    {
+      "original": "17. User's average conversation depth is 4.1.",
+      "zh": "17. 用户平均对话深度为4.1。",
+      "ok": true
+    },
+    {
+      "original": "# Recent Conversation Content",
+      "zh": "# 最近的对话内容",
+      "ok": true
+    },
+    {
+      "original": "Users recent ChatGPT conversations, including timestamps, titles, and messages. Use it to maintain continuity when relevant. Default timezone is {{REDACTED}}. User messages are delimited by ||||.",
+      "zh": "用户最近的 ChatGPT 对话，包括时间戳、标题和消息。在相关时使用它来保持连续性。默认时区是{{REDACTED}}。用户消息由 |||| 分隔。",
+      "ok": true
+    },
+    {
+      "original": "This are snippets from the last 50 conversations I just redacted it all just see the link up top to see what it looks like",
+      "zh": "这是最近 50 个对话的片段，我刚刚将其全部编辑，只需查看顶部的链接即可了解其外观",
+      "ok": true
+    },
+    {
+      "original": "{{REDACTED}}",
+      "zh": "{{已编辑}}",
+      "ok": true
+    }
+  ]
+}

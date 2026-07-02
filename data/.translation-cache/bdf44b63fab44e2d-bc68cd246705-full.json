@@ -1,0 +1,171 @@
+{
+  "id": "bdf44b63fab44e2d",
+  "relativePath": "Anthropic/Claude Code/glob-tool.md",
+  "generatedAt": "2026-07-01T09:34:49.217Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 32,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "# The `Glob` Tool",
+      "zh": "# `Glob` 工具",
+      "ok": true
+    },
+    {
+      "original": "A fast **filename / path matching** tool. It answers the question: *\"Which files exist whose\npath matches this pattern?\"*",
+      "zh": "一个快速的**文件名/路径匹配**工具。它回答了以下问题：*“存在哪些文件\n路径与此模式匹配吗？\"*",
+      "ok": true
+    },
+    {
+      "original": "Glob searches file **names and paths** — it does **not** look inside files. (Its sibling,\n`Grep`, searches file **contents**. See `grep-tool.md`.)",
+      "zh": "Glob 搜索文件**名称和路径** — 它**不**查看文件内部。 （它的兄弟姐妹，\n`Grep`，搜索文件**内容**。请参阅“grep-tool.md”。）",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "## When to use it",
+      "zh": "## 何时使用",
+      "ok": true
+    },
+    {
+      "original": "- Locating files by name or extension (e.g. all `*.test.ts` files).\n- Discovering the structure/layout of a codebase before diving in.\n- Finding the most recently modified files matching a pattern.\n- Any time you'd reach for `find . -name ...` or shell globbing in a terminal.",
+      "zh": "- 按名称或扩展名查找文件（例如所有“*.test.ts”文件）。\n- 在深入研究之前发现代码库的结构/布局。\n- 查找与模式匹配的最近修改的文件。\n- 任何时候你会伸手去寻找“find”。 -name ...` 或终端中的 shell 通配符。",
+      "ok": true
+    },
+    {
+      "original": "> **Important:** Prefer this tool over running `find` or `ls` through the Bash tool for file\n> discovery. It is faster, works on any codebase size, and returns results sorted usefully.",
+      "zh": "> **重要：** 优先使用此工具，而不是通过 Bash 工具运行“find”或“ls”来查找文件\n> 发现。它速度更快，适用于任何代码库大小，并返回有用排序的结果。",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "## Parameters",
+      "zh": "＃＃ 参数",
+      "ok": true
+    },
+    {
+      "original": "| Parameter | Type   | Required | Description                                                                                  |\n| --------- | ------ | -------- | -------------------------------------------------------------------------------------------- |\n| `pattern` | string | **Yes**  | The glob pattern to match files against (e.g. `**/*.js`, `src/**/*.{ts,tsx}`).               |\n| `path`    | string | No       | The directory to search within. Defaults to the current working directory. **Do not** pass `undefined` or `null` to mean \"current directory\" — simply omit the parameter. |",
+      "zh": "|参数|类型 |必填 |描述 |\n| ---------| ------ | -------- | -------------------------------------------------------------------------------------------------------- |\n| `模式` |字符串| **是** |用于匹配文件的 glob 模式（例如 `**/*.js`、`src/**/*.{ts,tsx}`）。               |\n| `路径` |字符串|没有 |要在其中搜索的目录。默认为当前工作目录。 **不要**传递 `undefined` 或 `null` 来表示“当前目录”——只需省略该参数即可。 |",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "## Glob pattern syntax",
+      "zh": "## Glob 模式语法",
+      "ok": true
+    },
+    {
+      "original": "Glob patterns are simpler than regular expressions. The most useful tokens:",
+      "zh": "Glob 模式比正则表达式更简单。最有用的代币：",
+      "ok": true
+    },
+    {
+      "original": "| Token       | Meaning                                                                 |\n| ----------- | ----------------------------------------------------------------------- |\n| `*`         | Matches any run of characters **except** a path separator (`/`).        |\n| `**`        | Matches any number of directories, recursively (including zero).        |\n| `?`         | Matches exactly one character.                                          |\n| `{a,b,c}`   | Matches any of the comma-separated alternatives (brace expansion).      |\n| `[abc]`     | Matches one character from the set.                                     |",
+      "zh": "|代币|意义|\n| ----------- | ----------------------------------------------------------------------------------- |\n| `*` |匹配除路径分隔符 (`/`) 之外的任意字符串。        |\n| `**` |递归地匹配任意数量的目录（包括零）。        |\n| `？` |恰好匹配一个字符。                                          |\n| `{a,b,c}` |匹配任何逗号分隔的替代项（大括号扩展）。      |\n| `[abc]` |匹配集合中的一个字符。                                     |",
+      "ok": true
+    },
+    {
+      "original": "### Common patterns",
+      "zh": "### 常见模式",
+      "ok": true
+    },
+    {
+      "original": "- `*.md` — every Markdown file in the search directory (top level only).\n- `**/*.md` — every Markdown file at **any** depth.\n- `src/**/*.js` — all `.js` files anywhere under `src/`.\n- `**/*.{ts,tsx}` — all TypeScript and TSX files, recursively.\n- `**/test_*.py` — all Python files beginning with `test_`, at any depth.\n- `?[0-9]*.log` — log files whose second character is a digit.",
+      "zh": "- `*.md` — 搜索目录中的每个 Markdown 文件（仅限顶层）。\n- `**/*.md` — **任何**深度的每个 Markdown 文件。\n- `src/**/*.js` — `src/` 下任意位置的所有 `.js` 文件。\n- `**/*.{ts,tsx}` — 所有 TypeScript 和 TSX 文件，递归。\n- `**/test_*.py` — 所有以 `test_` 开头的任意深度的 Python 文件。\n- `?[0-9]*.log` — 第二个字符是数字的日志文件。",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "## Output",
+      "zh": "＃＃ 输出",
+      "ok": true
+    },
+    {
+      "original": "- Returns a **list of matching file paths**.\n- Results are **sorted by modification time**, most recently modified first. This is handy:\n  the file you just touched (or the one most relevant to recent work) tends to appear at the\n  top.\n- If nothing matches, an empty result is returned (not an error).",
+      "zh": "- 返回**匹配文件路径的列表**。\n- 结果**按修改时间**排序，最近修改的排在最前面。这很方便：\n  您刚刚接触过的文件（或与最近工作最相关的文件）往往会出现在\n  顶部。\n- 如果没有匹配的内容，则返回空结果（不是错误）。",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "## Examples",
+      "zh": "## 示例",
+      "ok": true
+    },
+    {
+      "original": "**All TypeScript files anywhere in the project:**\n```json\n{ \"pattern\": \"**/*.ts\" }\n```",
+      "zh": "**项目中任意位置的所有 TypeScript 文件：**\n```json\n{“模式”：“**/*.ts”}\n````",
+      "ok": true
+    },
+    {
+      "original": "**Test files under a specific directory:**\n```json\n{\n  \"pattern\": \"**/*.test.{ts,tsx}\",\n  \"path\": \"packages/web/src\"\n}\n```",
+      "zh": "**测试特定目录下的文件：**\n```json\n{\n  \"pattern\": \"**/*.test.{ts,tsx}\",\n  “路径”：“包/web/src”\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "**Config files at the repo root:**\n```json\n{ \"pattern\": \"*.{json,yml,yaml,toml}\" }\n```",
+      "zh": "**存储库根目录下的配置文件：**\n```json\n{“模式”：“*。{json，yml，yaml，toml}”}\n````",
+      "ok": true
+    },
+    {
+      "original": "**Every README, regardless of depth:**\n```json\n{ \"pattern\": \"**/README.md\" }\n```",
+      "zh": "**每个自述文件，无论深度如何：**\n```json\n{“模式”：“**/README.md”}\n````",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "## Glob vs. Grep — which one?",
+      "zh": "## Glob 与 Grep — 哪一个？",
+      "ok": true
+    },
+    {
+      "original": "| You want to…                                      | Use      |\n| ------------------------------------------------- | -------- |\n| Find files **named** a certain way                | `Glob`   |\n| Find files **containing** certain text            | `Grep`   |\n| List all `*.py` files                             | `Glob`   |\n| Find which `*.py` files call `requests.get`       | `Grep` (with `glob: \"*.py\"`) |\n| Understand directory layout                       | `Glob`   |\n| Read the matching lines of code                   | `Grep` (`output_mode: \"content\"`) |",
+      "zh": "|你想要…… |使用|\n| ------------------------------------------------- | -------- |\n|以某种方式查找 **命名** 的文件 | `全球` |\n|查找**包含**某些文本的文件| `Grep` |\n|列出所有 `*.py` 文件 | `全球` |\n|查找哪些 `*.py` 文件调用 `requests.get` | `Grep` （使用 `glob: \"*.py\"`）|\n|了解目录布局 | `全球` |\n|阅读匹配的代码行 | `Grep` (`output_mode: \"内容\"`) |",
+      "ok": true
+    },
+    {
+      "original": "A common workflow is to **chain them**: use `Glob` to narrow to a set of candidate files,\nthen `Grep` to search their contents. Note that `Grep` also accepts its own `glob` parameter,\nso for simple \"search these file types\" cases you may not need a separate `Glob` call at all.",
+      "zh": "一个常见的工作流程是**链接它们**：使用 `Glob` 缩小到一组候选文件，\n然后使用 `Grep` 来搜索它们的内容。请注意，`Grep` 也接受它自己的 `glob` 参数，\n因此，对于简单的“搜索这些文件类型”的情况，您可能根本不需要单独的“Glob”调用。",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "## Tips & gotchas",
+      "zh": "## 提示和陷阱",
+      "ok": true
+    },
+    {
+      "original": "- **`*` does not cross directory boundaries; `**` does.** `src/*.js` matches files directly in\n  `src/`, while `src/**/*.js` matches `.js` files in `src/` and every subdirectory.\n- **Omit `path` for the whole project.** Don't pass an empty string or a placeholder — just\n  leave it out to search from the working directory.\n- **Sorted by recency.** Because results are ordered by modification time, `Glob` is a quick\n  way to answer \"what did I change most recently that matches X?\"\n- **For broad, open-ended searches** across many directories and naming conventions, consider\n  delegating to an exploration agent rather than issuing many individual `Glob` calls.",
+      "zh": "- **`*` 不跨越目录边界； `**` 确实如此。** `src/*.js` 直接匹配文件\n  `src/` ，而 `src/**/*.js` 匹配 `src/` 和每个子目录中的 `.js` 文件。\n- **省略整个项目的“path”。**不要传递空字符串或占位符 - 只是\n  将其保留以从工作目录中搜索。\n- **按新近度排序。** 因为结果是按修改时间排序的，所以 `Glob` 是一个快速的\n  回答“我最近更改了什么与 X 匹配？”的方法\n- **对于跨许多目录和命名约定的广泛、开放式搜索**，请考虑\n  委托给探索代理而不是发出许多单独的“Glob”调用。",
+      "ok": true
+    }
+  ]
+}

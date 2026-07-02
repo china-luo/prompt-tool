@@ -4,7 +4,6 @@ dist-pages/
 .playwright-cli/
 output/
 data/system_prompts_leaks/
-data/.translation-cache/
 
 *.log
 *.tmp

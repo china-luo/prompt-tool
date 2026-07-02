@@ -1,0 +1,101 @@
+{
+  "id": "9cdc6434a198bf66",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/debug.md",
+  "generatedAt": "2026-07-01T09:31:47.524Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 18,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "---\nname: debug\ndescription: Debug an issue in the current Claude Code session by enabling debug logging, reading logs, and suggesting fixes.\n---",
+      "zh": "---\n名称：调试\n描述：通过启用调试日志记录、读取日志和建议修复来调试当前 Claude Code 会话中的问题。\n---",
+      "ok": true
+    },
+    {
+      "original": "# Debug Skill",
+      "zh": "# 调试技巧",
+      "ok": true
+    },
+    {
+      "original": "Help the user debug an issue they're encountering in this current Claude Code session.",
+      "zh": "帮助用户调试他们在当前 Claude Code 会话中遇到的问题。",
+      "ok": true
+    },
+    {
+      "original": "## Debug Logging Just Enabled",
+      "zh": "## 调试日志记录刚刚启用",
+      "ok": true
+    },
+    {
+      "original": "Debug logging was OFF for this session until now. Nothing prior to this /debug invocation was captured.",
+      "zh": "到目前为止，此会话的调试日志记录处于关闭状态。在此 /debug 调用之前没有捕获任何内容。",
+      "ok": true
+    },
+    {
+      "original": "Tell the user that debug logging is now active at `{debug_log_path}`, ask them to reproduce the issue, then re-read the log. If they can't reproduce, they can also restart with `claude --debug` to capture logs from startup.",
+      "zh": "告诉用户调试日志记录现在在“{debug_log_path}”处处于活动状态，要求他们重现问题，然后重新读取日志。如果无法重现，还可以使用“claude --debug”重新启动以捕获启动日志。",
+      "ok": true
+    },
+    {
+      "original": "## Session Debug Log",
+      "zh": "## 会话调试日志",
+      "ok": true
+    },
+    {
+      "original": "The debug log for the current session is at: `{debug_log_path}`",
+      "zh": "当前会话的调试日志位于：“{debug_log_path}”",
+      "ok": true
+    },
+    {
+      "original": "No log file exists yet.",
+      "zh": "尚不存在日志文件。",
+      "ok": true
+    },
+    {
+      "original": "For additional context, grep for [ERROR] and [WARN] lines across the full file.",
+      "zh": "对于其他上下文，请 grep 查找整个文件中的 [ERROR] 和 [WARN] 行。",
+      "ok": true
+    },
+    {
+      "original": "## Daemon",
+      "zh": "## 守护进程",
+      "ok": true
+    },
+    {
+      "original": "No daemon lock or status file found — the background daemon does not appear to be running. If the issue involves background sessions or `claude agents`, the daemon log (if any) is at `{user_home}/.claude/daemon.log`.",
+      "zh": "未找到守护程序锁或状态文件 — 后台守护程序似乎未在运行。如果问题涉及后台会话或“claude 代理”，则守护程序日志（如果有）位于“{user_home}/.claude/daemon.log”。",
+      "ok": true
+    },
+    {
+      "original": "## Issue Description",
+      "zh": "## 问题描述",
+      "ok": true
+    },
+    {
+      "original": "The user did not describe a specific issue. Read the debug log and summarize any errors, warnings, or notable issues.",
+      "zh": "该用户没有描述具体问题。阅读调试日志并总结任何错误、警告或值得注意的问题。",
+      "ok": true
+    },
+    {
+      "original": "## Settings",
+      "zh": "＃＃ 设置",
+      "ok": true
+    },
+    {
+      "original": "Remember that settings are in:\n* user - {user_home}/.claude/settings.json\n* project - {working_directory}/.claude/settings.json\n* local - {working_directory}/.claude/settings.local.json",
+      "zh": "请记住，设置位于：\n* 用户 - {user_home}/.claude/settings.json\n* 项目 - {working_directory}/.claude/settings.json\n* 本地 - {working_directory}/.claude/settings.local.json",
+      "ok": true
+    },
+    {
+      "original": "## Instructions",
+      "zh": "＃＃ 指示",
+      "ok": true
+    },
+    {
+      "original": "1. Review the user's issue description\n2. The last 20 lines show the debug file format. Look for [ERROR] and [WARN] entries, stack traces, and failure patterns across the file\n3. Consider launching the claude-code-guide subagent to understand the relevant Claude Code features\n4. Explain what you found in plain language\n5. Suggest concrete fixes or next steps",
+      "zh": "1.查看用户的问题描述\n2. 最后 20 行显示调试文件格式。在文件中查找 [ERROR] 和 [WARN] 条目、堆栈跟踪和故障模式\n3.考虑启动claude-code-guide子代理来了解相关的Claude Code功能\n4. 用通俗易懂的语言解释你的发现\n5.提出具体的修复或后续步骤建议",
+      "ok": true
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "id": "821ebe3828abb955",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/run-skill-generator/examples/tui.md",
+  "generatedAt": "2026-07-01T09:31:04.744Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 14,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "# Example: TUI / interactive terminal app",
+      "zh": "# 示例：TUI / 交互式终端应用程序",
+      "ok": true
+    },
+    {
+      "original": "Interactive terminal apps (text editors, REPLs, curses-based UIs) can't\nbe driven directly by an agent's bash tool — they take over the terminal.\nThe skill must show how to wrap them in `tmux` so the agent can send\ninput, capture output, and take screenshots.",
+      "zh": "交互式终端应用程序（文本编辑器、REPL、基于curses的UI）不能\n由代理的 bash 工具直接驱动——它们接管终端。\n该技能必须展示如何将它们包装在“tmux”中，以便代理可以发送\n输入、捕获输出并截取屏幕截图。",
+      "ok": true
+    },
+    {
+      "original": "## The tmux pattern",
+      "zh": "## tmux 模式",
+      "ok": true
+    },
+    {
+      "original": "This is the standard approach:",
+      "zh": "这是标准方法：",
+      "ok": true
+    },
+    {
+      "original": "1. Start the TUI inside a detached tmux session\n2. Send keystrokes with `tmux send-keys`\n3. Read screen contents with `tmux capture-pane`\n4. Clean up with `tmux kill-session`",
+      "zh": "1. 在分离的 tmux 会话中启动 TUI\n2. 使用`tmux send-keys`发送击键\n3. 使用`tmux capture-pane`读取屏幕内容\n4. 使用 `tmux Kill-Session` 进行清理",
+      "ok": true
+    },
+    {
+      "original": "The skill's `SKILL.md` should present this as the primary way to drive\nthe app. A small `driver.sh` that wraps the launch+attach sequence can\nlive in the skill directory, but for most TUIs the raw tmux commands in\nthe skill body are enough.",
+      "zh": "该技能的“SKILL.md”应将其呈现为主要的驾驶方式\n该应用程序。包装启动+附加序列的小“driver.sh”可以\n位于技能目录中，但对于大多数 TUI，原始 tmux 命令位于\n技能本体就够了。",
+      "ok": true
+    },
+    {
+      "original": "## Example snippet",
+      "zh": "## 示例片段",
+      "ok": true
+    },
+    {
+      "original": "> ## Run (interactive, for agents)\n>\n> Start the TUI inside tmux:\n>\n> ```bash\n> tmux new-session -d -s app -x 120 -y 40 './myapp'\n> ```\n>\n> Poll until the ready marker appears (faster + more reliable than a fixed sleep —\n> returns the instant the app is up, fails loudly if it isn't):\n>\n> ```bash\n> timeout 10 bash -c 'until tmux capture-pane -t app -p | grep -q \"Ready\"; do sleep 0.2; done'\n> tmux capture-pane -t app -p\n> ```\n>\n> Send input (this example navigates to the Settings screen and toggles\n> an option):\n>\n> ```bash\n> tmux send-keys -t app 's'\n> timeout 5 bash -c 'until tmux capture-pane -t app -p | grep -q \"Settings\"; do sleep 0.2; done'\n> tmux send-keys -t app 'Down' 'Down' 'Space'  # navigate + toggle\n> timeout 5 bash -c 'until tmux capture-pane -t app -p | grep -qF \"[x]\"; do sleep 0.2; done'\n> tmux capture-pane -t app -p\n> ```\n>\n> If you find yourself writing more than a couple of these poll lines, pull\n> them into a `wait_for()` helper in a `driver.sh` next to the skill.\n>\n> Quit:\n>\n> ```bash\n> tmux send-keys -t app 'q'\n> tmux kill-session -t app 2>/dev/null || true\n> ```\n>\n> ### Key reference\n>\n> | Key | Action |\n> |---|---|\n> | `j` / `k` or `Down` / `Up` | Navigate lis",
+      "zh": "> ## 运行（交互式，针对代理）\n>\n> 在 tmux 内启动 TUI：\n>\n> ```bash\n> tmux 新会话 -d -s 应用程序 -x 120 -y 40 './myapp'\n> ```\n>\n> 轮询直到出现就绪标记（比固定睡眠更快+更可靠 —\n> 在应用程序启动时立即返回，如果没有启动，则会失败）：\n>\n> ```bash\n> 超时 10 bash -c ' 直到 tmux capture-pane -t app -p | grep -q“准备好”；睡0.2；完成'\n> tmux 捕获窗格 -t 应用程序 -p\n> ```\n>\n> 发送输入（此示例导航至“设置”屏幕并切换\n> 一个选项）：\n>\n> ```bash\n> tmux 发送键 -t 应用程序的'\n> 超时 5 bash -c ' 直到 tmux capture-pane -t app -p | grep -q“设置”；睡0.2；完成'\n> tmux send-keys -t app 'Down' 'Down' 'Space' # 导航 + 切换\n> 超时 5 bash -c ' 直到 tmux capture-pane -t app -p | grep -qF“[x]”；睡0.2；完成'\n> tmux 捕获窗格 -t 应用程序 -p\n> ```\n>\n> 如果您发现自己写了不止几行这样的民意调查，请拉\n> 将它们放入技能旁边的“driver.sh”中的“wait_for()”助手中。\n>\n> 退出：\n>\n> ```bash\n> tmux 发送键 -t 应用程序 'q'\n> tmux Kill-session -t app 2>/dev/null ||真实\n> ```\n>\n> ### 关键参考\n>\n> |关键|行动|\n> |---|---|\n> | `j` / `k` 或 `向下` / `向上` |导航 lis",
+      "ok": true
+    },
+    {
+      "original": "t |\n> | `Enter` | Select |\n> | `s` | Settings |\n> | `q` | Quit |",
+      "zh": "t |\n> | `输入` |选择 |\n> | `s` |设置 |\n> | `q` |退出 |",
+      "ok": true
+    },
+    {
+      "original": "## Details worth documenting",
+      "zh": "## 值得记录的细节",
+      "ok": true
+    },
+    {
+      "original": "- **Terminal size.** Some TUIs break or hide content at small widths.\n  Specify a known-good size in the `tmux new-session -x -y` args.\n- **Startup time.** Poll for a ready marker (`until tmux capture-pane | grep -q X`)\n  rather than a fixed `sleep N` — returns the instant the app is up, and fails\n  usefully when it never does. Say what string means ready.\n- **Keybinding reference.** A table of the main keys. This is the \"API\"\n  of a TUI — an agent needs it to drive the app.\n- **Exit cleanly.** Show the quit keystroke *and* `tmux kill-session` as\n  a fallback.\n- **Color/unicode quirks.** If `capture-pane` output is hard to read,\n  note flags that help (`-e` for escape sequences, `-J` to join wrapped\n  lines).",
+      "zh": "- **终端尺寸。** 某些 TUI 会破坏或隐藏小宽度的内容。\n  在“tmux new-session -x -y”参数中指定已知良好的大小。\n- **启动时间。** 轮询就绪标记（`until tmux capture-pane | grep -q X`）\n  而不是固定的“sleep N”——应用程序启动后立即返回，然后失败\n  当它从不这样做时很有用。说出什么字符串表示准备就绪。\n- **键绑定参考。** 主键表。这是“API”\n  TUI 的一部分 — 代理需要它来驱动应用程序。\n- **干净地退出。** 将退出击键 * 和 * `tmux Kill-session` 显示为\n  后备。\n- **颜色/unicode 怪癖。** 如果“capture-pane”输出难以阅读，\n  注意有助于的标志（“-e”用于转义序列，“-J”用于连接包装\n  线）。",
+      "ok": true
+    },
+    {
+      "original": "## Also document the direct invocation",
+      "zh": "## 还记录直接调用",
+      "ok": true
+    },
+    {
+      "original": "For a human running the app interactively, tmux is overkill. Include\nthe one-liner too:",
+      "zh": "对于以交互方式运行应用程序的人来说，tmux 太过分了。包括\n也是单行：",
+      "ok": true
+    },
+    {
+      "original": "> ## Run (direct, for humans)\n>\n> ```bash\n> ./myapp\n> ```\n>\n> Press `q` to quit.",
+      "zh": "> ## 运行（直接，对于人类）\n>\n> ```bash\n> ./myapp\n> ```\n>\n> 按“q”退出。",
+      "ok": true
+    }
+  ]
+}

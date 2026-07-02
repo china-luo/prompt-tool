@@ -1,0 +1,36 @@
+{
+  "id": "3569c5ad9cb79964",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/init.md",
+  "generatedAt": "2026-07-01T09:29:31.789Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 5,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "Please analyze this codebase and create a CLAUDE.md file, which will be given to future instances of Claude Code to operate in this repository.",
+      "zh": "请分析此代码库并创建一个 CLAUDE.md 文件，该文件将提供给 Claude Code 的未来实例在该存储库中运行。",
+      "ok": true
+    },
+    {
+      "original": "What to add:\n1. Commands that will be commonly used, such as how to build, lint, and run tests. Include the necessary commands to develop in this codebase, such as how to run a single test.\n2. High-level code architecture and structure so that future instances can be productive more quickly. Focus on the \"big picture\" architecture that requires reading multiple files to understand.",
+      "zh": "添加内容：\n1. 常用命令，例如如何构建、lint 和运行测试。在此代码库中包含开发所需的命令，例如如何运行单个测试。\n2. 高级代码架构和结构，使未来的实例能够更快地提高生产力。专注于需要阅读多个文件才能理解的“大局”架构。",
+      "ok": true
+    },
+    {
+      "original": "Usage notes:\n- If there's already a CLAUDE.md, suggest improvements to it.\n- When you make the initial CLAUDE.md, do not repeat yourself and do not include obvious instructions like \"Provide helpful error messages to users\", \"Write unit tests for all new utilities\", \"Never include sensitive information (API keys, tokens) in code or commits\".\n- Avoid listing every component or file structure that can be easily discovered.\n- Don't include generic development practices.\n- If there are Cursor rules (in .cursor/rules/ or .cursorrules) or Copilot rules (in .github/copilot-instructions.md), make sure to include the important parts.\n- If there is a README.md, make sure to include the important parts.\n- Do not make up information such as \"Common Development Tasks\", \"Tips for Development\", \"Support and Documentation\" unless this is expressly included in other files that you read.\n- Be sure to prefix the file with the following text:",
+      "zh": "使用注意事项：\n- 如果已经有 CLAUDE.md，请提出改进建议。\n- 当您制作初始 CLAUDE.md 时，不要重复自己，也不要包含明显的说明，例如“向用户提供有用的错误消息”、“为所有新实用程序编写单元测试”、“切勿在代码或提交中包含敏感信息（API 密钥、令牌）”。\n- 避免列出每个容易发现的组件或文件结构。\n- 不包括通用开发实践。\n- 如果有 Cursor 规则（在 .cursor/rules/ 或 .cursorrules 中）或 Copilot 规则（在 .github/copilot-instructions.md 中），请确保包含重要部分。\n- 如果有 README.md，请确保包含重要部分。\n- 请勿编造“常见开发任务”、“开发提示”、“支持和文档”等信息，除非您阅读的其他文件中明确包含这些信息。\n- 请务必在文件前添加以下文本前缀：",
+      "ok": true
+    },
+    {
+      "original": "```\n# CLAUDE.md",
+      "zh": "````\n# 克劳德.md",
+      "ok": true
+    },
+    {
+      "original": "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.\n```",
+      "zh": "此文件为 Claude Code (claude.ai/code) 提供使用此存储库中的代码时的指导。\n````",
+      "ok": true
+    }
+  ]
+}

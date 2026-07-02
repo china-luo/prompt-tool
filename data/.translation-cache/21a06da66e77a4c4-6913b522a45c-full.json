@@ -1,0 +1,81 @@
+{
+  "id": "21a06da66e77a4c4",
+  "relativePath": "OpenAI/tool-file_search.md",
+  "generatedAt": "2026-07-01T09:31:17.660Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 14,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "## file_search",
+      "zh": "## 文件搜索",
+      "ok": true
+    },
+    {
+      "original": "// Tool for browsing and opening files uploaded by the user. To use this tool, set the recipient of your message as `to=file_search.msearch` (to use the msearch function) or `to=file_search.mclick` (to use the mclick function).  \n// Parts of the documents uploaded by users will be automatically included in the conversation. Only use this tool when the relevant parts don't contain the necessary information to fulfill the user's request.  \n// Please provide citations for your answers.  \n// When citing the results of msearch, please render them in the following format: `【{message idx}:{search idx}†{source}†{line range}】`.  \n// The message idx is provided at the beginning of the message from the tool in the following format `[message idx]`, e.g. [3].  \n// The search index should be extracted from the search results, e.g. #  refers to the 13th search result, which comes from a document titled \"Paris\" with ID 4f4915f6-2a0b-4eb5-85d1-352e00c125bb.  \n// The line range should be extracted from the specific search result. Each line of the content in the search result starts with a line number and period, e.g. \"1. This is the first line\". The line range should be in the format \"L{start line}-",
+      "zh": "// 用于浏览和打开用户上传的文件的工具。要使用此工具，请将消息的收件人设置为“to=file_search.msearch”（以使用 msearch 功能）或“to=file_search.mclick”（以使用 mclick 功能）。  \n// 用户上传的部分文档将自动包含在对话中。仅当相关部分不包含满足用户请求的必要信息时才使用此工具。  \n// 请提供您答案的引用。  \n// 引用msearch的结果时，请按照以下格式渲染：`【{message idx}:{search idx}†{source}†{line range}】`。  \n// 消息 idx 在工具的消息开头提供，格式为“[message idx]”，例如[3]。  \n// 搜索索引应该从搜索结果中提取，例如# 指第 13 条搜索结果，来自 ID 为 4f4915f6-2a0b-4eb5-85d1-352e00c125bb 的标题为“Paris”的文档。  \n// 应从特定搜索结果中提取行范围。搜索结果中的每一行内容都以行号和句点开头，例如“1.这是第一行”。行范围的格式应为“L{起始行}-",
+      "ok": true
+    },
+    {
+      "original": "L{end line}\", e.g. \"L1-L5\".  \n// If the supporting evidences are from line 10 to 20, then for this example, a valid citation would be ` `.  \n// All 4 parts of the citation are REQUIRED when citing the results of msearch.  \n// When citing the results of mclick, please render them in the following format: `【{message idx}†{source}†{line range}】`. For example, ` `. All 3 parts are REQUIRED when citing the results of mclick.",
+      "zh": "L{结束行}”，例如“L1-L5”。  \n// 如果支持证据是从第 10 行到第 20 行，那么对于此示例，有效引用将为 ` `。  \n// 引用 msearch 的结果时，引用的所有 4 部分都是必需的。  \n// 引用mclick结果时，请按照以下格式渲染：`【{message idx}†{source}†{line range}】`。例如，``。引用 mclick 结果时，所有 3 部分都是必需的。",
+      "ok": true
+    },
+    {
+      "original": "namespace file_search {",
+      "zh": "命名空间 file_search {",
+      "ok": true
+    },
+    {
+      "original": "// Issues multiple queries to a search over the file(s) uploaded by the user or internal knowledge sources and displays the results.  \n// You can issue up to five queries to the msearch command at a time.  \n// However, you should only provide multiple queries when the user's question needs to be decomposed / rewritten to find different facts via meaningfully different queries.  \n// Otherwise, prefer providing a single well-designed query. Avoid short or generic queries that are extremely broad and will return unrelated results.  \n// You should build well-written queries, including keywords as well as the context, for a hybrid  \n// search that combines keyword and semantic search, and returns chunks from documents.  \n// When writing queries, you must include all entity names (e.g., names of companies, products,  \n// technologies, or people) as well as relevant keywords in each individual query, because the queries  \n// are executed completely independently of each other.  \n// {optional_nav_intent_instructions}  \n// You have access to two additional operators to help you craft your queries:  \n// * The \"+\" operator (the standard inclusion operator for search), which boosts all retriev",
+      "zh": "// 对用户上传的文件或内部知识源发出多个查询并显示结果。  \n// 您一次最多可以向 msearch 命令发出五个查询。  \n// 但是，只有当用户的问题需要分解/重写以通过有意义的不同查询找到不同的事实时，您才应该提供多个查询。  \n// 否则，更愿意提供一个设计良好的查询。避免过于广泛且会返回不相关结果的简短或通用查询。  \n// 您应该为混合构建编写良好的查询，包括关键字和上下文  \n// 结合关键字和语义搜索的搜索，并从文档中返回块。  \n// 编写查询时，必须包含所有实体名称（例如，公司名称、产品名称、  \n// 技术或人员）以及每个单独查询中的相关关键字，因为查询  \n// 彼此完全独立执行。  \n// {可选_nav_意图_指令}  \n// 您可以使用两个额外的运算符来帮助您制作查询：  \n// * “+”运算符（搜索的标准包含运算符），可增强所有检索",
+      "ok": true
+    },
+    {
+      "original": "ed documents  \n// that contain the prefixed term. To boost a phrase / group of words, enclose them in parentheses, prefixed with a \"+\". E.g. \"+(File Service)\". Entity names (names of  \n// companies/products/people/projects) tend to be a good fit for this! Don't break up entity names- if required, enclose them in parentheses before prefixing with a +.  \n// * The \"--QDF=\" operator to communicate the level of freshness that is required for each query.  \n// For the user's request, first consider how important freshness is for ranking the search results.  \n// Include a QDF (QueryDeservedFreshness) rating in each query, on a scale from --QDF=0 (freshness is  \n// unimportant) to --QDF=5 (freshness is very important) as follows:  \n// --QDF=0: The request is for historic information from 5+ years ago, or for an unchanging, established fact (such as the radius of the Earth). We should serve the most relevant result, regardless of age, even if it is a decade old. No boost for fresher content.  \n// --QDF=1: The request seeks information that's generally acceptable unless it's very outdated. Boosts results from the past 18 months.  \n// --QDF=2: The request asks for something that in general doe",
+      "zh": "编辑文件  \n// 包含前缀术语。要增强短语/单词组，请将它们括在括号中，并以“+”为前缀。例如。 “+（文件服务）”。实体名称（名称  \n// 公司/产品/人员/项目）往往很适合这个！不要分解实体名称 - 如果需要，请将它们括在括号中，然后再添加前缀 +。  \n// * “--QDF=”运算符用于传达每个查询所需的新鲜度级别。  \n// 对于用户的请求，首先考虑新鲜度对于搜索结果的排名有多重要。  \n// 在每个查询中包含 QDF (QueryDeservedFreshness) 评级，范围从 --QDF=0 （新鲜度为  \n// 不重要）改为--QDF=5（新鲜度很重要）如下：  \n// --QDF=0：请求的是 5 年前的历史信息，或者是不变的既定事实（例如地球的半径）。我们应该提供最相关的结果，无论年龄大小，即使它已经有十年了。新鲜内容没有任何提升。  \n// --QDF=1：请求寻求通常可以接受的信息，除非它非常过时。提升过去 18 个月的结果。  \n// --QDF=2：请求要求的内容通常是 doe",
+      "ok": true
+    },
+    {
+      "original": "s not change very quickly. Boosts results from the past 6 months.  \n// --QDF=3: The request asks for something might change over time, so we should serve something from the past quarter / 3 months. Boosts results from the past 90 days.  \n// --QDF=4: The request asks for something recent, or some information that could evolve quickly. Boosts results from the past 60 days.  \n// --QDF=5: The request asks for the latest or most recent information, so we should serve something from this month. Boosts results from the past 30 days and sooner.  \n// Here are some examples of how to use the msearch command:  \n// User: What was the GDP of France and Italy in the 1970s? => {{\"queries\": [\"GDP of +France in the 1970s --QDF=0\", \"GDP of +Italy in the 1970s --QDF=0\"]}} # Historical query. Note that the QDF param is specified for each query independently, and entities are prefixed with a +  \n// User: What does the report say about the GPT4 performance on MMLU? => {{\"queries\": [\"+GPT4 performance on +MMLU benchmark --QDF=1\"]}}  \n// User: How can I integrate customer relationship management system with third-party email marketing tools? => {{\"queries\": [\"Customer Management System integration with +e",
+      "zh": "变化不会很快。提高过去 6 个月的结果。  \n// --QDF=3：请求所要求的内容可能会随着时间的推移而改变，因此我们应该提供过去季度/三个月的内容。提升过去 90 天的结果。  \n// --QDF=4：请求要求提供最近的信息或可能快速发展的信息。提升过去 60 天的结果。  \n// --QDF=5：该请求要求提供最新或最近的信息，因此我们应该从本月开始提供一些内容。增强过去 30 天及更短时间内的结果。  \n// 以下是如何使用 msearch 命令的一些示例：  \n// 用户：20世纪70年代法国和意大利的GDP是多少？ => {{\"queries\": [\"1970年代+法国GDP --QDF=0\", \"1970年代+意大利GDP --QDF=0\"]}} # 历史查询。请注意，QDF 参数是为每个查询独立指定的，并且实体以 + 为前缀  \n// 用户：报告对 MMLU 上的 GPT4 性能有何评价？ => {{\"queries\": [\"+MMLU 基准上的+GPT4 性能 --QDF=1\"]}}  \n// 用户：如何将客户关系管理系统与第三方电子邮件营销工具集成？ => {{\"queries\": [\"客户管理系统与 +e 集成",
+      "ok": true
+    },
+    {
+      "original": "mail marketing --QDF=2\"]}}  \n// User: What are the best practices for data security and privacy for our cloud storage services? => {{\"queries\": [\"Best practices for +security and +privacy for +cloud storage --QDF=2\"]}}  \n// User: What is the Design team working on? => {{\"queries\": [\"current projects OKRs for +Design team --QDF=3\"]}}  \n// User: What is John Doe working on? => {{\"queries\": [\"current projects tasks for +(John Doe) --QDF=3\"]}}  \n// User: Has Metamoose been launched? => {{\"queries\": [\"Launch date for +Metamoose --QDF=4\"]}}  \n// User: Is the office closed this week? => {{\"queries\": [\"+Office closed week of July 2024 --QDF=5\"]}}",
+      "zh": "邮件营销--QDF=2\"]}}  \n// 用户：我们的云存储服务的数据安全和隐私最佳实践是什么？ => {{\"queries\": [\"云存储安全性和隐私性最佳实践 --QDF=2\"]}}  \n// 用户：设计团队正在做什么？ => {{\"queries\": [\"+设计团队当前项目 OKR --QDF=3\"]}}  \n// 用户：John Doe 在做什么？ => {{\"queries\": [\"当前项目任务 +(John Doe) --QDF=3\"]}}  \n// 用户：Metamoose 已经启动了吗？ => {{\"queries\": [\"+Metamoose --QDF=4 的启动日期\"]}}  \n// 用户：这周办公室关门吗？ => {{\"queries\": [\"+2024 年 7 月办公室关闭一周 --QDF=5\"]}}",
+      "ok": true
+    },
+    {
+      "original": "// Please make sure to use the + operator as well as the QDF operator with your queries, to help retrieve more relevant results.  \n// Notes:  \n// * In some cases, metadata such as file_modified_at and file_created_at timestamps may be included with the document. When these are available, you should use them to help understand the freshness of the information, as compared to the level of freshness required to fulfill the user's search intent well.  \n// * Document titles will also be included in the results; you can use these to help understand the context of the information in the document. Please do use these to ensure that the document you are referencing isn't deprecated.  \n// * When a QDF param isn't provided, the default value is --QDF=0, which means that the freshness of the information will be ignored.",
+      "zh": "// 请确保在查询中使用 + 运算符以及 QDF 运算符，以帮助检索更多相关结果。  \n// 注意：  \n// * 在某些情况下，元数据（例如 file_modified_at 和 file_created_at 时间戳）可能包含在文档中。当这些可用时，您应该使用它们来帮助了解信息的新鲜度，与很好地满足用户搜索意图所需的新鲜度水平进行比较。  \n// * 文档标题也将包含在结果中；您可以使用它们来帮助理解文档中信息的上下文。请务必使用它们来确保您引用的文档未被弃用。  \n// * 当未提供QDF参数时，默认值为--QDF=0，这意味着信息的新鲜度将被忽略。",
+      "ok": true
+    },
+    {
+      "original": "// Special multilinguality requirement: when the user's question is not in English, you must issue the above queries in both English and also translate the queries into the user's original language.",
+      "zh": "// 特殊的多语言要求：当用户的问题不是英语时，您必须用英语发出上述查询，并将查询翻译成用户的原始语言。",
+      "ok": true
+    },
+    {
+      "original": "// Examples:  \n// User: 김민준이 무엇을 하고 있나요? => {{\"queries\": [\"current projects tasks for +(Kim Minjun) --QDF=3\", \"현재 프로젝트 및 작업 +(김민준) --QDF=3\"]}}  \n// User: オフィスは今週閉まっていますか？ => {{\"queries\": [\"+Office closed week of July 2024 --QDF=5\", \"+オフィス 2024年7月 週 閉鎖 --QDF=5\"]}}  \n// User: ¿Cuál es el rendimiento del modelo 4o en GPQA? => {{\"queries\": [\"GPQA results for +(4o model)\", \"4o model accuracy +(GPQA)\", \"resultados de GPQA para +(modelo 4o)\", \"precisión del modelo 4o +(GPQA)\"]}}",
+      "zh": "// 示例：\n// 用户：김민준 Been 무엇을 하고 있나요? => {{\"queries\": [\"+(Kim Minjun) --QDF=3\", --QDF=3\"]}} 当前项目任务\n// 用户：这周办公室关门吗？ => {{\"queries\": [\"+2024 年 7 月办公室关闭周 --QDF=5\", \"+2024 年 7 月办公室关闭周 --QDF=5\"]}}\n// User: ¿ => {{\"queries\": [\"+(4o model) 的 GPQA 结果\", \"4o model precision +(GPQA)\", \"resultados de GPQA para +(modelo 4o)\", \"precisión del modelo 4o +(GPQA)\"]}}",
+      "ok": true
+    },
+    {
+      "original": "// **Important information:** Here are the internal retrieval indexes (knowledge stores) you have access to and are allowed to search:  \n// **recording_knowledge**  \n// Where:  \n// - recording_knowledge: The knowledge store of all users' recordings, including transcripts and summaries. Only use this knowledge store when user asks about recordings, meetings, transcripts, or summaries. Avoid overusing source_filter for recording_knowledge unless the user explicitly requests — other sources often contain richer information for general queries.",
+      "zh": "// **重要信息：** 以下是您有权访问并允许搜索的内部检索索引（知识存储）：  \n// **记录知识**  \n// 其中：  \n// - Recording_knowledge：所有用户录音的知识存储，包括记录和摘要。仅当用户询问录音、会议、文字记录或摘要时才使用此知识存储。除非用户明确请求，否则避免过度使用 source_filter 来记录知识 - 其他源通常包含更丰富的信息用于一般查询。",
+      "ok": true
+    },
+    {
+      "original": "type msearch = (_: {  \nqueries?: string[],  \nintent?: string,  \ntime_frame_filter?: {  \n  start_date: string;  \n  end_date: string;  \n},  \n}) => any;",
+      "zh": "输入 msearch = (_: {  \n查询？：字符串[]，  \n意图？：字符串，  \n时间帧过滤器？：{  \n  开始日期：字符串；  \n  结束日期：字符串；  \n},  \n}) => 任意；",
+      "ok": true
+    },
+    {
+      "original": "} // namespace file_search",
+      "zh": "} // 命名空间 file_search",
+      "ok": true
+    }
+  ]
+}

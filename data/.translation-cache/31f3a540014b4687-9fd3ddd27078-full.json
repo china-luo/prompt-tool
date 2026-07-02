@@ -1,0 +1,171 @@
+{
+  "id": "31f3a540014b4687",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/code-review.md",
+  "generatedAt": "2026-07-01T09:34:42.236Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 32,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "---\nname: code-review\ndescription: Review the current diff for correctness bugs and reuse/simplification/efficiency cleanups at the given effort level.\n---",
+      "zh": "---\n名称：代码审查\n描述：检查当前差异的正确性错误以及给定工作级别的重用/简化/效率清理。\n---",
+      "ok": true
+    },
+    {
+      "original": "`high effort → 3+4 angles × 6 candidates → 1-vote verify (recall-biased) → ≤10 findings`",
+      "zh": "`高度努力 → 3+4 角度 × 6 个候选者 → 1 票验证（回忆偏向）→ ≤10 个结果`",
+      "ok": true
+    },
+    {
+      "original": "You are reviewing for **recall** at high effort: catch every real bug a careful\nreviewer would catch in one sitting. At this level, catching real bugs matters\nmore than avoiding false positives. Err on the side of surfacing.",
+      "zh": "您正在努力审查 **召回**：仔细捕获每个真正的错误\n审稿人一下子就明白了。在这个级别，捕获真正的错误很重要\n不仅仅是避免误报。在表面处理方面犯了错误。",
+      "ok": true
+    },
+    {
+      "original": "## Phase 0 — Gather the diff",
+      "zh": "## 阶段 0 — 收集差异",
+      "ok": true
+    },
+    {
+      "original": "Run `git diff @{upstream}...HEAD` (or `git diff main...HEAD` / `git diff HEAD~1`\nif there's no upstream) to get the unified diff under review. If there are\nuncommitted changes, or the range diff is empty, also run `git diff HEAD` and\ninclude the working-tree changes in scope — the review often runs before the\ncommit. If a PR number, branch name, or file path was passed as an argument,\nreview that target instead. Treat this diff as the review scope.",
+      "zh": "运行 `git diff @{upstream}...HEAD` （或 `git diff main...HEAD` / `git diff HEAD~1`\n如果没有上游）来审查统一差异。如果有\n未提交的更改，或者范围差异为空，也运行 `git diff HEAD` 并\n包括范围内的工作树更改——审查通常在\n提交。如果 PR 编号、分支名称或文件路径作为参数传递，\n相反，请检查该目标。将此差异视为审查范围。",
+      "ok": true
+    },
+    {
+      "original": "## Phase 1 — Find candidates (3 correctness angles + 3 cleanup angles + 1 altitude angle, up to 6 each)",
+      "zh": "## 第 1 阶段 — 寻找候选者（3 个正确角 + 3 个清理角 + 1 个高度角，每个角最多 6 个）",
+      "ok": true
+    },
+    {
+      "original": "Run **7 independent finder angles** via the Agent tool. Each\nsurfaces **up to 6 candidate findings** with `file`, `line`, a one-line\n`summary`, and a concrete `failure_scenario`.",
+      "zh": "通过代理工具运行 **7 个独立的取景器角度**。每个\n使用“文件”、“行”、一行显示**最多 6 个候选结果**\n`summary` 和具体的 `failure_scenario`。",
+      "ok": true
+    },
+    {
+      "original": "### Angle A — line-by-line diff scan",
+      "zh": "### 角度 A — 逐行差异扫描",
+      "ok": true
+    },
+    {
+      "original": "Read every hunk in the diff, line by line. Then Read the enclosing function for\neach hunk — bugs in unchanged lines of a touched function are in scope (the PR\nre-exposes or fails to fix them). For every line ask: what input, state, timing,\nor platform makes this line wrong? Look for inverted/wrong conditions,\noff-by-one, null/undefined deref, missing `await`, falsy-zero checks,\nwrong-variable copy-paste, error swallowed in catch, unescaped regex metachars.",
+      "zh": "逐行阅读差异中的每一块内容。然后阅读封闭函数\n每个块 - 所触及函数的未更改行中的错误都在范围内（PR\n重新暴露或未能修复它们）。对于每一行询问：什么输入、状态、时序、\n或者平台使这条线错误？寻找颠倒/错误的条件，\n差一、空/未定义的 deref、缺少 `await`、假零检查、\n错误的变量复制粘贴、catch 中的错误、未转义的正则表达式元字符。",
+      "ok": true
+    },
+    {
+      "original": "### Angle B — removed-behavior auditor",
+      "zh": "### B 角 — 移除行为审核员",
+      "ok": true
+    },
+    {
+      "original": "For every line the diff DELETES or replaces, name the invariant or behavior it\nenforced, then search the new code for where that invariant is re-established.\nIf you can't find it, that's a candidate: a removed guard, a dropped error\npath, a narrowed validation, a deleted test that was covering a real case.",
+      "zh": "对于 diff 删除或替换的每一行，命名它的不变量或行为\n强制执行，然后在新代码中搜索重新建立该不变量的位置。\n如果你找不到它，那就是一个候选者：一个被移除的守卫，一个被丢弃的错误\n路径，缩小验证范围，删除覆盖真实案例的测试。",
+      "ok": true
+    },
+    {
+      "original": "### Angle C — cross-file tracer",
+      "zh": "### 角度 C — 跨文件跟踪器",
+      "ok": true
+    },
+    {
+      "original": "For each function the diff changes, find its callers (Grep for the symbol) and\ncheck whether the change breaks any call site: a new precondition, a changed\nreturn shape, a new exception, a timing/ordering dependency. Also check callees:\ndoes a parallel change in the same PR make a call unsafe?",
+      "zh": "对于差异发生变化的每个函数，找到其调用者（Grep 表示符号）并\n检查更改是否会破坏任何调用站点：新的前提条件、更改的\n返回形状、新异常、时间/顺序依赖性。还要检查被调用者：\n同一 PR 中的并行更改是否会使呼叫不安全？",
+      "ok": true
+    },
+    {
+      "original": "### Reuse",
+      "zh": "### 重复使用",
+      "ok": true
+    },
+    {
+      "original": "The angles above hunt for bugs; this one and the next two hunt for cleanup in\nthe changed code. Flag new code that re-implements something the codebase\nalready has — Grep shared/utility modules and files adjacent to the change,\nand name the existing helper to call instead.",
+      "zh": "上面的角度寻找虫子；这一个和接下来的两个寻找清理\n更改后的代码。标记重新实现代码库某些内容的新代码\n已经有 — Grep 共享/实用模块和与更改相邻的文件，\n并命名现有的助手来调用。",
+      "ok": true
+    },
+    {
+      "original": "### Simplification",
+      "zh": "### 简化",
+      "ok": true
+    },
+    {
+      "original": "Flag unnecessary complexity the diff adds: redundant or derivable state,\ncopy-paste with slight variation, deep nesting, dead code left behind. Name\nthe simpler form that does the same job.",
+      "zh": "标记 diff 添加的不必要的复杂性：冗余或可导出状态，\n复制粘贴略有变化，深层嵌套，留下死代码。名称\n完成相同工作的更简单的形式。",
+      "ok": true
+    },
+    {
+      "original": "### Efficiency",
+      "zh": "＃＃＃ 效率",
+      "ok": true
+    },
+    {
+      "original": "Flag wasted work the diff introduces: redundant computation or repeated I/O,\nindependent operations run sequentially, blocking work added to startup or\nhot paths. Name the cheaper alternative.",
+      "zh": "标记 diff 引入的浪费工作：冗余计算或重复 I/O，\n独立操作按顺序运行，阻止添加到启动或\n热路径。说出更便宜的替代方案。",
+      "ok": true
+    },
+    {
+      "original": "### Altitude",
+      "zh": "### 海拔高度",
+      "ok": true
+    },
+    {
+      "original": "Check that each change is implemented at the right depth, not as a fragile\nbandaid. Special cases layered on shared infrastructure are a sign the fix\nisn't deep enough — prefer generalizing the underlying mechanism over adding\nspecial cases.",
+      "zh": "检查每个更改是否在正确的深度实施，而不是作为脆弱的\n创可贴。共享基础设施上的特殊情况是修复的标志\n不够深入——更喜欢概括底层机制而不是添加\n特殊情况。",
+      "ok": true
+    },
+    {
+      "original": "Cleanup and altitude candidates use the same `file`/`line`/`summary` shape; in\n`failure_scenario`, state the concrete cost (what is duplicated, wasted, or\nharder to maintain) instead of a crash. Correctness bugs always outrank\ncleanup and altitude findings when the output cap forces a cut.",
+      "zh": "清理和高度候选使用相同的“文件”/“行”/“摘要”形状；在\n`failure_scenario`，说明具体成本（重复的、浪费的或\n更难维护）而不是崩溃。正确性错误总是高于排名\n当输出上限强制削减时的清理和高度结果。",
+      "ok": true
+    },
+    {
+      "original": "Pass every candidate with a nameable failure scenario through — finders that\nsilently drop half-believed candidates bypass the verify step and are the\ndominant cause of misses.",
+      "zh": "通过每一位具有可命名的失败场景的候选人——发现者\n默默地放弃半信半疑的候选人，绕过验证步骤，是\n失误的主要原因。",
+      "ok": true
+    },
+    {
+      "original": "## Phase 2 — Verify (1-vote, recall-biased)",
+      "zh": "## 第 2 阶段 — 验证（1 票，召回偏向）",
+      "ok": true
+    },
+    {
+      "original": "Dedup near-duplicates (same defect, same location, same reason → keep one). For\neach remaining candidate, run **one verifier** via the Agent tool:\ngive it the diff, the relevant file(s), and the candidate; it returns exactly\none of **CONFIRMED / PLAUSIBLE / REFUTED**.",
+      "zh": "重复删除近似重复项（相同缺陷、相同位置、相同原因 → 保留一个）。对于\n每个剩余的候选人，通过代理工具运行**一个验证程序**：\n给出差异、相关文件和候选文件；它准确地返回\n**已确认/似是而非/已驳斥**之一。",
+      "ok": true
+    },
+    {
+      "original": "**PLAUSIBLE by default** — do not refute a candidate for being \"speculative\" or\n\"depends on runtime state\" when the state is realistic: concurrency races,\nnil/undefined on a rare-but-reachable path (error handler, cold cache, missing\noptional field), falsy-zero treated as missing, off-by-one on a boundary the\ncode does not exclude, retry storms / partial failures, regex/allowlist that\nlost an anchor. These are PLAUSIBLE.",
+      "zh": "**默认情况下合理**——不要反驳候选人的“投机性”或\n当状态是现实的时“取决于运行时状态”：并发竞争，\nnil/undefined 在罕见但可到达的路径上（错误处理程序、冷缓存、缺失\n可选字段），假零被视为缺失，在边界上相差一\n代码不排除，重试风暴/部分失败，正则表达式/白名单\n失去了锚。这些都是合理的。",
+      "ok": true
+    },
+    {
+      "original": "**REFUTED** only when constructible from the code: factually wrong (quote the\nactual line); provably impossible (type/constant/invariant — show it); already\nhandled in this diff (cite the guard); or pure style with no observable effect.",
+      "zh": "**REFUTED** 仅当可从代码构造时：实际上是错误的（引用\n实际线路）；证明不可能（类型/常数/不变——显示出来）；已经\n在此差异中处理（引用守卫）；或没有明显效果的纯粹风格。",
+      "ok": true
+    },
+    {
+      "original": "Keep **CONFIRMED and PLAUSIBLE**. Drop REFUTED.",
+      "zh": "保持**确认且可信**。删除已驳斥。",
+      "ok": true
+    },
+    {
+      "original": "## Output",
+      "zh": "＃＃ 输出",
+      "ok": true
+    },
+    {
+      "original": "Return findings as a JSON array of at most 10 objects:",
+      "zh": "以最多包含 10 个对象的 JSON 数组形式返回结果：",
+      "ok": true
+    },
+    {
+      "original": "```json\n[\n  {\n    \"file\": \"path/to/file.ext\",\n    \"line\": 123,\n    \"summary\": \"one-sentence statement of the bug\",\n    \"failure_scenario\": \"concrete inputs/state → wrong output/crash\"\n  }\n]\n```",
+      "zh": "```json\n[\n  {\n    \"文件\": \"路径/到/文件.ext\",\n    “行”：123，\n    \"summary\": \"bug 的一句话陈述\",\n    \"failure_scenario\": \"具体输入/状态 → 错误输出/崩溃\"\n  }\n]\n````",
+      "ok": true
+    },
+    {
+      "original": "Ranked most-severe first. If more than 10 survive, keep the 10 most\nsevere. If nothing survives verification, return `[]`.",
+      "zh": "排在最严重的第一位。如果超过10个存活，则保留最多的10个\n严重。如果没有任何内容通过验证，则返回“[]”。",
+      "ok": true
+    }
+  ]
+}

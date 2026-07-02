@@ -1,0 +1,21 @@
+{
+  "id": "48a2fb4438a53df7",
+  "relativePath": "OpenAI/tool-memory-bio.md",
+  "generatedAt": "2026-07-01T09:29:07.906Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 2,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "## bio",
+      "zh": "## 个人简介",
+      "ok": true
+    },
+    {
+      "original": "The bio tool allows you to persist information across conversations. Address your message to=bio and write whatever information you want to remember. The information will appear in the model set context below in future conversations.",
+      "zh": "Bio 工具允许您在对话中保留信息。将您的信息发送至 =bio 并写下您想要记住的任何信息。该信息将在以后的对话中出现在下面的模型集上下文中。",
+      "ok": true
+    }
+  ]
+}

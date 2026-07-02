@@ -1,0 +1,271 @@
+{
+  "id": "322866711be7782b",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/verify.md",
+  "generatedAt": "2026-07-01T09:38:53.604Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 52,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "---\nname: verify\ndescription: Verify that a code change actually does what it's supposed to by running the app and observing behavior.\n---",
+      "zh": "---\n名称： 验证\n描述：通过运行应用程序并观察行为来验证代码更改是否确实达到了预期的效果。\n---",
+      "ok": true
+    },
+    {
+      "original": "**Verification is runtime observation.** You build the app, run it,\ndrive it to where the changed code executes, and capture what you\nsee. That capture is your evidence. Nothing else is.",
+      "zh": "**验证是运行时观察。**您构建应用程序，运行它，\n将其驱动到更改的代码执行的位置，并捕获您想要的内容\n瞧。那次捕获就是你的证据。没有别的了。",
+      "ok": true
+    },
+    {
+      "original": "**Don't run tests. Don't typecheck.** Running them here proves you\ncan run CI — not that the change works. Not as a warm-up,\nnot \"just to be sure,\" not as a regression sweep after. The time\ngoes to running the app instead.",
+      "zh": "**不要运行测试。不要进行类型检查。**在这里运行它们可以证明你\n可以运行 CI——但这并不是说改变有效。不是作为热身，\n不是“只是为了确定”，不是作为回归后的扫荡。时间\n改为运行应用程序。",
+      "ok": true
+    },
+    {
+      "original": "**Don't import-and-call.** `import { foo } from './src/...'` then\n`console.log(foo(x))` is a unit test you wrote. The function did what\nthe function does — you knew that from reading it. The app never ran.\nWhatever calls `foo` in the real codebase ends at a CLI, a socket, or\na window. Go there.",
+      "zh": "**不要导入并调用。** `import { foo } from './src/...'` 然后\n`console.log(foo(x))` 是您编写的单元测试。该函数做了什么\n这个函数确实如此——你读过它就知道了。该应用程序从未运行过。\n在真实代码库中调用 `foo` 的任何内容都以 CLI、套接字或\n一扇窗户。去那里吧。",
+      "ok": true
+    },
+    {
+      "original": "## Find the change",
+      "zh": "## 找到变化",
+      "ok": true
+    },
+    {
+      "original": "The scope is what you're verifying — usually a diff, sometimes just\n\"does X work.\" In a git repo, establish the full range (a branch may\nbe many commits, or the change may still be uncommitted):",
+      "zh": "范围是您要验证的内容 - 通常是差异，有时只是\n“X 有效吗？”在 git 存储库中，建立完整范围（分支可以\n有很多提交，或者更改可能仍未提交）：",
+      "ok": true
+    },
+    {
+      "original": "```bash\ngit log --oneline @{u}..              # count commits (if upstream set)\ngit diff @{u}.. --stat                # full range, not HEAD~1\ngit diff origin/HEAD... --stat        # no upstream: committed vs base\ngit diff HEAD --stat                  # uncommitted: working tree vs HEAD\ngh pr diff                            # if in a PR context\n```",
+      "zh": "````bash\ngit log --oneline @{u}.. # 计数提交（如果上游设置）\ngit diff @{u}.. --stat # 全范围，而不是 HEAD~1\ngit diff origin/HEAD... --stat # 无上游：已提交 vs 基础\ngit diff HEAD --stat # 未提交：工作树与 HEAD\ngh pr diff # 如果在 PR 上下文中\n````",
+      "ok": true
+    },
+    {
+      "original": "State the commit count. Large diff truncating? Redirect to a file\nthen Read it. Repo but no diff from any of these → say so, stop.\n**No repo → the scope is whatever the user named; ask if they\ndidn't.**",
+      "zh": "说明提交计数。大差异截断？重定向到文件\n然后阅读它。回购，但与这些都没有区别 → 说吧，停止。\n**没有存储库 → 范围是用户命名的任何内容；询问他们是否\n没有。**",
+      "ok": true
+    },
+    {
+      "original": "**The diff is ground truth. Any description is a claim about it.**\nRead both. If they disagree, that's a finding.",
+      "zh": "**差异是基本事实。任何描述都是关于它的声明。**\n两者都读。如果他们不同意，那就是一个发现。",
+      "ok": true
+    },
+    {
+      "original": "## Surface",
+      "zh": "＃＃ 表面",
+      "ok": true
+    },
+    {
+      "original": "The surface is where a user — human or programmatic — meets the\nchange. That's where you observe.",
+      "zh": "表面是用户（人类或程序化用户）遇到的地方\n改变。这就是你观察的地方。",
+      "ok": true
+    },
+    {
+      "original": "| Change reaches | Surface | You |\n|---|---|---|\n| CLI / TUI | terminal | type the command, capture the pane — [example](examples/cli.md) |\n| Server / API | socket | send the request, capture the response — [example](examples/server.md) |\n| GUI | pixels | drive it under xvfb/Playwright, screenshot |\n| Library | package boundary | sample code through the public export — `import pkg`, not `import ./src/...` |\n| Prompt / agent config | the agent | run the agent, capture its behavior |\n| CI workflow | Actions | dispatch it, read the run |",
+      "zh": "|改变达到|表面|你|\n|---|---|---|\n| CLI / TUI |终端|键入命令，捕获窗格 — [示例](examples/cli.md) |\n|服务器/API |插座|发送请求，捕获响应 — [示例](examples/server.md) |\n|图形用户界面 |像素|在 xvfb/Playwright 下驱动它，截图 |\n|图书馆 |包边界 |通过公共导出的示例代码 - `import pkg`，而不是 `import ./src/...` |\n|提示/代理配置 |代理|运行代理，捕获其行为 |\n| CI 工作流程 |行动|调度它，阅读运行 |",
+      "ok": true
+    },
+    {
+      "original": "**Internal function? Not a surface.** Something in the repo calls it\nand that caller ends at one of the rows above. Follow it there. A\nbash security gate's surface isn't the function's return value — it's\nthe CLI prompting or auto-allowing when you type the command.",
+      "zh": "**内部功能？不是表面。** 存储库中的某些内容称之为\n并且该调用者在上面的某一行结束。跟着它到那里。一个\nbash安全门的表面不是函数的返回值——它是\n当您键入命令时 CLI 提示或自动允许。",
+      "ok": true
+    },
+    {
+      "original": "**No runtime surface at all** — docs-only, type declarations with no\nemit, build config that produces no behavioral diff — report\n**SKIP — no runtime surface: (reason).** Don't run tests to fill\nthe space.",
+      "zh": "**根本没有运行时表面** - 仅文档，没有类型声明\n发出，构建不产生行为差异的配置 - 报告\n**跳过 — 没有运行时表面：（原因）。** 不要运行测试来填充\n的空间。",
+      "ok": true
+    },
+    {
+      "original": "**Tests in the diff are the author's evidence, not a surface.** CI\nruns them. You'd be re-running CI. Tests-only PR → SKIP, one line.\nMixed src+tests → verify the src, ignore the test files. Reading a\ntest to learn what to check is fine — it's a spec. But then go run\nthe app. Checking that assertions match source is code review.",
+      "zh": "**差异中的测试是作者的证据，而不是表面。** CI\n运行它们。您将重新运行 CI。仅测试 PR → SKIP，一行。\n混合 src+tests → 验证 src，忽略测试文件。读一\n通过测试来了解要检查什么是可以的——它是一个规范。但然后就跑吧\n该应用程序。检查断言是否与源代码匹配是代码审查。",
+      "ok": true
+    },
+    {
+      "original": "## Get a handle",
+      "zh": "## 获取句柄",
+      "ok": true
+    },
+    {
+      "original": "**Check `.claude/skills/` first — even if you already know how to\nbuild and run.** A matching `verifier-*` skill is the repo's\nevidence-capture protocol: it wraps the session so a reviewer can\nreplay what you saw (recording, screenshots). Drive the surface\nwithout it and you get a verdict with no replay.",
+      "zh": "**首先检查`.claude/skills/` - 即使您已经知道如何\n构建并运行。** 匹配的“verifier-*”技能是存储库的\n证据捕获协议：它包装会话，以便审阅者可以\n重播您所看到的内容（录音、屏幕截图）。驱动表面\n如果没有它，你就会得到一个没有重播的判决。",
+      "ok": true
+    },
+    {
+      "original": "```bash\nls .claude/skills/\n```",
+      "zh": "````bash\nls .claude/技能/\n````",
+      "ok": true
+    },
+    {
+      "original": "- **`verifier-*` matching your surface** (CLI verifier for a CLI\n  change, etc.) → invoke it with the Skill tool and follow its\n  setup. Mismatched surface → skip that one, try the next. Stale\n  verifier (fails on mechanics unrelated to the change) → ask the\n  user whether to patch it; don't FAIL the change for verifier rot.\n- **`run-*` but no matching verifier** → use its build/launch\n  primitives as your handle.\n- **Neither** → cold start from README/package.json/Makefile. Timebox\n  ~15min. Stuck → BLOCKED with exactly where, plus a filled-in\n  `/run-skill-generator` prompt. Got through → note the working\n  build/launch recipe so it can become a `verifier-*` skill.",
+      "zh": "- **`verifier-*` 匹配您的表面**（CLI 的 CLI 验证器\n  更改等）→ 使用技能工具调用它并遵循其\n  设置。表面不匹配 → 跳过该表面，尝试下一个。陈旧的\n  验证者（与变更无关的机制失败）→询问\n  用户是否打补丁；不要因验证者腐烂而导致更改失败。\n- **`run-*` 但没有匹配的验证程序** → 使用其构建/启动\n  基元作为你的句柄。\n- **都不是** → 从 README/package.json/Makefile 冷启动。时间盒\n  〜15分钟。卡住 → BLOCKED 与确切位置，加上填充\n  `/run-skill-generator` 提示符。完成→注意工作\n  构建/启动配方，使其成为“验证者-*”技能。",
+      "ok": true
+    },
+    {
+      "original": "## Drive it",
+      "zh": "## 驾驶它",
+      "ok": true
+    },
+    {
+      "original": "Smallest path that makes the changed code execute:",
+      "zh": "使更改的代码执行的最小路径：",
+      "ok": true
+    },
+    {
+      "original": "- Changed a flag? Run with it.\n- Changed a handler? Hit that route.\n- Changed error handling? Trigger the error.\n- Changed an internal function? Find the CLI command / request / render\n  that reaches it. Run that.",
+      "zh": "- 改变了标志？带着它跑。\n- 更换了处理程序？打那条路线。\n- 改变了错误处理？触发错误。\n- 改变了内部功能？找到CLI命令/请求/渲染\n  到达它。运行那个。",
+      "ok": true
+    },
+    {
+      "original": "**Read your plan back before running.** If every step is build /\ntypecheck / run test file — you've planned a CI rerun, not a\nverification. Find a step that reaches the surface or report BLOCKED.",
+      "zh": "**在运行之前读回你的计划。**如果每一步都是构建/\ntypecheck / 运行测试文件 — 您计划的是 CI 重新运行，而不是\n验证。找到到达地面的台阶或报告“阻塞”。",
+      "ok": true
+    },
+    {
+      "original": "**The verdict is table stakes. Your observations are the signal.**\nA PASS with three sharp \"hey, I noticed…\" lines is worth more than a\nbare PASS. You're the only reviewer who actually *ran* the thing —\nanything that made you pause, work around, or go \"huh\" is information\nthe author doesn't have. Don't filter for \"is this a bug.\" Filter for\n\"would I mention this if they were sitting next to me.\"",
+      "zh": "**判决是赌注。您的观察就是信号。**\n包含三句尖锐的“嘿，我注意到……”的 PASS 比一张\n裸通行证。你是唯一真正“运行”这件事的评论者 -\n任何让你停下来、变通办法或“嗯”的东西都是信息\n作者没有。不要过滤“这是一个错误吗”。过滤器\n“如果他们坐在我旁边，我会提到这一点吗？”",
+      "ok": true
+    },
+    {
+      "original": "**End-to-end, through the real interface.** Pieces passing in\nisolation doesn't mean the flow works — seams are where bugs hide.\nIf users click buttons, test by clicking buttons, not by curling the\nAPI underneath.",
+      "zh": "**端到端，通过真实的接口。** 传入的片段\n隔离并不意味着流程有效——接缝是错误隐藏的地方。\n如果用户单击按钮，请通过单击按钮进行测试，而不是通过卷曲按钮进行测试\n下面有API。",
+      "ok": true
+    },
+    {
+      "original": "**Destructive path?** If the change touches code that deletes,\npublishes, sends, or writes outside the workspace and there's no\ndry-run or safe target, don't drive it live. Verify what you can\naround it and say which path you didn't exercise and why.",
+      "zh": "**破坏性路径？** 如果更改涉及删除的代码，\n在工作区之外发布、发送或写入，并且没有\n试运行或安全目标，请勿实时驾驶。验证你能做什么\n围绕它并说出哪条路径是你没有练习的以及原因。",
+      "ok": true
+    },
+    {
+      "original": "## Push on it",
+      "zh": "## 推动它",
+      "ok": true
+    },
+    {
+      "original": "The claim checked out — that's the first half. Confirming is step\none, not the job. The description is what the author intended;\nyour value is what they didn't.",
+      "zh": "索赔得到了证实——这是上半部分。确认是步骤\n一，不是工作。描述是作者的意图；\n你的价值是他们所没有的。",
+      "ok": true
+    },
+    {
+      "original": "You know exactly what changed. Probe *around* it, at the same\nsurface you just drove:",
+      "zh": "你清楚地知道发生了什么变化。同时探测它*周围*\n您刚刚驾驶的路面：",
+      "ok": true
+    },
+    {
+      "original": "- **New flag / option** → empty value, passed twice, combined with a\n  conflicting flag, typo'd (does the error name it?)\n- **New handler / route** → wrong method, malformed body, missing\n  required field, oversized payload\n- **Changed error path** → the adjacent errors it didn't touch —\n  did the refactor catch them too, or only the one in the diff?\n- **Interactive / TUI** → Ctrl-C mid-op, resize the pane, paste\n  garbage, rapid-fire the key, Esc at the wrong moment\n- **State / persistence** → do it twice, do it with stale state\n  underneath, do it in two sessions at once\n- **Wander** → what's adjacent? What looked off while you were\n  confirming? Go back to it.",
+      "zh": "- **新标志/选项** → 空值，传递两次，与\n  冲突标志，拼写错误（错误是否命名了它？）\n- **新处理程序/路线** → 错误的方法、畸形的正文、缺失\n  必填字段，负载过大\n- **更改了错误路径** → 它没有触及的相邻错误 —\n  重构是否也捕获了它们，还是仅捕获了差异中的一个？\n- **交互式/TUI** → Ctrl-C 中间操作，调整窗格大小，粘贴\n  垃圾，快速按键，在错误的时刻 Esc\n- **状态/持久性** → 执行两次，使用陈旧状态执行\n  下面，一次分两次进行\n- **漫步** → 邻近是什么？当你在的时候，什么看起来不太对劲\n  确认？回到它。",
+      "ok": true
+    },
+    {
+      "original": "These aren't a checklist — pick the ones the change points at. Stop\nwhen you've covered the obvious adjacents or hit something worth a\n⚠️. A probe that finds nothing is still a step: \"🔍 passed `--from ''`\n→ clean `error: --from requires a value`, exit 2.\" That the author\ndidn't test it is exactly why it's worth knowing it holds.",
+      "zh": "这些不是清单 - 选择更改点所在的清单。停止\n当你覆盖了明显的相邻区域或击中了值得的东西时\n⚠️。没有发现什么的探针还是一步：“🔍通过了`--from ''`\n→ 清除`错误：--from需要一个值`，退出2。”那个作者\n没有测试它正是为什么值得知道它成立的原因。",
+      "ok": true
+    },
+    {
+      "original": "Still not a test run. You're at the surface, typing what a user\nwould type wrong.",
+      "zh": "还没有试运行。您在表面上，输入用户的内容\n会打字错误。",
+      "ok": true
+    },
+    {
+      "original": "## Capture",
+      "zh": "＃＃ 捕获",
+      "ok": true
+    },
+    {
+      "original": "Stdout, response bodies, screenshots, pane dumps. Captured output is\nevidence; your memory isn't. Something unexpected? Don't route around\nit — capture, note, decide if it's the change or the environment.\nUnrelated breakage is a finding, not noise.",
+      "zh": "标准输出、响应正文、屏幕截图、窗格转储。捕获的输出是\n证据；你的记忆不是。有什么意想不到的事情吗？请勿绕行\n它——捕捉、记录、决定是变化还是环境。\n不相关的破损是一种发现，而不是噪音。",
+      "ok": true
+    },
+    {
+      "original": "Shared process state (tmux, ports, lockfiles) — isolate. `tmux -L\nname`, bind `:0`, `mktemp -d`. You share a namespace with your host.",
+      "zh": "共享进程状态（tmux、端口、锁定文件）——隔离。 `tmux-L\n名称`，绑定`：0`，`mktemp -d`。您与主机共享命名空间。",
+      "ok": true
+    },
+    {
+      "original": "## Report",
+      "zh": "＃＃ 报告",
+      "ok": true
+    },
+    {
+      "original": "Inline, final message:",
+      "zh": "内联最终消息：",
+      "ok": true
+    },
+    {
+      "original": "```\n## Verification: <one-line what changed>",
+      "zh": "````\n## 验证：<单行发生了什么变化>",
+      "ok": true
+    },
+    {
+      "original": "**Verdict:** PASS | FAIL | BLOCKED | SKIP",
+      "zh": "**结论：** 通过 |失败 |被封锁 |跳过",
+      "ok": true
+    },
+    {
+      "original": "**Claim:** <what it's supposed to do — your read of the diff and/or\nthe stated claim; note any mismatch>",
+      "zh": "**声明：** <它应该做什么 - 你对差异的阅读和/或\n所陈述的索赔；注意任何不匹配>",
+      "ok": true
+    },
+    {
+      "original": "**Method:** <how you got a handle — which verifier/run-skill, or\ncold start; what you launched>",
+      "zh": "**方法：** <如何获得句柄 - 哪个验证者/运行技能，或者\n冷启动；你推出了什么>",
+      "ok": true
+    },
+    {
+      "original": "### Steps",
+      "zh": "### 步骤",
+      "ok": true
+    },
+    {
+      "original": "Each step is one thing you did to the **running app** and what it\nshowed. Build/install/checkout are setup, not steps. Test runs and\ntypecheck don't belong here — they're CI's output.",
+      "zh": "每个步骤都是您对 **正在运行的应用程序** 所做的一件事以及它的用途\n显示。构建/安装/结帐是设置，而不是步骤。测试运行和\ntypecheck 不属于这里——它们是 CI 的输出。",
+      "ok": true
+    },
+    {
+      "original": "1. ✅/❌/⚠️/🔍 <what you did to the running app> → <what you observed>\n   <evidence: the app's own output — pane capture, response body,\n   screenshot path>",
+      "zh": "1. ✅/❌/⚠️/🔍 <您对正在运行的应用程序做了什么> → <您观察到的内容>\n   <证据：应用程序自己的输出 - 窗格捕获、响应正文、\n   截图路径>",
+      "ok": true
+    },
+    {
+      "original": "🔍 marks a probe — a step off the claim's happy path, trying to\nbreak it. At least one. A Steps list that's all ✅ and no 🔍 is a\nhappy-path replay: still PASS, but you stopped at the first half.",
+      "zh": "🔍 标志着一次探索——从索赔的幸福道路上迈出了一步，试图\n打破它。至少一个。一个步骤列表，全部是 ✅，没有 🔍 是\nhappy-path 重播：仍然通过，但你在上半场停了下来。",
+      "ok": true
+    },
+    {
+      "original": "**Screenshot / sample:** <the one frame a reviewer looks at to see\nthe feature — image path for GUI/TUI, code block for library/API;\nomit for build/types-only>",
+      "zh": "**屏幕截图/示例：** <审阅者查看的一帧\n功能 — GUI/TUI 的图像路径、库/API 的代码块；\n省略构建/仅类型>",
+      "ok": true
+    },
+    {
+      "original": "### Findings\n<Things you noticed. Not just bugs — friction, surprises, anything\na first-time user would trip on. \"Took three tries to find the right\nflag.\" \"Error message on typo was unhelpful.\" \"Default seems odd for\nthe common case.\" \"Works, but slower than I expected.\" Lower the bar:\nif it made you pause, it goes here. But the pause has to be yours,\nfrom running the app — not from reading the PR page. A red CI check,\na review comment, someone else's bot: visible to anyone already, and\nyou relaying it isn't an observation. Claim/diff mismatch, pre-existing\nbreakage, and env notes also belong.",
+      "zh": "### 调查结果\n<你注意到的事情。不只是错误——摩擦、意外等等\n第一次使用的用户会被绊倒。 “尝试了三次才找到合适的\n旗帜。” “打字错误的错误消息没有帮助。” “默认似乎很奇怪\n常见情况。” “有效，但比我预期的要慢。”降低门槛：\n如果它让你停下来，它就放在这里。但暂停必须属于你，\n来自运行应用程序 - 而不是来自阅读 PR 页面。红色 CI 检查，\n评论评论，其他人的机器人：任何人都可以看到，并且\n你转发它不是一个观察。声明/差异不匹配，预先存在\n破损和环境注释也属于其中。",
+      "ok": true
+    },
+    {
+      "original": "Each probe gets a line here even when it held — \"🔍 empty `--from`\n→ clean error\" tells the author what *was* covered, which they\ncan't see from a bare PASS.",
+      "zh": "每个探针在这里都会有一行，即使它包含 —“🔍 空`--from`\n→ 干净的错误”告诉作者*被*覆盖了什么，他们\n从光秃秃的PASS看不到。",
+      "ok": true
+    },
+    {
+      "original": "Lead with ⚠️ for lines worth interrupting the reviewer for; plain\nbullets are context. Empty is fine if nothing stuck out — but nothing\nsticking out is itself rare.>\n```",
+      "zh": "对于值得打断审稿人的行以 ⚠️ 开头；普通的\n项目符号是上下文。如果没有什么突出的地方，空着也没关系——但什么也没有\n脱颖而出本身就很罕见。>\n````",
+      "ok": true
+    },
+    {
+      "original": "**Verdicts:**\n- **PASS** — you ran the app, the change did what it should at its\n  surface. Not: tests pass, builds clean, code looks right.\n- **FAIL** — you ran it and it doesn't. Or it breaks something else.\n  Or claim and diff disagree materially.\n- **BLOCKED** — couldn't reach a state where the change is observable.\n  Build broke, env missing a dep, handle wouldn't come up. Not a\n  verdict on the change. Say exactly where it stopped +\n  `/run-skill-generator` prompt.\n- **SKIP** — no runtime surface exists. Docs-only, types-only,\n  tests-only. Nothing went wrong; there's just nothing here to run.\n  One line why.",
+      "zh": "**判决：**\n- **通过** — 您运行了该应用程序，所做的更改按照其应有的方式进行了\n  表面。不是：测试通过，构建干净，代码看起来正确。\n- **失败** — 你运行了它，但它没有运行。或者它破坏了其他东西。\n  或者声称和 diff 存在重大分歧。\n- **被阻止** — 无法达到可观察到更改的状态。\n  构建损坏，环境缺少 dep，句柄不会出现。不是一个\n  对变更的判决。准确说出停止的位置 +\n  `/run-skill-generator` 提示符。\n- **SKIP** — 不存在运行时表面。仅文档、仅类型、\n  仅测试。没有出什么问题；这里没什么可跑的。\n  一行为什么。",
+      "ok": true
+    },
+    {
+      "original": "No partial pass. \"3 of 4 passed\" is FAIL until 4 passes or is\nexplained away.",
+      "zh": "没有部分通过。 “3 of 4 Passed” 为 FAIL，直到 4 次通过或\n解释走了。",
+      "ok": true
+    },
+    {
+      "original": "**When in doubt, FAIL.** False PASS ships broken code; false FAIL\ncosts one more human look. Ambiguous output is FAIL with the raw\ncapture attached — don't interpret.",
+      "zh": "**如有疑问，FAIL。** False PASS 会发送损坏的代码；假失败\n成本多了一份人性化的外观。原始的输出不明确是失败的\n捕获附件 - 不要解释。",
+      "ok": true
+    }
+  ]
+}

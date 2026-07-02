@@ -1,0 +1,161 @@
+{
+  "id": "6869802e9eb46d25",
+  "relativePath": "Anthropic/Claude Code/grep-tool.md",
+  "generatedAt": "2026-07-01T09:34:27.573Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 30,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "# The `Grep` Tool",
+      "zh": "# `Grep` 工具",
+      "ok": true
+    },
+    {
+      "original": "A powerful **content search** tool built on top of [ripgrep](https://github.com/BurntSushi/ripgrep)\n(`rg`). It answers the question: *\"Which files contain text matching this pattern, and what\nare the matching lines?\"*",
+      "zh": "建立在 [ripgrep] 之上的强大的**内容搜索**工具(https://github.com/BurntSushi/ripgrep)\n（`rg`）。它回答了以下问题：*“哪些文件包含与此模式匹配的文本，以及什么\n是匹配的线吗？\"*",
+      "ok": true
+    },
+    {
+      "original": "Grep searches **inside** files. (Its sibling, `Glob`, searches file **names**. See\n`glob-tool.md`.)",
+      "zh": "Grep 搜索**内部**文件。 （它的兄弟“Glob”，搜索文件**名称**。请参阅\n`glob-tool.md`。）",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "## When to use it",
+      "zh": "## 何时使用",
+      "ok": true
+    },
+    {
+      "original": "- Finding where a function, variable, class, or string is defined or used.\n- Locating all occurrences of a pattern across a codebase.\n- Counting how many times something appears.\n- Any time you'd reach for `grep`, `rg`, `egrep`, or `grep -r` in a shell.",
+      "zh": "- 查找定义或使用函数、变量、类或字符串的位置。\n- 定位代码库中所有出现的模式。\n- 计算某事物出现的次数。\n- 任何时候你在 shell 中使用 `grep`、`rg`、`egrep` 或 `grep -r` 。",
+      "ok": true
+    },
+    {
+      "original": "> **Important:** Always prefer this tool over running `grep`/`rg` through the Bash tool.\n> It is purpose-built, respects `.gitignore` by default, and returns results in a clean,\n> structured form. Running `grep` in Bash is discouraged.",
+      "zh": "> **重要提示：** 与通过 Bash 工具运行 `grep`/`rg` 相比，始终更喜欢此工具。\n> 它是专门构建的，默认情况下尊重 `.gitignore`，并以干净的方式返回结果，\n> 结构化形式。不鼓励在 Bash 中运行“grep”。",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "## Parameters",
+      "zh": "＃＃ 参数",
+      "ok": true
+    },
+    {
+      "original": "| Parameter      | Type    | Required | Description                                                                                         |\n| -------------- | ------- | -------- | --------------------------------------------------------------------------------------------------- |\n| `pattern`      | string  | **Yes**  | A regular expression to search for. Full regex syntax is supported (e.g. `log.*Error`, `function\\s+\\w+`). |\n| `path`         | string  | No       | File or directory to search in. Defaults to the current working directory.                          |\n| `glob`         | string  | No       | Glob pattern to filter which files are searched (e.g. `*.js`, `*.{ts,tsx}`). Maps to ripgrep's `--glob`. |\n| `type`         | string  | No       | File type to search (e.g. `js`, `py`, `rust`, `go`). Often more efficient than `glob` for standard types. |\n| `output_mode`  | string  | No       | One of `content`, `files_with_matches` (default), or `count`. Controls what is returned (see below). |\n| `-i`           | boolean | No       | Case-insensitive search.                                                                            |\n| `-n`           | boolean | No       | Show l",
+      "zh": "|参数|类型 |必填 |描述 |\n| -------------- | -------- | -------- | ------------------------------------------------------------------------------------------------------------------ |\n| `模式` |字符串| **是** |要搜索的正则表达式。支持完整的正则表达式语法（例如“log.*Error”、“function\\s+\\w+”）。 |\n| `路径` |字符串|没有 |要搜索的文件或目录。默认为当前工作目录。                          |\n| `全局` |字符串|没有 |用于过滤搜索文件的全局模式（例如“*.js”、“*.{ts,tsx}”）。映射到 ripgrep 的 `--glob`。 |\n| `类型` |字符串|没有 |要搜索的文件类型（例如“js”、“py”、“rust”、“go”）。对于标准类型来说，通常比“glob”更有效。 |\n| `输出模式` |字符串|没有 | “content”、“files_with_matches”（默认）或“count”之一。控制返回的内容（见下文）。 |\n| `-i` |布尔 |没有 |不区分大小写的搜索。                                                                            |\n| `-n` |布尔 |没有 |显示l",
+      "ok": true
+    },
+    {
+      "original": "ine numbers. Only applies when `output_mode` is `content`.                                    |\n| `-A`           | number  | No       | Lines of context to show **A**fter each match. (`content` mode only.)                               |\n| `-B`           | number  | No       | Lines of context to show **B**efore each match. (`content` mode only.)                              |\n| `-C`           | number  | No       | Lines of context to show before **and** after each match. (`content` mode only.)                    |\n| `multiline`    | boolean | No       | Enable multiline mode so `.` matches newlines and patterns can span lines. Default `false`.         |\n| `head_limit`   | number  | No       | Limit output to the first N lines/entries (like piping to `head -N`). Works across all output modes. |",
+      "zh": "内数。仅当“output_mode”为“content”时适用。                                    |\n| `-A` |数量 |没有 |每场比赛结束后**显示的上下文行。 （仅限“内容”模式。）\n| `-B` |数量 |没有 |每场比赛之前显示 **B** 的上下文行。 （仅限“内容”模式。）\n| `-C` |数量 |没有 |每场比赛之前 ** 和 ** 之后显示的上下文行。 （仅限“内容”模式。）\n| `多行` |布尔 |没有 |启用多行模式，以便“.”匹配换行符并且模式可以跨行。默认为“假”。         |\n| `head_limit` |数量 |没有 |将输出限制为前 N 行/条目（例如通过管道传输到“head -N”）。适用于所有输出模式。 |",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "## Output modes explained",
+      "zh": "## 输出模式解释",
+      "ok": true
+    },
+    {
+      "original": "The `output_mode` parameter changes *what* you get back. Picking the right one keeps results\nfocused:",
+      "zh": "`output_mode` 参数会更改您返回的*内容*。选择正确的可以保持结果\n重点：",
+      "ok": true
+    },
+    {
+      "original": "- **`files_with_matches`** *(default)* — Returns just the list of file paths that contain at\n  least one match. Best when you only need to know *where* something lives. Cheapest output.",
+      "zh": "- **`files_with_matches`** *（默认）* — 仅返回包含以下内容的文件路径列表\n  至少一场比赛。当您只需要知道某物“在哪里”时最好。最便宜的输出。",
+      "ok": true
+    },
+    {
+      "original": "- **`content`** — Returns the actual matching lines (and optional surrounding context via\n  `-A`/`-B`/`-C`). This is the mode that supports `-n`, `-A`, `-B`, and `-C`. Use it when you\n  need to *read* the matches, not just locate the files.",
+      "zh": "- **`content`** — 返回实际匹配行（以及可选的周围上下文\n  `-A`/`-B`/`-C`)。这是支持“-n”、“-A”、“-B”和“-C”的模式。当你\n  需要“读取”匹配项，而不仅仅是找到文件。",
+      "ok": true
+    },
+    {
+      "original": "- **`count`** — Returns the number of matches per file. Use it to gauge how widespread a\n  pattern is before diving in.",
+      "zh": "- **`count`** — 返回每个文件的匹配数。用它来衡量一个\n  模式是在潜入之前。",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "## Regex notes",
+      "zh": "## 正则表达式注释",
+      "ok": true
+    },
+    {
+      "original": "- The `pattern` is a regular expression, **not** a literal string. Characters like `.`, `(`,\n  `)`, `{`, `[`, `*`, `+`, `?`, `|`, `\\` have special meaning.\n- To match them literally, escape with a backslash. Example: to find the literal text\n  `interface{}` in Go, write the pattern as `interface\\{\\}`.\n- Ripgrep uses the Rust regex engine. By default, patterns are matched **per line** — a\n  pattern cannot span multiple lines unless `multiline: true` is set.",
+      "zh": "- “pattern”是正则表达式，**不是**文字字符串。诸如“.”、“(”、\n  `)`、`{`、`[`、`*`、`+`、`?`、`|`、`\\` 具有特殊含义。\n- 要按字面意思匹配它们，请使用反斜杠转义。示例：查找文字\n  Go 中的“interface{}”，将模式写为“interface\\{\\}”。\n- Ripgrep 使用 Rust 正则表达式引擎。默认情况下，模式**每行**匹配 - a\n  除非设置了“multiline: true”，否则模式不能跨越多行。",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "## Examples",
+      "zh": "## 示例",
+      "ok": true
+    },
+    {
+      "original": "**Find every file that mentions `TODO` (just the file list):**\n```json\n{ \"pattern\": \"TODO\" }\n```",
+      "zh": "**查找每个提到“TODO”的文件（仅文件列表）：**\n```json\n{“模式”：“待办事项”}\n````",
+      "ok": true
+    },
+    {
+      "original": "**Show the matching lines with line numbers, only in JavaScript files:**\n```json\n{\n  \"pattern\": \"useState\",\n  \"glob\": \"*.js\",\n  \"output_mode\": \"content\",\n  \"-n\": true\n}\n```",
+      "zh": "**显示带有行号的匹配行，仅在 JavaScript 文件中：**\n```json\n{\n  “模式”：“使用状态”，\n  \"glob\": \"*.js\",\n  \"output_mode\": \"内容\",\n  “-n”：正确\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "**Case-insensitive search with 3 lines of surrounding context:**\n```json\n{\n  \"pattern\": \"deprecated\",\n  \"output_mode\": \"content\",\n  \"-i\": true,\n  \"-C\": 3\n}\n```",
+      "zh": "**不区分大小写的搜索，包含 3 行周围上下文：**\n```json\n{\n  “模式”：“已弃用”，\n  \"output_mode\": \"内容\",\n  “-i”：正确，\n  “-C”：3\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "**Count how often `console.log` appears, per file, in TypeScript sources:**\n```json\n{\n  \"pattern\": \"console\\\\.log\",\n  \"type\": \"ts\",\n  \"output_mode\": \"count\"\n}\n```",
+      "zh": "**计算每个文件在 TypeScript 源中出现 `console.log` 的频率：**\n```json\n{\n  \"pattern\": \"控制台\\\\.log\",\n  “类型”：“ts”，\n  “输出模式”：“计数”\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "**Multiline search — a `struct` block spanning several lines:**\n```json\n{\n  \"pattern\": \"struct \\\\{[\\\\s\\\\S]*?name\",\n  \"multiline\": true,\n  \"output_mode\": \"content\"\n}\n```",
+      "zh": "**多行搜索 - 跨越多行的“struct”块：**\n```json\n{\n  \"pattern\": \"struct \\\\{[\\\\s\\\\S]*?name\",\n  “多行”：正确，\n  “输出模式”：“内容”\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "## Tips & gotchas",
+      "zh": "## 提示和陷阱",
+      "ok": true
+    },
+    {
+      "original": "- **Filter early.** Combining `pattern` with `glob` or `type` is far faster and cleaner than\n  searching everything and sorting through noise.\n- **`type` vs `glob`.** `type` uses ripgrep's built-in language definitions (it knows which\n  extensions belong to `python`, `rust`, etc.). `glob` gives you precise control over file\n  patterns. Use whichever expresses your intent more clearly.\n- **Escaping in JSON.** Because patterns travel through JSON, a backslash in the regex must be\n  written as `\\\\` in the JSON string (e.g. `\\\\.` to match a literal dot).\n- **`.gitignore` aware.** Like ripgrep, the tool skips ignored files (e.g. `node_modules`) by\n  default — usually what you want.\n- **For exploration, pair with `Glob`.** Use `Glob` to discover candidate files by name, then\n  `Grep` to search their contents — or hand both off to an agent for broad fan-out searches.",
+      "zh": "- **尽早过滤。** 将 `pattern` 与 `glob` 或 `type` 组合起来比\n  搜索一切并排除噪音。\n- **`type` 与 `glob`。** `type` 使用 ripgrep 的内置语言定义（它知道哪个\n  扩展属于“python”、“rust”等）。 `glob` 可以让您精确控制文件\n  模式。使用更清楚地表达您的意图的那个。\n- **在 JSON 中转义。** 因为模式通过 JSON 传输，所以正则表达式中的反斜杠必须是\n  在 JSON 字符串中写为“\\\\”（例如“\\\\.”以匹配文字点）。\n- **`.gitignore` 感知。** 与 ripgrep 一样，该工具通过以下方式跳过忽略的文件（例如 `node_modules`）\n  默认值——通常是你想要的。\n- **为了探索，请与 `Glob` 配对。** 使用 `Glob` 按名称发现候选文件，然后\n  “Grep”来搜索它们的内容 - 或者将两者都交给代理进行广泛的扇出搜索。",
+      "ok": true
+    }
+  ]
+}

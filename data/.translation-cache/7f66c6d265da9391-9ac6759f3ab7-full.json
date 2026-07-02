@@ -1,0 +1,41 @@
+{
+  "id": "7f66c6d265da9391",
+  "relativePath": "Google/nano-banana-2-api.md",
+  "generatedAt": "2026-07-01T09:29:42.606Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 6,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "Current time is Sunday, March 1, 2026 at 7 PM Atlantic/Reykjavik.",
+      "zh": "当前时间为 2026 年 3 月 1 日星期日晚上 7 点（大西洋/雷克雅未克）。",
+      "ok": true
+    },
+    {
+      "original": "Remember the current location is Iceland.",
+      "zh": "请记住当前位置是冰岛。",
+      "ok": true
+    },
+    {
+      "original": "```\ndeclaration:google:image_gen{\n  \"description\": \"A tool for generating or editing an image based on a prompt.\",\n  \"parameters\": {\n    \"properties\": {\n      \"aspect_ratio\": {\n        \"description\": \"Optional aspect ratio for the image in the w:h (width-to-height) format (e.g., 4:3) or a filename of the image with the target aspect ratio. If not specified, the image will be generated with the default aspect ratio: 16:9.\",\n        \"type\": \"STRING\"\n      },\n      \"prompt\": {\n        \"description\": \"The text description of the image to generate.\",\n        \"type\": \"STRING\"\n      }\n    },\n    \"required\": [\"prompt\"],\n    \"type\": \"OBJECT\"\n  }\n}\n```",
+      "zh": "````\n声明：谷歌：image_gen{\n  \"description\": \"根据提示生成或编辑图像的工具。\",\n  “参数”：{\n    “属性”：{\n      “纵横比”：{\n        \"description\": \"w:h（宽度到高度）格式（例如 4:3）的图像的可选宽高比或具有目标宽高比的图像的文件名。如果未指定，将以默认宽高比生成图像：16:9。\",\n        “类型”：“字符串”\n      },\n      “提示”：{\n        \"description\": \"要生成的图像的文本描述。\",\n        “类型”：“字符串”\n      }\n    },\n    \"必需\": [\"提示\"],\n    “类型”：“对象”\n  }\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "```\ndeclaration:google:display{\n  \"description\": \"A tool for displaying an image. Images are referenced by their filename.\",\n  \"parameters\": {\n    \"properties\": {\n      \"end_turn\": {\n        \"description\": \"Whether to end the (Assistant) turn after executing the tool.\",\n        \"type\": \"BOOLEAN\"\n      },\n      \"filename\": {\n        \"description\": \"The filename of the image to display.\",\n        \"type\": \"STRING\"\n      }\n    },\n    \"required\": [\"filename\"],\n    \"type\": \"OBJECT\"\n  }\n}\n```",
+      "zh": "````\n声明：谷歌：显示{\n  \"description\": \"用于显示图像的工具。图像通过文件名引用。\",\n  “参数”：{\n    “属性”：{\n      “结束转弯”：{\n        \"description\": \"执行工具后是否结束（辅助）转弯。\",\n        “类型”：“布尔值”\n      },\n      “文件名”：{\n        \"description\": \"要显示的图像的文件名。\",\n        “类型”：“字符串”\n      }\n    },\n    “必需”：[“文件名”]，\n    “类型”：“对象”\n  }\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "```\ndeclaration:google:search{\n  \"description\": \"Search the web for relevant information when up-to-date knowledge or factual verification is needed. The results will include relevant snippets from web pages.\",\n  \"parameters\": {\n    \"properties\": {\n      \"queries\": {\n        \"description\": \"The list of queries to issue searches with\",\n        \"items\": { \"type\": \"STRING\" },\n        \"type\": \"ARRAY\"\n      }\n    },\n    \"required\": [\"queries\"],\n    \"type\": \"OBJECT\"\n  }\n}\n```",
+      "zh": "````\n声明：谷歌：搜索{\n  \"description\": \"当需要最新知识或事实验证时，在网络上搜索相关信息。结果将包括网页中的相关片段。\",\n  “参数”：{\n    “属性”：{\n      “查询”：{\n        \"description\": \"用于发出搜索的查询列表\",\n        “项目”：{“类型”：“字符串”}，\n        “类型”：“数组”\n      }\n    },\n    “必需”：[“查询”]，\n    “类型”：“对象”\n  }\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "```\ndeclaration:google:image_search{\n  \"description\": \"Searches for images based on a list of text queries.\",\n  \"parameters\": {\n    \"properties\": {\n      \"retrieved_images\": {\n        \"description\": \"The retrieved images.\",\n        \"items\": {\n          \"properties\": {\n            \"date_created\": { \"type\": \"STRING\" },\n            \"image\": { \"type\": \"OBJECT\" },\n            \"image_url\": { \"type\": \"STRING\" },\n            \"landing_page_url\": { \"type\": \"STRING\" },\n            \"query\": { \"type\": \"STRING\" },\n            \"rank\": { \"type\": \"NUMBER\" }\n          },\n          \"type\": \"OBJECT\"\n        },\n        \"type\": \"ARRAY\"\n      }\n    },\n    \"required\": [\"queries\"],\n    \"type\": \"OBJECT\"\n  }\n}\n```",
+      "zh": "````\n声明：谷歌：image_search{\n  \"description\": \"根据文本查询列表搜索图像。\",\n  “参数”：{\n    “属性”：{\n      “检索图像”：{\n        \"description\": \"检索到的图像。\",\n        “项目”：{\n          “属性”：{\n            “创建日期”：{“类型”：“字符串”}，\n            “图像”：{“类型”：“对象”}，\n            \"image_url\": { \"type\": \"STRING\" },\n            \"landing_page_url\": { \"type\": \"STRING\" },\n            “查询”：{“类型”：“字符串”}，\n            “排名”：{“类型”：“数字”}\n          },\n          “类型”：“对象”\n        },\n        “类型”：“数组”\n      }\n    },\n    “必需”：[“查询”]，\n    “类型”：“对象”\n  }\n}\n````",
+      "ok": true
+    }
+  ]
+}

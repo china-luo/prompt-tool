@@ -1,0 +1,16 @@
+{
+  "id": "0b8a9d738b7ccc32",
+  "relativePath": "Anthropic/Official/README.md",
+  "generatedAt": "2026-07-01T09:29:05.944Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 1,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "Archives from https://platform.claude.com/docs/en/release-notes/system-prompts",
+      "zh": "存档来自 https://platform.claude.com/docs/en/release-notes/system-prompts",
+      "ok": true
+    }
+  ]
+}

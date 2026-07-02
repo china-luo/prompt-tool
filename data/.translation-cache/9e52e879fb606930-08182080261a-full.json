@@ -1,0 +1,181 @@
+{
+  "id": "9e52e879fb606930",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/compact.md",
+  "generatedAt": "2026-07-01T09:35:07.440Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 34,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "CRITICAL: Respond with TEXT ONLY. Do NOT call any tools.",
+      "zh": "重要：仅以文字回复。不要调用任何工具。",
+      "ok": true
+    },
+    {
+      "original": "- Do NOT use Read, Bash, Grep, Glob, Edit, Write, or ANY other tool.\n- You already have all the context you need in the conversation above.\n- Tool calls will be REJECTED and will waste your only turn — you will fail the task.\n- Your entire response must be plain text: an `<analysis>` block followed by a `<summary>` block.",
+      "zh": "- 请勿使用 Read、Bash、Grep、Glob、Edit、Write 或任何其他工具。\n- 您已经掌握了上述对话中所需的所有背景信息。\n- 工具调用将被拒绝，并且会浪费你唯一的回合 - 你将导致任务失败。\n- 您的整个响应必须是纯文本：一个“<analysis>”块，后跟一个“<summary>”块。",
+      "ok": true
+    },
+    {
+      "original": "Your task is to create a detailed summary of the conversation so far, paying close attention to the user's explicit requests and your previous actions.\nThis summary should be thorough in capturing technical details, code patterns, and architectural decisions that would be essential for continuing development work without losing context.",
+      "zh": "您的任务是创建迄今为止对话的详细摘要，密切关注用户的明确请求和您之前的操作。\n该摘要应该全面捕获技术细节、代码模式和架构决策，这些对于继续开发工作而不丢失上下文至关重要。",
+      "ok": true
+    },
+    {
+      "original": "Before providing your final summary, wrap your analysis in `<analysis>` tags to organize your thoughts and ensure you've covered all necessary points. In your analysis process:",
+      "zh": "在提供最终摘要之前，请将您的分析包含在“<analysis>”标签中，以组织您的想法并确保您已涵盖所有必要的要点。在你的分析过程中：",
+      "ok": true
+    },
+    {
+      "original": "1. Chronologically analyze each message and section of the conversation. For each section thoroughly identify:\n   - The user's explicit requests and intents\n   - Your approach to addressing the user's requests\n   - Key decisions, technical concepts and code patterns\n   - Specific details like:\n     - file names\n     - full code snippets\n     - function signatures\n     - file edits\n   - Errors that you ran into and how you fixed them\n   - Pay special attention to specific user feedback that you received, especially if the user told you to do something differently.\n   - Note any security-relevant instructions or constraints the user stated (e.g., sensitive files or data to avoid, operations that must not be performed, credential or secret handling rules). These MUST be preserved verbatim in the summary so they continue to apply after compaction.\n2. Double-check for technical accuracy and completeness, addressing each required element thoroughly.",
+      "zh": "1. 按时间顺序分析每条消息和对话的部分。对于每个部分彻底确定：\n   - 用户的明确请求和意图\n   - 您解决用户请求的方法\n   - 关键决策、技术概念和代码模式\n   - 具体细节如：\n     - 文件名\n     - 完整的代码片段\n     - 函数签名\n     - 文件编辑\n   - 您遇到的错误以及如何修复它们\n   - 特别注意您收到的特定用户反馈，特别是如果用户告诉您做一些不同的事情。\n   - 注意用户声明的任何与安全相关的指令或约束（例如，要避免的敏感文件或数据、不得执行的操作、凭证或秘密处理规则）。这些必须在摘要中逐字保留，以便它们在压缩后继续应用。\n2. 仔细检查技术准确性和完整性，彻底解决每个必需的要素。",
+      "ok": true
+    },
+    {
+      "original": "Your summary should include the following sections:",
+      "zh": "您的摘要应包括以下部分：",
+      "ok": true
+    },
+    {
+      "original": "1. Primary Request and Intent: Capture all of the user's explicit requests and intents in detail\n2. Key Technical Concepts: List all important technical concepts, technologies, and frameworks discussed.\n3. Files and Code Sections: Enumerate specific files and code sections examined, modified, or created. Pay special attention to the most recent messages and include full code snippets where applicable and include a summary of why this file read or edit is important.\n4. Errors and fixes: List all errors that you ran into, and how you fixed them. Pay special attention to specific user feedback that you received, especially if the user told you to do something differently.\n5. Problem Solving: Document problems solved and any ongoing troubleshooting efforts.\n6. All user messages: List ALL user messages that are not tool results. These are critical for understanding the users' feedback and changing intent. Preserve any security-relevant instructions or constraints verbatim so they remain in effect after compaction.\n7. Pending Tasks: Outline any pending tasks that you have explicitly been asked to work on.\n8. Current Work: Describe in detail precisely what was being worked on immediately",
+      "zh": "1. 主要请求和意图：详细捕获用户的所有显式请求和意图\n2.关键技术概念：列出所有讨论的重要技术概念、技术和框架。\n3. 文件和代码部分：枚举检查、修改或创建的特定文件和代码部分。请特别注意最新消息，并在适用的情况下包含完整的代码片段，并包含有关读取或编辑此文件的重要性的摘要。\n4. 错误和修复：列出您遇到的所有错误以及修复方法。请特别注意您收到的特定用户反馈，尤其是当用户告诉您采取不同的做法时。\n5. 解决问题：记录已解决的问题以及任何正在进行的故障排除工作。\n6. 所有用户消息：列出所有非工具结果的用户消息。这些对于理解用户的反馈和改变意图至关重要。逐字保留所有与安全相关的指令或约束，以便它们在压缩后仍然有效。\n7. 待处理任务：概述明确要求您处理的所有待处理任务。\n8. 当前工作：详细准确地描述立即正在进行的工作",
+      "ok": true
+    },
+    {
+      "original": "before this summary request, paying special attention to the most recent messages from both user and assistant. Include file names and code snippets where applicable.\n9. Optional Next Step: List the next step that you will take that is related to the most recent work you were doing. IMPORTANT: ensure that this step is DIRECTLY in line with the user's most recent explicit requests, and the task you were working on immediately before this summary request. If your last task was concluded, then only list next steps if they are explicitly in line with the users request. Do not start on tangential requests or really old requests that were already completed without confirming with the user first.\n                       If there is a next step, include direct quotes from the most recent conversation showing exactly what task you were working on and where you left off. This should be verbatim to ensure there's no drift in task interpretation.",
+      "zh": "在此摘要请求之前，请特别注意来自用户和助手的最新消息。包括文件名和代码片段（如果适用）。\n9. 可选下一步：列出您将采取的与您最近所做的工作相关的下一步。重要提示：确保此步骤直接符合用户最近的明确请求以及您在此摘要请求之前正在处理的任务。如果您的上一个任务已完成，则仅列出明确符合用户请求的后续步骤。在未先与用户确认的情况下，不要从无关的请求或已经完成的非常旧的请求开始。\n                       如果有下一步，请直接引用最近对话中的内容，准确显示您正在执行的任务以及您停止的任务。这应该是逐字记录的，以确保任务解释不会出现偏差。",
+      "ok": true
+    },
+    {
+      "original": "Here's an example of how your output should be structured:",
+      "zh": "以下是如何构建输出的示例：",
+      "ok": true
+    },
+    {
+      "original": "`<example>`",
+      "zh": "`<示例>`",
+      "ok": true
+    },
+    {
+      "original": "`<analysis>`",
+      "zh": "`<分析>`",
+      "ok": true
+    },
+    {
+      "original": "[Your thought process, ensuring all points are covered thoroughly and accurately]",
+      "zh": "[你的思考过程，确保所有要点都得到彻底、准确的涵盖]",
+      "ok": true
+    },
+    {
+      "original": "`</analysis>`",
+      "zh": "`</分析>`",
+      "ok": true
+    },
+    {
+      "original": "`<summary>`",
+      "zh": "`<摘要>`",
+      "ok": true
+    },
+    {
+      "original": "1. Primary Request and Intent:\n   [Detailed description]",
+      "zh": "1. 主要请求和意图：\n   [详细说明]",
+      "ok": true
+    },
+    {
+      "original": "2. Key Technical Concepts:\n   - [Concept 1]\n   - [Concept 2]\n   - [...]",
+      "zh": "2. 关键技术概念：\n   - [概念1]\n   - [概念2]\n   - [...]",
+      "ok": true
+    },
+    {
+      "original": "3. Files and Code Sections:\n   - [File Name 1]\n      - [Summary of why this file is important]\n      - [Summary of the changes made to this file, if any]\n      - [Important Code Snippet]\n   - [File Name 2]\n      - [Important Code Snippet]\n   - [...]",
+      "zh": "3. 文件和代码部分：\n   - [文件名1]\n      - [总结为什么这个文件很重要]\n      - [对此文件所做的更改摘要（如果有）]\n      - [重要代码片段]\n   - [文件名2]\n      - [重要代码片段]\n   - [...]",
+      "ok": true
+    },
+    {
+      "original": "4. Errors and fixes:\n    - [Detailed description of error 1]:\n      - [How you fixed the error]\n      - [User feedback on the error if any]\n    - [...]",
+      "zh": "4. 错误及修正：\n    - 【错误1详细描述】：\n      - [你如何修复错误]\n      - [用户对错误的反馈（如果有）]\n    - [...]",
+      "ok": true
+    },
+    {
+      "original": "5. Problem Solving:\n   [Description of solved problems and ongoing troubleshooting]",
+      "zh": "5、问题解决：\n   [已解决的问题和正在进行的故障排除的描述]",
+      "ok": true
+    },
+    {
+      "original": "6. All user messages: \n    - [Detailed non tool use user message]\n    - [...]",
+      "zh": "6. 所有用户留言： \n    - [详细的非工具使用用户消息]\n    - [...]",
+      "ok": true
+    },
+    {
+      "original": "7. Pending Tasks:\n   - [Task 1]\n   - [Task 2]\n   - [...]",
+      "zh": "7. 待处理任务：\n   - [任务1]\n   - [任务2]\n   - [...]",
+      "ok": true
+    },
+    {
+      "original": "8. Current Work:\n   [Precise description of current work]",
+      "zh": "8. 目前的工作：\n   [当前工作的精确描述]",
+      "ok": true
+    },
+    {
+      "original": "9. Optional Next Step:\n   [Optional Next step to take]",
+      "zh": "9. 可选的下一步：\n   [可选的下一步要采取的步骤]",
+      "ok": true
+    },
+    {
+      "original": "`</summary>`",
+      "zh": "`</摘要>`",
+      "ok": true
+    },
+    {
+      "original": "`</example>`",
+      "zh": "`</示例>`",
+      "ok": true
+    },
+    {
+      "original": "Please provide your summary based on the conversation so far, following this structure and ensuring precision and thoroughness in your response.",
+      "zh": "请根据迄今为止的对话提供您的摘要，遵循此结构并确保您的答复的准确性和彻底性。",
+      "ok": true
+    },
+    {
+      "original": "There may be additional summarization instructions provided in the included context. If so, remember to follow these instructions when creating the above summary. Examples of instructions include:",
+      "zh": "所包含的上下文中可能会提供其他摘要说明。如果是这样，请记住在创建上述摘要时遵循这些说明。指令示例包括：",
+      "ok": true
+    },
+    {
+      "original": "`<example>`",
+      "zh": "`<示例>`",
+      "ok": true
+    },
+    {
+      "original": "## Compact Instructions\nWhen summarizing the conversation focus on typescript code changes and also remember the mistakes you made and how you fixed them.",
+      "zh": "## 简洁说明\n总结对话时，重点关注打字稿代码更改，并记住您所犯的错误以及如何修复这些错误。",
+      "ok": true
+    },
+    {
+      "original": "`</example>`",
+      "zh": "`</示例>`",
+      "ok": true
+    },
+    {
+      "original": "`<example>`",
+      "zh": "`<示例>`",
+      "ok": true
+    },
+    {
+      "original": "# Summary instructions\nWhen you are using compact - please focus on test output and code changes. Include file reads verbatim.",
+      "zh": "# 简要说明\n当您使用紧凑型时 - 请关注测试输出和代码更改。包含文件逐字读取。",
+      "ok": true
+    },
+    {
+      "original": "`</example>`",
+      "zh": "`</示例>`",
+      "ok": true
+    },
+    {
+      "original": "REMINDER: Do NOT call any tools. Respond with plain text only — an `<analysis>` block followed by a `<summary>` block. Tool calls will be rejected and you will fail the task.",
+      "zh": "提醒：不要调用任何工具。仅使用纯文本进行响应 - 一个“<analysis>”块，后跟一个“<summary>”块。工具调用将被拒绝，您将导致任务失败。",
+      "ok": true
+    }
+  ]
+}

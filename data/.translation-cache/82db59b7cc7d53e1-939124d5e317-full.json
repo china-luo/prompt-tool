@@ -1,0 +1,96 @@
+{
+  "id": "82db59b7cc7d53e1",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/simplify.md",
+  "generatedAt": "2026-07-01T09:31:33.654Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 17,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "---\nname: simplify\ndescription: Review the changed code for reuse, simplification, efficiency, and altitude cleanups, then apply the fixes.\n---",
+      "zh": "---\n名称：简化\n描述：检查更改后的代码的重用、简化、效率和高度清理，然后应用修复。\n---",
+      "ok": true
+    },
+    {
+      "original": "`/simplify → 4 cleanup agents in parallel → apply the fixes`",
+      "zh": "`/simplify → 4 个并行清理代理 → 应用修复程序`",
+      "ok": true
+    },
+    {
+      "original": "You are improving the quality of the changed code, not hunting for bugs. Review\nit for reuse, simplification, efficiency, and altitude issues, then fix what you\nfind. Do not look for correctness bugs — that is what `/code-review` is for.",
+      "zh": "您正在提高更改后的代码的质量，而不是寻找错误。评论\n其目的是为了重用、简化、效率和高度问题，然后修复您所需要的\n找到。不要寻找正确性错误——这就是“/code-review”的用途。",
+      "ok": true
+    },
+    {
+      "original": "## Phase 0 — Gather the diff",
+      "zh": "## 阶段 0 — 收集差异",
+      "ok": true
+    },
+    {
+      "original": "Run `git diff @{upstream}...HEAD` (or `git diff main...HEAD` / `git diff HEAD~1`\nif there's no upstream) to get the unified diff under review. If there are\nuncommitted changes, or the range diff is empty, also run `git diff HEAD` and\ninclude the working-tree changes in scope — the review often runs before the\ncommit. If a PR number, branch name, or file path was passed as an argument,\nreview that target instead. Treat this diff as the review scope.",
+      "zh": "运行 `git diff @{upstream}...HEAD` （或 `git diff main...HEAD` / `git diff HEAD~1`\n如果没有上游）来审查统一差异。如果有\n未提交的更改，或者范围差异为空，也运行 `git diff HEAD` 并\n包括范围内的工作树更改——审查通常在\n提交。如果 PR 编号、分支名称或文件路径作为参数传递，\n相反，请检查该目标。将此差异视为审查范围。",
+      "ok": true
+    },
+    {
+      "original": "## Phase 1 — Review (4 cleanup agents in parallel)",
+      "zh": "## 第 1 阶段 — 审查（并行 4 个清理代理）",
+      "ok": true
+    },
+    {
+      "original": "Launch **4 independent review agents** via the Agent tool, all in a\nsingle message so they run concurrently. Pass each agent the diff and one of\nthe four angles below. Each returns its findings with `file`, `line`, a\none-line `summary`, and the concrete cost (what is duplicated, wasted, or\nharder to maintain).",
+      "zh": "通过代理工具启动 **4 个独立审查代理**，所有这些都在一个\n单个消息，因此它们同时运行。向每个代理传递 diff 和其中之一\n下面的四个角。每个都返回其结果“file”、“line”、a\n一行“摘要”，以及具体成本（重复的、浪费的或\n更难维护）。",
+      "ok": true
+    },
+    {
+      "original": "### Reuse",
+      "zh": "### 重复使用",
+      "ok": true
+    },
+    {
+      "original": "Flag new code that re-implements something the codebase\nalready has — Grep shared/utility modules and files adjacent to the change,\nand name the existing helper to call instead.",
+      "zh": "标记重新实现代码库某些内容的新代码\n已经有 — Grep 共享/实用模块和与更改相邻的文件，\n并命名现有的助手来调用。",
+      "ok": true
+    },
+    {
+      "original": "### Simplification",
+      "zh": "### 简化",
+      "ok": true
+    },
+    {
+      "original": "Flag unnecessary complexity the diff adds: redundant or derivable state,\ncopy-paste with slight variation, deep nesting, dead code left behind. Name\nthe simpler form that does the same job.",
+      "zh": "标记 diff 添加的不必要的复杂性：冗余或可导出状态，\n复制粘贴略有变化，深层嵌套，留下死代码。名称\n完成相同工作的更简单的形式。",
+      "ok": true
+    },
+    {
+      "original": "### Efficiency",
+      "zh": "＃＃＃ 效率",
+      "ok": true
+    },
+    {
+      "original": "Flag wasted work the diff introduces: redundant computation or repeated I/O,\nindependent operations run sequentially, blocking work added to startup or\nhot paths. Name the cheaper alternative.",
+      "zh": "标记 diff 引入的浪费工作：冗余计算或重复 I/O，\n独立操作按顺序运行，阻止添加到启动或\n热路径。说出更便宜的替代方案。",
+      "ok": true
+    },
+    {
+      "original": "### Altitude",
+      "zh": "### 海拔高度",
+      "ok": true
+    },
+    {
+      "original": "Check that each change is implemented at the right depth, not as a fragile\nbandaid. Special cases layered on shared infrastructure are a sign the fix\nisn't deep enough — prefer generalizing the underlying mechanism over adding\nspecial cases.",
+      "zh": "检查每个更改是否在正确的深度实施，而不是作为脆弱的\n创可贴。共享基础设施上的特殊情况是修复的标志\n不够深入——更喜欢概括底层机制而不是添加\n特殊情况。",
+      "ok": true
+    },
+    {
+      "original": "## Phase 2 — Apply the fixes",
+      "zh": "## 第 2 阶段 — 应用修复",
+      "ok": true
+    },
+    {
+      "original": "Wait for all four agents to complete, dedup findings that point at the same\nline or mechanism, and fix each remaining one directly. Skip any finding whose\nfix would change intended behavior, require changes well outside the reviewed\ndiff, or that you judge to be a false positive — note the skip rather than\narguing with it. Finish with a brief summary of what was fixed and what was\nskipped (or confirm the code was already clean).",
+      "zh": "等待所有四个代理完成，删除指向相同的结果\n线或机构，并直接修复剩余的每一个。跳过任何发现\n修复会改变预期的行为，需要远远超出审查范围的更改\ndiff，或者您判断为误报 - 请注意跳过而不是\n与它争论。最后简要总结一下已修复的内容和已修改的内容\n跳过（或确认代码已经干净）。",
+      "ok": true
+    }
+  ]
+}

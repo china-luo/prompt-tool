@@ -1,0 +1,76 @@
+{
+  "id": "a17f5187aacd7929",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/run-skill-generator/examples/library.md",
+  "generatedAt": "2026-07-01T09:30:53.713Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 13,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "# Example: Library / SDK",
+      "zh": "# 示例：库/SDK",
+      "ok": true
+    },
+    {
+      "original": "Libraries don't have a \"run\" step in the process sense — there's no\nserver to start, no CLI to invoke. For libraries, the run skill is about:",
+      "zh": "从流程意义上来说，图书馆没有“运行”步骤——没有\n服务器启动，无需调用 CLI。对于库来说，运行技能大约是：",
+      "ok": true
+    },
+    {
+      "original": "1. **Building** the library from source\n2. **Running the test suite**\n3. **A minimal working example** that exercises the library and proves\n   it's installed correctly",
+      "zh": "1. **从源代码构建**库\n2. **运行测试套件**\n3. **一个最小的工作示例**，用于练习库并证明\n   安装正确",
+      "ok": true
+    },
+    {
+      "original": "Keep it brief. The template's Build and Test sections do most of the work.",
+      "zh": "保持简短。模板的构建和测试部分完成大部分工作。",
+      "ok": true
+    },
+    {
+      "original": "## The smoke-test example",
+      "zh": "## 冒烟测试示例",
+      "ok": true
+    },
+    {
+      "original": "The main library-specific addition is a tiny program (or REPL snippet)\nthat imports the library and does one real thing. This is how an agent\nconfirms \"yes, the library is usable\":",
+      "zh": "主要的库特定添加是一个小程序（或 REPL 片段）\n导入库并做一件真正的事情。代理是这样的\n确认“是的，该库可用”：",
+      "ok": true
+    },
+    {
+      "original": "> ## Verify\n>\n> ```bash\n> python -c '\n> from mylib import Client\n> c = Client()\n> print(c.ping())\n> '\n> # → pong\n> ```",
+      "zh": "> ## 验证\n>\n> ```bash\n> python -c '\n> 从 mylib 导入客户端\n> c = 客户端()\n> 打印(c.ping())\n> '\n> # → 乒乓球\n> ```",
+      "ok": true
+    },
+    {
+      "original": "Or for a compiled language:",
+      "zh": "或者对于编译语言：",
+      "ok": true
+    },
+    {
+      "original": "> ```bash\n> cat > /tmp/smoke.go <<GO\n> package main\n> import \"example.com/mylib\"\n> func main() { println(mylib.Version()) }\n> GO\n> go run /tmp/smoke.go\n> # → v1.2.3\n> ```",
+      "zh": "> ```bash\n> 猫 > /tmp/smoke.go <<GO\n> 包主要\n> 导入“example.com/mylib”\n> func main() { println(mylib.Version()) }\n> 去\n> 运行 /tmp/smoke.go\n> # → v1.2.3\n> ```",
+      "ok": true
+    },
+    {
+      "original": "## Example snippet",
+      "zh": "## 示例片段",
+      "ok": true
+    },
+    {
+      "original": "> ---\n> name: run-mylib\n> description: Build, install, and test mylib from source. Use when asked to verify mylib works, run its tests, or build a distribution.\n> ---\n>\n> `mylib` is a Python library — \"running\" it means building from source\n> and executing the test suite.\n>\n> ## Setup\n>\n> ```bash\n> pip install -e '.[dev]'\n> ```\n>\n> ## Verify\n>\n> ```bash\n> python -c 'import mylib; print(mylib.__version__)'\n> # → 2.1.0\n> ```\n>\n> ## Test\n>\n> ```bash\n> pytest\n> ```\n>\n> Subset of tests: `pytest tests/unit/`. With coverage: `pytest --cov=mylib`.\n>\n> ## Build (distribution)\n>\n> ```bash\n> pip install build\n> python -m build\n> # → dist/mylib-2.1.0-py3-none-any.whl\n> ```",
+      "zh": "> ---\n> 名称：run-mylib\n> 描述：从源代码构建、安装和测试 mylib。当要求验证 mylib 是否工作、运行其测试或构建发行版时使用。\n> ---\n>\n> `mylib` 是一个 Python 库——“运行”意味着从源代码构建\n> 并执行测试套件。\n>\n> ## 设置\n>\n> ```bash\n> pip install -e '.[dev]'\n> ```\n>\n> ## 验证\n>\n> ```bash\n> python -c '导入 mylib;打印（mylib.__version__）'\n> # → 2.1.0\n> ```\n>\n> ## 测试\n>\n> ```bash\n> py测试\n> ```\n>\n> 测试子集：`pytest测试/单元/`。覆盖范围：`pytest --cov=mylib`。\n>\n> ## 构建（分发）\n>\n> ```bash\n> pip 安装构建\n> python -m 构建\n> # → dist/mylib-2.1.0-py3-none-any.whl\n> ```",
+      "ok": true
+    },
+    {
+      "original": "## Things to consider documenting",
+      "zh": "## 需要考虑记录的事项",
+      "ok": true
+    },
+    {
+      "original": "- **Development mode vs installed mode.** `pip install -e .` vs\n  `pip install .` — if behavior differs, say which to use for what.\n- **Optional dependencies.** `[dev]`, `[test]`, `[docs]` extras and when\n  each is needed.\n- **Generated code.** If there's a codegen step (protobuf, OpenAPI clients),\n  document it — it's almost always missing from READMEs.",
+      "zh": "- **开发模式与安装模式。** `pip install -e .` vs\n  `pip install .` — 如果行为不同，请说明使用哪个。\n- **可选依赖项。** `[dev]`、`[test]`、`[docs]` 附加项以及何时\n  每一个都是需要的。\n- **生成的代码。** 如果有代码生成步骤（protobuf、OpenAPI 客户端），\n  记录它——自述文件中几乎总是缺少它。",
+      "ok": true
+    }
+  ]
+}

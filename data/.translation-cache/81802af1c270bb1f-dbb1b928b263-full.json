@@ -1,0 +1,101 @@
+{
+  "id": "81802af1c270bb1f",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/run-skill-generator/examples/playwright.md",
+  "generatedAt": "2026-07-01T09:31:52.206Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 18,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "# Example: Browser-driven web app",
+      "zh": "# 示例：浏览器驱动的 Web 应用程序",
+      "ok": true
+    },
+    {
+      "original": "You have a dev server that serves HTML to a browser. An agent in a\nheadless container can't open a browser window — so \"run the app\" means\nlaunching the dev server, driving a headless Chromium against it, and\nproducing a screenshot that proves the page rendered.",
+      "zh": "您有一个向浏览器提供 HTML 的开发服务器。代理人在一个\n无头容器无法打开浏览器窗口 - 所以“运行应用程序”意味着\n启动开发服务器，驱动一个无头 Chromium 来对抗它，以及\n生成证明页面呈现的屏幕截图。",
+      "ok": true
+    },
+    {
+      "original": "Don't write a browser driver. Use `chromium-cli`.",
+      "zh": "不要编写浏览器驱动程序。使用“chromium-cli”。",
+      "ok": true
+    },
+    {
+      "original": "## Dev server",
+      "zh": "## 开发服务器",
+      "ok": true
+    },
+    {
+      "original": "Find the dev command (`package.json` `scripts.dev`, `Makefile`,\nREADME), start it in the background, and wait for it to actually serve:",
+      "zh": "找到 dev 命令（`package.json`、`scripts.dev`、`Makefile`、\nREADME），在后台启动它，并等待它实际运行：",
+      "ok": true
+    },
+    {
+      "original": "```bash\nnpm run dev &   # or yarn dev, pnpm dev, make serve, ./dev.sh\necho $! > /tmp/dev.pid\ntimeout 30 bash -c 'until curl -sf http://localhost:3000 >/dev/null; do sleep 1; done'\n```",
+      "zh": "````bash\nnpm run dev & # 或yarn dev, pnpm dev, makeserve, ./dev.sh\n回声$！ > /tmp/dev.pid\n超时 30 bash -c '直到curl -sf http://localhost:3000 >/dev/null;睡觉1；完成'\n````",
+      "ok": true
+    },
+    {
+      "original": "Don't `sleep 5` — poll the port. Stop with\n`kill $(cat /tmp/dev.pid)` (or `pkill -f 'npm run dev'`) before\nrelaunching, or the next run hits `EADDRINUSE`.",
+      "zh": "不要“sleep 5”——轮询端口。停止与\n之前`kill $(cat /tmp/dev.pid)`（或`pkill -f 'npm run dev'`）\n重新启动，或者下一次运行会出现“EADDRINUSE”。",
+      "ok": true
+    },
+    {
+      "original": "## Drive",
+      "zh": "＃＃ 驾驶",
+      "ok": true
+    },
+    {
+      "original": "`chromium-cli` is a headless-Chromium REPL. Pipe a script to stdin:",
+      "zh": "`chromium-cli` 是一个无头 Chromium REPL。将脚本通过管道传输到标准输入：",
+      "ok": true
+    },
+    {
+      "original": "```bash\nchromium-cli --session app <<'EOF'\nnav http://localhost:3000\nwait-for text=Dashboard\nscreenshot\nclick button:has-text(\"New item\")\nfill input[name=\"title\"] Smoke test\npress Enter\nwait-for text=Smoke test\nscreenshot\nconsole --errors\nEOF\n```",
+      "zh": "````bash\nchromium-cli --session app <<'EOF'\n导航 http://localhost:3000\n等待文本=仪表板\n截图\n单击按钮：has-text(\"新项目\")\n填写输入[name=\"title\"] 冒烟测试\n按回车键\n等待文本=冒烟测试\n截图\n控制台--错误\nEOF\n````",
+      "ok": true
+    },
+    {
+      "original": "Screenshots land in `chromium_cli/sessions/app/screenshots/` (latest\nsymlinked as `screenshot.png`). That's the whole loop: `nav` →\n`wait-for` the element you need → act (`click` / `fill` / `type` /\n`press`) → `screenshot` → `console --errors` to check nothing threw.\nFull command reference: `chromium-cli` skill, or `help` at the prompt.",
+      "zh": "屏幕截图位于“chromium_cli/sessions/app/screenshots/”（最新\n符号链接为“screenshot.png”）。这就是整个循环：`nav` →\n`等待`您需要的元素→行动（`单击`/`填充`/`类型`/\n`press`) → `screenshot` → `console --errors` 检查是否没有抛出任何异常。\n完整命令参考：“chromium-cli”技能，或提示符下的“help”。",
+      "ok": true
+    },
+    {
+      "original": "For iterative debugging, run it under tmux and `send-keys` one command\nat a time — same commands, same session.",
+      "zh": "对于迭代调试，请在 tmux 和 `send-keys` 一个命令下运行它\n一次 - 相同的命令，相同的会话。",
+      "ok": true
+    },
+    {
+      "original": "**If `chromium-cli` isn't available:** adapt\n[electron.md](electron.md)'s REPL driver — the structure and commands\ntransfer, but it's `_electron`-specific:\nimport `{ chromium }` instead, launch with\n`chromium.launch({ args: ['--no-sandbox'] })`, acquire the page via\n`(await app.newContext()).newPage()` then `goto()` your dev URL, and\ndrop the Electron-only window introspection\n(`.windows()`/`.firstWindow()`/the `windows` command).",
+      "zh": "**如果 `chromium-cli` 不可用：** 适应\n[ Electron.md](Electron.md) 的 REPL 驱动程序 — 结构和命令\n转移，但它是“_电子”特定的：\n改为导入 `{ chromium }`，启动\n`chromium.launch({ args: ['--no-sandbox'] })`，通过以下方式获取页面\n`(await app.newContext()).newPage()` 然后 `goto()` 你的开发 URL，以及\n删除仅 Electron 窗口内省\n（`.windows()`/`.firstWindow()`/`windows` 命令）。",
+      "ok": true
+    },
+    {
+      "original": "## What to put in the skill",
+      "zh": "## 技能里要放什么",
+      "ok": true
+    },
+    {
+      "original": "The project-specific bits only. `chromium-cli` handles the mechanics.",
+      "zh": "仅项目特定位。 `chromium-cli` 处理机制。",
+      "ok": true
+    },
+    {
+      "original": "- **Dev command + port + stop.** The exact start line, any env vars it\n  needs, and the `kill`/`pkill` to stop it.\n- **Auth.** Whatever gets a logged-in session — a `set-cookie` line, a\n  `fill`/`click` login sequence, or a helper script that does the API\n  dance and emits the cookie.\n- **One representative interaction.** Not the whole app — one path that\n  proves it's running, ending in a screenshot.\n- **App-specific gotchas.** Only the ones you actually hit.",
+      "zh": "- **Dev 命令 + 端口 + stop。** 确切的起始行，任何环境变量\n  需要，以及`kill`/`pkill`来阻止它。\n- **Auth.** 任何获得登录会话的内容 — `set-cookie` 行、\n  `fill`/`click` 登录序列，或执行 API 的帮助程序脚本\n  跳舞并发出饼干。\n- **一次有代表性的交互。**不是整个应用程序 - 一条路径\n  证明它正在运行，以屏幕截图结束。\n- **特定于应用程序的陷阱。** 只有您实际遇到的陷阱。",
+      "ok": true
+    },
+    {
+      "original": "## Gotchas that recur",
+      "zh": "## 重复出现的问题",
+      "ok": true
+    },
+    {
+      "original": "- **React controlled inputs.** `eval el.value = '…'` doesn't fire\n  React's onChange. Use `fill` / `type` — they go through Playwright's\n  input pipeline.\n- **Websockets / long-poll.** `wait-idle` never settles. `wait-for` the\n  element you actually need.\n- **Slow first paint.** Vite/Next compile routes on demand; the first\n  `nav` can take 10s+. `wait-for` handles it; raw `sleep` doesn't.\n- **`screenshot-element <sel>`** crops to one element — use it when the\n  diff is in a specific component, not the whole page.\n- **Check `console --errors` before declaring success.** A page can\n  render its shell while every data fetch 500s.",
+      "zh": "- **React 控制输入。** `eval el.value = '...'` 不会触发\n  React 的 onChange。使用“fill”/“type”——它们会经过剧作家的\n  输入管道。\n- **Websockets / long-poll.** `wait-idle` 永远不会解决。 ‘等待’\n  您实际需要的元素。\n- **第一次绘制速度慢。** Vite/Next 按需编译路线；第一个\n  `nav` 可能需要 10 秒以上。 `wait-for` 处理它；原始的“睡眠”则不然。\n- **`screenshot-element <sel>`** 裁剪为一个元素 — 当\n  diff 位于特定组件中，而不是整个页面中。\n- **在声明成功之前检查 `console --errors`。** 页面可以\n  每次获取数据时渲染其外壳 500 秒。",
+      "ok": true
+    }
+  ]
+}

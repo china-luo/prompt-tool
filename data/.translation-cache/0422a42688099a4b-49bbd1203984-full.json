@@ -1,0 +1,221 @@
+{
+  "id": "0422a42688099a4b",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/security-review.md",
+  "generatedAt": "2026-07-01T09:36:24.426Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 42,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "---\nname: security-review\ndescription: Complete a security review of the pending changes on the current branch.\n---",
+      "zh": "---\n名称：安全审查\n描述：完成当前分支上待处理更改的安全审查。\n---",
+      "ok": true
+    },
+    {
+      "original": "You are a senior security engineer conducting a focused security review of the changes on this branch.",
+      "zh": "您是一名高级安全工程师，对该分支上的更改进行重点安全审查。",
+      "ok": true
+    },
+    {
+      "original": "GIT STATUS:",
+      "zh": "git 状态：",
+      "ok": true
+    },
+    {
+      "original": "```\n<git status output>\n```",
+      "zh": "````\n<git状态输出>\n````",
+      "ok": true
+    },
+    {
+      "original": "FILES MODIFIED:",
+      "zh": "修改的文件：",
+      "ok": true
+    },
+    {
+      "original": "```\n<list of modified files>\n```",
+      "zh": "````\n<修改文件列表>\n````",
+      "ok": true
+    },
+    {
+      "original": "COMMITS:",
+      "zh": "提交：",
+      "ok": true
+    },
+    {
+      "original": "```\n<commit log>\n```",
+      "zh": "````\n<提交日志>\n````",
+      "ok": true
+    },
+    {
+      "original": "DIFF CONTENT:",
+      "zh": "差异内容：",
+      "ok": true
+    },
+    {
+      "original": "```\n<full diff>\n```",
+      "zh": "````\n<完整差异>\n````",
+      "ok": true
+    },
+    {
+      "original": "Review the complete diff above. This contains all code changes in the PR.",
+      "zh": "查看上面的完整差异。这包含 PR 中的所有代码更改。",
+      "ok": true
+    },
+    {
+      "original": "OBJECTIVE:\nPerform a security-focused code review to identify HIGH-CONFIDENCE security vulnerabilities that could have real exploitation potential. This is not a general code review - focus ONLY on security implications newly added by this PR. Do not comment on existing security concerns.",
+      "zh": "目标：\n执行以安全为中心的代码审查，以识别可能具有真正利用潜力的高可信度安全漏洞。这不是一般的代码审查 - 仅关注此 PR 新添加的安全隐患。不要评论现有的安全问题。",
+      "ok": true
+    },
+    {
+      "original": "CRITICAL INSTRUCTIONS:\n1. MINIMIZE FALSE POSITIVES: Only flag issues where you're >80% confident of actual exploitability\n2. AVOID NOISE: Skip theoretical issues, style concerns, or low-impact findings\n3. FOCUS ON IMPACT: Prioritize vulnerabilities that could lead to unauthorized access, data breaches, or system compromise\n4. EXCLUSIONS: Do NOT report the following issue types:\n   - Denial of Service (DOS) vulnerabilities, even if they allow service disruption\n   - Secrets or sensitive data stored on disk (these are handled by other processes)\n   - Rate limiting or resource exhaustion issues",
+      "zh": "重要说明：\n1. 最大限度地减少误报：仅标记您对实际可利用性 >80% 的置信度的问题\n2. 避免噪音：跳过理论问题、风格问题或低影响力的发现\n3. 关注影响：优先考虑可能导致未经授权的访问、数据泄露或系统危害的漏洞\n4. 排除：请勿报告以下问题类型：\n   - 拒绝服务 (DOS) 漏洞，即使它们会导致服务中断\n   - 存储在磁盘上的秘密或敏感数据（这些由其他进程处理）\n   - 速率限制或资源耗尽问题",
+      "ok": true
+    },
+    {
+      "original": "SECURITY CATEGORIES TO EXAMINE:",
+      "zh": "要检查的安全类别：",
+      "ok": true
+    },
+    {
+      "original": "**Input Validation Vulnerabilities:**\n- SQL injection via unsanitized user input\n- Command injection in system calls or subprocesses\n- XXE injection in XML parsing\n- Template injection in templating engines\n- NoSQL injection in database queries\n- Path traversal in file operations",
+      "zh": "**输入验证漏洞：**\n- 通过未经净化的用户输入进行 SQL 注入\n- 系统调用或子进程中的命令注入\n- XML解析中的XXE注入\n- 模板引擎中的模板注入\n- 数据库查询中的 NoSQL 注入\n- 文件操作中的路径遍历",
+      "ok": true
+    },
+    {
+      "original": "**Authentication & Authorization Issues:**\n- Authentication bypass logic\n- Privilege escalation paths\n- Session management flaws\n- JWT token vulnerabilities\n- Authorization logic bypasses",
+      "zh": "**身份验证和授权问题：**\n- 身份验证绕过逻辑\n- 权限升级路径\n- 会话管理缺陷\n- JWT 令牌漏洞\n- 授权逻辑绕过",
+      "ok": true
+    },
+    {
+      "original": "**Crypto & Secrets Management:**\n- Hardcoded API keys, passwords, or tokens\n- Weak cryptographic algorithms or implementations\n- Improper key storage or management\n- Cryptographic randomness issues\n- Certificate validation bypasses",
+      "zh": "**加密货币和秘密管理：**\n- 硬编码的 API 密钥、密码或令牌\n- 弱加密算法或实现\n- 密钥存储或管理不当\n- 密码随机性问题\n- 证书验证绕过",
+      "ok": true
+    },
+    {
+      "original": "**Injection & Code Execution:**\n- Remote code execution via deseralization\n- Pickle injection in Python\n- YAML deserialization vulnerabilities\n- Eval injection in dynamic code execution\n- XSS vulnerabilities in web applications (reflected, stored, DOM-based)",
+      "zh": "**注入和代码执行：**\n- 通过反序列化远程执行代码\n- Python 中的 Pickle 注入\n- YAML反序列化漏洞\n- 动态代码执行中的Eval注入\n- Web 应用程序中的 XSS 漏洞（反射、存储、基于 DOM）",
+      "ok": true
+    },
+    {
+      "original": "**Data Exposure:**\n- Sensitive data logging or storage\n- PII handling violations\n- API endpoint data leakage\n- Debug information exposure",
+      "zh": "**数据暴露：**\n- 敏感数据记录或存储\n- PII 处理违规行为\n- API端点数据泄露\n- 调试信息暴露",
+      "ok": true
+    },
+    {
+      "original": "Additional notes:\n- Even if something is only exploitable from the local network, it can still be a HIGH severity issue",
+      "zh": "附加说明：\n- 即使某些东西只能从本地网络利用，它仍然可能是一个高度严重的问题",
+      "ok": true
+    },
+    {
+      "original": "ANALYSIS METHODOLOGY:",
+      "zh": "分析方法：",
+      "ok": true
+    },
+    {
+      "original": "Phase 1 - Repository Context Research (Use file search tools):\n- Identify existing security frameworks and libraries in use\n- Look for established secure coding patterns in the codebase\n- Examine existing sanitization and validation patterns\n- Understand the project's security model and threat model",
+      "zh": "第 1 阶段 - 存储库上下文研究（使用文件搜索工具）：\n- 识别现有的安全框架和正在使用的库\n- 在代码库中寻找已建立的安全编码模式\n- 检查现有的清理和验证模式\n- 了解项目的安全模型和威胁模型",
+      "ok": true
+    },
+    {
+      "original": "Phase 2 - Comparative Analysis:\n- Compare new code changes against existing security patterns\n- Identify deviations from established secure practices\n- Look for inconsistent security implementations\n- Flag code that introduces new attack surfaces",
+      "zh": "第 2 阶段 - 比较分析：\n- 将新代码更改与现有安全模式进行比较\n- 识别与既定安全实践的偏差\n- 寻找不一致的安全实施\n- 引入新攻击面的标记代码",
+      "ok": true
+    },
+    {
+      "original": "Phase 3 - Vulnerability Assessment:\n- Examine each modified file for security implications\n- Trace data flow from user inputs to sensitive operations\n- Look for privilege boundaries being crossed unsafely\n- Identify injection points and unsafe deserialization",
+      "zh": "第 3 阶段 - 漏洞评估：\n- 检查每个修改的文件是否存在安全隐患\n- 跟踪从用户输入到敏感操作的数据流\n- 寻找不安全地跨越特权边界的情况\n- 识别注入点和不安全的反序列化",
+      "ok": true
+    },
+    {
+      "original": "REQUIRED OUTPUT FORMAT:",
+      "zh": "所需的输出格式：",
+      "ok": true
+    },
+    {
+      "original": "You MUST output your findings in markdown. The markdown output should contain the file, line number, severity, category (e.g. `sql_injection` or `xss`), description, exploit scenario, and fix recommendation.",
+      "zh": "您必须以降价形式输出您的发现。 Markdown 输出应包含文件、行号、严重性、类别（例如“sql_injection”或“xss”）、描述、利用场景和修复建议。",
+      "ok": true
+    },
+    {
+      "original": "For example:",
+      "zh": "例如：",
+      "ok": true
+    },
+    {
+      "original": "# Vuln 1: XSS: `foo.py:42`",
+      "zh": "# 漏洞 1: XSS: `foo.py:42`",
+      "ok": true
+    },
+    {
+      "original": "* Severity: High\n* Description: User input from `username` parameter is directly interpolated into HTML without escaping, allowing reflected XSS attacks\n* Exploit Scenario: Attacker crafts URL like /bar?q=<script>alert(document.cookie)</script> to execute JavaScript in victim's browser, enabling session hijacking or data theft\n* Recommendation: Use Flask's escape() function or Jinja2 templates with auto-escaping enabled for all user inputs rendered in HTML",
+      "zh": "* 严重性：高\n* 说明：用户输入的“username”参数直接插入到 HTML 中而不进行转义，从而允许反射型 XSS 攻击\n* 利用场景：攻击者制作 /bar?q=<script>alert(document.cookie)</script> 这样的 URL 在受害者的浏览器中执行 JavaScript，从而实现会话劫持或数据窃取\n* 建议：使用 Flask 的 escape() 函数或 Jinja2 模板，为 HTML 中呈现的所有用户输入启用自动转义",
+      "ok": true
+    },
+    {
+      "original": "SEVERITY GUIDELINES:\n- **HIGH**: Directly exploitable vulnerabilities leading to RCE, data breach, or authentication bypass\n- **MEDIUM**: Vulnerabilities requiring specific conditions but with significant impact\n- **LOW**: Defense-in-depth issues or lower-impact vulnerabilities",
+      "zh": "严重程度指南：\n- **高**：可直接利用的漏洞导致 RCE、数据泄露或身份验证绕过\n- **中**：需要特定条件但影响重大的漏洞\n- **低**：深度防御问题或影响较低的漏洞",
+      "ok": true
+    },
+    {
+      "original": "CONFIDENCE SCORING:\n- 0.9-1.0: Certain exploit path identified, tested if possible\n- 0.8-0.9: Clear vulnerability pattern with known exploitation methods\n- 0.7-0.8: Suspicious pattern requiring specific conditions to exploit\n- Below 0.7: Don't report (too speculative)",
+      "zh": "置信度评分：\n- 0.9-1.0：确定了某些漏洞利用路径，如果可能的话进行测试\n- 0.8-0.9：具有已知利用方法的清晰漏洞模式\n- 0.7-0.8：需要特定条件才能利用的可疑模式\n- 低于 0.7：不要报告（投机性太强）",
+      "ok": true
+    },
+    {
+      "original": "FINAL REMINDER:\nFocus on HIGH and MEDIUM findings only. Better to miss some theoretical issues than flood the report with false positives. Each finding should be something a security engineer would confidently raise in a PR review.",
+      "zh": "最后提醒：\n仅关注高和中等结果。漏掉一些理论问题比报告中充斥着误报要好。每项发现都应该是安全工程师在公关审查中自信提出的内容。",
+      "ok": true
+    },
+    {
+      "original": "FALSE POSITIVE FILTERING:",
+      "zh": "误报过滤：",
+      "ok": true
+    },
+    {
+      "original": "> You do not need to run commands to reproduce the vulnerability, just read the code to determine if it is a real vulnerability. Do not use the bash tool or write to any files.\n>\n> HARD EXCLUSIONS - Automatically exclude findings matching these patterns:\n> 1. Denial of Service (DOS) vulnerabilities or resource exhaustion attacks.\n> 2. Secrets or credentials stored on disk if they are otherwise secured.\n> 3. Rate limiting concerns or service overload scenarios.\n> 4. Memory consumption or CPU exhaustion issues.\n> 5. Lack of input validation on non-security-critical fields without proven security impact.\n> 6. Input sanitization concerns for GitHub Action workflows unless they are clearly triggerable via untrusted input.\n> 7. A lack of hardening measures. Code is not expected to implement all security best practices, only flag concrete vulnerabilities.\n> 8. Race conditions or timing attacks that are theoretical rather than practical issues. Only report a race condition if it is concretely problematic.\n> 9. Vulnerabilities related to outdated third-party libraries. These are managed separately and should not be reported here.\n> 10. Memory safety issues such as buffer overflows or use-af",
+      "zh": "> 无需运行命令复现漏洞，只需阅读代码即可判断是否为真正的漏洞。不要使用 bash 工具或写入任何文件。\n>\n> 硬排除 - 自动排除与这些模式匹配的结果：\n> 1. 拒绝服务（DOS）漏洞或资源耗尽攻击。\n> 2. 存储在磁盘上的秘密或凭证（如果它们受到其他保护）。\n> 3. 速率限制问题或服务过载情况。\n> 4.内存消耗或CPU耗尽问题。\n> 5. 缺乏对非安全关键字段的输入验证，且没有经过证实的安全影响。\n> 6. GitHub Action 工作流程的输入清理问题，除非它们可以通过不受信任的输入明确触发。\n> 7.缺乏强化措施。代码预计不会实现所有安全最佳实践，仅标记具体漏洞。\n> 8. 竞争条件或时序攻击是理论问题而不是实际问题。仅在存在具体问题时才报告竞争条件。\n> 9. 与过时的第三方库相关的漏洞。这些是单独管理的，不应在此处报告。\n> 10. 缓冲区溢出或use-af等内存安全问题",
+      "ok": true
+    },
+    {
+      "original": "ter-free-vulnerabilities are impossible in rust. Do not report memory safety issues in rust or any other memory safe languages.\n> 11. Files that are only unit tests or only used as part of running tests.\n> 12. Log spoofing concerns. Outputting un-sanitized user input to logs is not a vulnerability.\n> 13. SSRF vulnerabilities that only control the path. SSRF is only a concern if it can control the host or protocol.\n> 14. Including user-controlled content in AI system prompts is not a vulnerability.\n> 15. Regex injection. Injecting untrusted content into a regex is not a vulnerability.\n> 16. Regex DOS concerns.\n> 16. Insecure documentation. Do not report any findings in documentation files such as markdown files.\n> 17. A lack of audit logs is not a vulnerability.\n>\n> PRECEDENTS -\n> 1. Logging high value secrets in plaintext is a vulnerability. Logging URLs is assumed to be safe.\n> 2. UUIDs can be assumed to be unguessable and do not need to be validated.\n> 3. Environment variables and CLI flags are trusted values. Attackers are generally not able to modify them in a secure environment. Any attack that relies on controlling an environment variable is invalid.\n> 4. Resource management",
+      "zh": "Rust 中不可能出现无任何漏洞。不要用 Rust 或任何其他内存安全语言报告内存安全问题。\n> 11. 仅作为单元测试或仅用作运行测试的一部分的文件。\n> 12. 记录欺骗问题。将未经净化的用户输入输出到日志不是漏洞。\n> 13.仅控制路径的SSRF漏洞。 SSRF 仅当它可以控制主机或协议时才值得关注。\n> 14. 在人工智能系统提示中包含用户控制的内容不是漏洞。\n> 15.正则表达式注入。将不受信任的内容注入正则表达式不是漏洞。\n> 16. 正则表达式 DOS 问题。\n> 16. 不安全的文档。不要报告文档文件（例如 Markdown 文件）中的任何发现。\n> 17. 缺少审核日志不是漏洞。\n>\n> 先例 -\n> 1. 以明文形式记录高价值秘密是一个漏洞。假设记录 URL 是安全的。\n> 2. UUID 可以假设是不可猜测的，不需要验证。\n> 3. 环境变量和 CLI 标志是可信值。攻击者通常无法在安全环境中修改它们。任何依赖于控制环境变量的攻击都是无效的。\n> 4.资源管理",
+      "ok": true
+    },
+    {
+      "original": "issues such as memory or file descriptor leaks are not valid.\n> 5. Subtle or low impact web vulnerabilities such as tabnabbing, XS-Leaks, prototype pollution, and open redirects should not be reported unless they are extremely high confidence.\n> 6. React and Angular are generally secure against XSS. These frameworks do not need to sanitize or escape user input unless it is using dangerouslySetInnerHTML, bypassSecurityTrustHtml, or similar methods. Do not report XSS vulnerabilities in React or Angular components or tsx files unless they are using unsafe methods.\n> 7. Most vulnerabilities in github action workflows are not exploitable in practice. Before validating a github action workflow vulnerability ensure it is concrete and has a very specific attack path.\n> 8. A lack of permission checking or authentication in client-side JS/TS code is not a vulnerability. Client-side code is not trusted and does not need to implement these checks, they are handled on the server-side. The same applies to all flows that send untrusted data to the backend, the backend is responsible for validating and sanitizing all inputs.\n> 9. Only include MEDIUM findings if they are obvious and concrete issues",
+      "zh": "内存或文件描述符泄漏等问题无效。\n> 5. 不应报告微妙或低影响的 Web 漏洞，例如 tabnabbing、XS-Leaks、原型污染和开放重定向，除非它们的置信度极高。\n> 6. React 和 Angular 通常可以抵御 XSS。这些框架不需要清理或转义用户输入，除非使用的是angerouslySetInnerHTML、bypassSecurityTrustHtml 或类似方法。不要报告 React 或 Angular 组件或 tsx 文件中的 XSS 漏洞，除非它们使用不安全的方法。\n> 7. github操作工作流程中的大多数漏洞在实践中是不可利用的。在验证 github 操作工作流程漏洞之前，请确保它是具体的并且具有非常具体的攻击路径。\n> 8. 客户端 JS/TS 代码中缺乏权限检查或身份验证不是漏洞。客户端代码不受信任，不需要实现这些检查，它们在服务器端处理。这同样适用于将不受信任的数据发送到后端的所有流，后端负责验证和清理所有输入。\n> 9. 仅在明显且具体的问题时才包含中等调查结果",
+      "ok": true
+    },
+    {
+      "original": ".\n> 10. Most vulnerabilities in ipython notebooks (*.ipynb files) are not exploitable in practice. Before validating a notebook vulnerability ensure it is concrete and has a very specific attack path where untrusted input can trigger the vulnerability.\n> 11. Logging non-PII data is not a vulnerability even if the data may be sensitive. Only report logging vulnerabilities if they expose sensitive information such as secrets, passwords, or personally identifiable information (PII).\n> 12. Command injection vulnerabilities in shell scripts are generally not exploitable in practice since shell scripts generally do not run with untrusted user input. Only report command injection vulnerabilities in shell scripts if they are concrete and have a very specific attack path for untrusted input.\n>\n> SIGNAL QUALITY CRITERIA - For remaining findings, assess:\n> 1. Is there a concrete, exploitable vulnerability with a clear attack path?\n> 2. Does this represent a real security risk vs theoretical best practice?\n> 3. Are there specific code locations and reproduction steps?\n> 4. Would this finding be actionable for a security team?\n>\n> For each finding, assign a confidence score from 1-10:\n> - 1-3:",
+      "zh": "。\n> 10. ipython 笔记本（*.ipynb 文件）中的大多数漏洞在实践中无法利用。在验证笔记本漏洞之前，请确保它是具体的，并且具有非常具体的攻击路径，不受信任的输入可以触发该漏洞。\n> 11. 即使数据可能敏感，记录非 PII 数据也不是漏洞。仅在日志记录漏洞暴露机密、密码或个人身份信息 (PII) 等敏感信息时报告日志记录漏洞。\n> 12. shell 脚本中的命令注入漏洞在实践中通常无法利用，因为 shell 脚本通常不会使用不受信任的用户输入运行。仅报告 shell 脚本中的命令注入漏洞，前提是这些漏洞是具体的，并且针对不受信任的输入具有非常具体的攻击路径。\n>\n> 信号质量标准 - 对于剩余的结果，评估：\n> 1. 是否存在具体的、可利用的、具有明确攻击路径的漏洞？\n> 2. 这是否代表了真正的安全风险与理论上的最佳实践？\n> 3.有具体的代码位置和复现步骤吗？\n> 4. 这一发现对于安全团队来说是否可行？\n>\n> 对于每个发现，指定一个 1-10 的置信度分数：\n> - 1-3：",
+      "ok": true
+    },
+    {
+      "original": "Low confidence, likely false positive or noise\n> - 4-6: Medium confidence, needs investigation\n> - 7-10: High confidence, likely true vulnerability",
+      "zh": "置信度低，可能出现误报或噪音\n> - 4-6：中等可信度，需要调查\n> - 7-10：高置信度，可能是真正的漏洞",
+      "ok": true
+    },
+    {
+      "original": "START ANALYSIS:",
+      "zh": "开始分析：",
+      "ok": true
+    },
+    {
+      "original": "Begin your analysis now. Do this in 3 steps:",
+      "zh": "现在开始你的分析。分 3 步执行此操作：",
+      "ok": true
+    },
+    {
+      "original": "1. Use a sub-task to identify vulnerabilities. Use the repository exploration tools to understand the codebase context, then analyze the PR changes for security implications. In the prompt for this sub-task, include all of the above.\n2. Then for each vulnerability identified by the above sub-task, create a new sub-task to filter out false-positives. Launch these sub-tasks as parallel sub-tasks. In the prompt for these sub-tasks, include everything in the \"FALSE POSITIVE FILTERING\" instructions.\n3. Filter out any vulnerabilities where the sub-task reported a confidence less than 8.",
+      "zh": "1. 使用子任务来识别漏洞。使用存储库探索工具来了解代码库上下文，然后分析 PR 更改以了解安全影响。在此子任务的提示中，包含上述所有内容。\n2. 然后，对于上述子任务识别的每个漏洞，创建一个新的子任务以过滤掉误报。将这些子任务作为并行子任务启动。在这些子任务的提示中，包含“假阳性过滤”说明中的所有内容。\n3. 过滤掉子任务报告置信度小于 8 的所有漏洞。",
+      "ok": true
+    },
+    {
+      "original": "Your final reply must contain the markdown report and nothing else.",
+      "zh": "您的最终回复必须包含 Markdown 报告，仅包含其他内容。",
+      "ok": true
+    }
+  ]
+}

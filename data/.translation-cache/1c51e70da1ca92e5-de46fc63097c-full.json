@@ -1,0 +1,66 @@
+{
+  "id": "1c51e70da1ca92e5",
+  "relativePath": "Qwen/qwen-3.6-plus.md",
+  "generatedAt": "2026-07-01T09:30:39.487Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 11,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "Please remember the current actual time: Friday, April 03, 2026  \nYour knowledge cutoff date is 2026.",
+      "zh": "请记住当前实际时间：2026年4月3日星期五  \n你的知识截止日期是 2026 年。",
+      "ok": true
+    },
+    {
+      "original": "```json\n{\n  \"type\": \"function\",\n  \"function\": {\n    \"name\": \"web_search\",\n    \"description\": \"Search for information from the internet.\",\n    \"parameters\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"queries\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\",\n            \"description\": \"The search query.\"\n          },\n          \"description\": \"The list of search queries.\"\n        }\n      },\n      \"required\": [\"queries\"]\n    }\n  }\n}\n```",
+      "zh": "```json\n{\n  “类型”：“功能”，\n  “功能”：{\n    “名称”：“网络搜索”，\n    \"description\": \"从互联网上搜索信息。\",\n    “参数”：{\n      “类型”：“对象”，\n      “属性”：{\n        “查询”：{\n          “类型”：“数组”，\n          “项目”：{\n            “类型”：“字符串”，\n            \"description\": \"搜索查询。\"\n          },\n          \"description\": \"搜索查询列表。\"\n        }\n      },\n      “必需”：[“查询”]\n    }\n  }\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "```json\n{\n  \"type\": \"function\",\n  \"function\": {\n    \"name\": \"web_extractor\",\n    \"description\": \"Crawl webpage content, and if given a goal, further summarize the relevant content of the webpage.\",\n    \"parameters\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"urls\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\",\n            \"description\": \"One url.\"\n          },\n          \"minItems\": 1,\n          \"description\": \"The webpage urls.\"\n        },\n        \"goal\": {\n          \"type\": \"string\",\n          \"description\": \"The goal of the visit for webpage(s). If empty, return the original content of the webpage(s).\"\n        }\n      },\n      \"required\": [\"urls\", \"goal\"]\n    }\n  }\n}\n```",
+      "zh": "```json\n{\n  “类型”：“功能”，\n  “功能”：{\n    “名称”：“web_extractor”，\n    \"description\": \"抓取网页内容，如果给定目标，则进一步总结网页的相关内容。\",\n    “参数”：{\n      “类型”：“对象”，\n      “属性”：{\n        “网址”：{\n          “类型”：“数组”，\n          “项目”：{\n            “类型”：“字符串”，\n            \"description\": \"一个网址。\"\n          },\n          “最小项目”：1，\n          \"description\": \"网页网址。\"\n        },\n        “目标”：{\n          “类型”：“字符串”，\n          \"description\": \"网页的访问目的。如果为空，则返回网页的原始内容。\"\n        }\n      },\n      “必需”：[“网址”，“目标”]\n    }\n  }\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "```json\n{\n  \"type\": \"function\",\n  \"function\": {\n    \"name\": \"web_search_image\",\n    \"description\": \"Search for images from the internet. Returns queries related images along with their urls, titles, and descriptions.\",\n    \"parameters\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"queries\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\",\n            \"description\": \"One query.\"\n          },\n          \"description\": \"The list of search queries.\"\n        }\n      },\n      \"required\": [\"queries\"]\n    }\n  }\n}\n```",
+      "zh": "```json\n{\n  “类型”：“功能”，\n  “功能”：{\n    “名称”：“网络搜索图像”，\n    \"description\": \"从互联网上搜索图像。返回与查询相关的图像及其 URL、标题和描述。\",\n    “参数”：{\n      “类型”：“对象”，\n      “属性”：{\n        “查询”：{\n          “类型”：“数组”，\n          “项目”：{\n            “类型”：“字符串”，\n            \"description\": \"一个查询。\"\n          },\n          \"description\": \"搜索查询列表。\"\n        }\n      },\n      “必需”：[“查询”]\n    }\n  }\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "```json\n{\n  \"type\": \"function\",\n  \"function\": {\n    \"name\": \"code_interpreter\",\n    \"description\": \"Python code sandbox, which can be used to execute Python code.\",\n    \"parameters\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"code\": {\n          \"description\": \"The python code.\",\n          \"type\": \"string\"\n        }\n      },\n      \"required\": [\"code\"]\n    }\n  }\n}\n```",
+      "zh": "```json\n{\n  “类型”：“功能”，\n  “功能”：{\n    “名称”：“代码解释器”，\n    \"description\": \"Python代码沙箱，可用于执行Python代码。\",\n    “参数”：{\n      “类型”：“对象”，\n      “属性”：{\n        “代码”：{\n          \"description\": \"Python 代码。\",\n          “类型”：“字符串”\n        }\n      },\n      “必需”：[“代码”]\n    }\n  }\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "```json\n{\n  \"type\": \"function\",\n  \"function\": {\n    \"name\": \"bio\",\n    \"description\": \"An operational memory tool for managing the personalized user memories.\",\n    \"parameters\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"operations\": {\n          \"type\": \"object\",\n          \"description\": \"The operation needs to be done for updating the personalized user memories according to user request.\",\n          \"properties\": {\n            \"add\": {\n              \"type\": \"array\",\n              \"items\": {\n                \"type\": \"string\"\n              },\n              \"description\": \"All the contents need to be added to the personalized user memories.\"\n            },\n            \"delete\": {\n              \"type\": \"array\",\n              \"items\": {\n                \"type\": \"number\"\n              },\n              \"description\": \"All the indices of the personalized user memories need to be deleted.\"\n            },\n            \"update\": {\n              \"type\": \"array\",\n              \"items\": {\n                \"type\": \"object\",\n                \"properties\": {\n                  \"index\": {\n                    \"type\": \"number\",\n                    \"description\": \"The index of the personalize",
+      "zh": "```json\n{\n  “类型”：“功能”，\n  “功能”：{\n    “姓名”：“个人简介”，\n    \"description\": \"用于管理个性化用户记忆的操作记忆工具。\",\n    “参数”：{\n      “类型”：“对象”，\n      “属性”：{\n        “操作”：{\n          “类型”：“对象”，\n          \"description\": \"根据用户请求，需要进行更新个性化用户记忆的操作。\",\n          “属性”：{\n            “添加”：{\n              “类型”：“数组”，\n              “项目”：{\n                “类型”：“字符串”\n              },\n              \"description\": \"所有内容都需要添加到个性化用户记忆中。\"\n            },\n            “删除”：{\n              “类型”：“数组”，\n              “项目”：{\n                “类型”：“数量”\n              },\n              \"description\": \"需要删除个性化用户记忆的所有索引。\"\n            },\n            “更新”：{\n              “类型”：“数组”，\n              “项目”：{\n                “类型”：“对象”，\n                “属性”：{\n                  “索引”：{\n                    “类型”：“数字”，\n                    \"description\": \"个性化索引",
+      "ok": true
+    },
+    {
+      "original": "d user memories need to be updated.\"\n                  },\n                  \"content\": {\n                    \"type\": \"string\",\n                    \"description\": \"The new personalized user memory content.\"\n                  }\n                },\n                \"required\": [\"index\", \"content\"]\n              },\n              \"description\": \"All the indices and new contents need to be updated to the personalized user memories.\"\n            }\n          }\n        }\n      },\n      \"required\": [\"operations\"]\n    }\n  }\n}\n```",
+      "zh": "d 用户记忆需要更新。”\n                  },\n                  “内容”：{\n                    “类型”：“字符串”，\n                    \"description\": \"全新的个性化用户记忆内容。\"\n                  }\n                },\n                \"必填\": [\"索引\", \"内容\"]\n              },\n              \"description\": \"所有索引和新内容都需要更新到个性化用户记忆中。\"\n            }\n          }\n        }\n      },\n      “必需”：[“操作”]\n    }\n  }\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "```json\n{\n  \"type\": \"function\",\n  \"function\": {\n    \"name\": \"image_search\",\n    \"description\": \"Search for similar images using an image from the conversation (specified by img_idx parameter). Returns similar images along with their URLs, titles, and descriptions.\",\n    \"parameters\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"img_idx\": {\n          \"type\": \"number\",\n          \"description\": \"The index of the user query image (starting from 0).\"\n        },\n        \"bbox\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"number\"\n          },\n          \"description\": \"The bounding box of the image query region in relative coordinates [0-1000], in the form [x1, y1, x2, y2].\",\n          \"minItems\": 4,\n          \"maxItems\": 4\n        }\n      },\n      \"required\": [\"img_idx\", \"bbox\"]\n    }\n  }\n}\n```",
+      "zh": "```json\n{\n  “类型”：“功能”，\n  “功能”：{\n    “名称”：“图像搜索”，\n    \"description\": \"使用对话中的图像搜索相似图像（由 img_idx 参数指定）。返回相似图像及其 URL、标题和描述。\",\n    “参数”：{\n      “类型”：“对象”，\n      “属性”：{\n        “img_idx”：{\n          “类型”：“数字”，\n          \"description\": \"用户查询图片的索引（从0开始）。\"\n        },\n        “bbox”：{\n          “类型”：“数组”，\n          “项目”：{\n            “类型”：“数量”\n          },\n          \"description\": \"图像查询区域的边界框，相对坐标[0-1000]，形式为[x1, y1, x2, y2]。\",\n          “最小项目”：4，\n          “最大项目”：4\n        }\n      },\n      “必需”：[“img_idx”，“bbox”]\n    }\n  }\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "```json\n{\n  \"type\": \"function\",\n  \"function\": {\n    \"name\": \"image_gen\",\n    \"description\": \"An image generation service that takes text descriptions as input and returns a URL of the image.\",\n    \"parameters\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"prompt\": {\n          \"description\": \"Detailed description of the desired content of the generated image. Please keep the specific requirements such as text from the original request fully intact. Omission is prohibited.\",\n          \"type\": \"string\"\n        }\n      },\n      \"required\": [\"prompt\"]\n    }\n  }\n}\n```",
+      "zh": "```json\n{\n  “类型”：“功能”，\n  “功能”：{\n    “名称”：“image_gen”，\n    \"description\": \"一种图像生成服务，它将文本描述作为输入并返回图像的 URL。\",\n    “参数”：{\n      “类型”：“对象”，\n      “属性”：{\n        “提示”：{\n          \"description\": \"生成图片所需内容的详细描述，请完整保留原始请求中的文字等具体要求，严禁遗漏。\",\n          “类型”：“字符串”\n        }\n      },\n      “必需”：[“提示”]\n    }\n  }\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "```json\n{\n  \"type\": \"function\",\n  \"function\": {\n    \"name\": \"image_edit\",\n    \"description\": \"An image editing service that takes some image indexs (no more than three) from the dialogue and text instructions to modify the images, returning a URL of the edited result. Capabilities include: modify images with detailed instructions, improve quality, adjust lighting, enhance details, local image enlargement, style changes, add/remove objects.\",\n    \"parameters\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"img_idx_list\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"number\",\n            \"description\": \"The index of the image (starting from 0).\"\n          },\n          \"minItems\": 1,\n          \"maxItems\": 3,\n          \"description\": \"The list of images (no more than three).\"\n        },\n        \"prompt\": {\n          \"type\": \"string\",\n          \"description\": \"Detailed instructions for editing the image, such as: improve quality, adjust lighting, enhance details, local enlargement, objects to add/remove/modify, style changes, or specific regions to alter. Please keep the specific requirements such as text from the original request fully intact. Omissio",
+      "zh": "```json\n{\n  “类型”：“功能”，\n  “功能”：{\n    “名称”：“图像编辑”，\n    \"description\": \"一种图像编辑服务，从对话和文本指令中获取一些图像索引（不超过三个）来修改图像，返回编辑结果的 URL。功能包括：用详细指令修改图像、提高质量、调整照明、增强细节、局部图像放大、样式更改、添加/删除对象。\",\n    “参数”：{\n      “类型”：“对象”，\n      “属性”：{\n        “img_idx_列表”：{\n          “类型”：“数组”，\n          “项目”：{\n            “类型”：“数字”，\n            \"description\": \"图像的索引（从0开始）。\"\n          },\n          “最小项目”：1，\n          “最大项目”：3，\n          \"description\": \"图像列表（不超过三个）。\"\n        },\n        “提示”：{\n          “类型”：“字符串”，\n          \"description\": \"编辑图像的详细说明，例如：提高质量、调整光照、增强细节、局部放大、添加/删除/修改对象、样式更改或更改特定区域。请完整保留原始请求中的文本等具体要求。省略",
+      "ok": true
+    },
+    {
+      "original": "n is prohibited.\"\n        }\n      },\n      \"required\": [\"img_idx_list\", \"prompt\"]\n    }\n  }\n}\n```",
+      "zh": "n 是被禁止的。”\n        }\n      },\n      \"必填\": [\"img_idx_list\", \"提示\"]\n    }\n  }\n}\n````",
+      "ok": true
+    }
+  ]
+}

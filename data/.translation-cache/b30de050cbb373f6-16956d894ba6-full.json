@@ -1,0 +1,641 @@
+{
+  "id": "b30de050cbb373f6",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/run.md",
+  "generatedAt": "2026-07-01T09:51:54.485Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 126,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "---\nname: run\ndescription: Launch and drive this project's app to see a change working.\n---",
+      "zh": "---\n名称：奔跑\n描述：启动并驱动该项目的应用程序以查看更改是否有效。\n---",
+      "ok": true
+    },
+    {
+      "original": "# run skill",
+      "zh": "# 奔跑技能",
+      "ok": true
+    },
+    {
+      "original": "**Running means launching the actual app and interacting with it** —\nnot the test suite, not an `import` of an internal function and a\n`console.log`. The app as a user (human or programmatic) would meet\nit: the CLI at its command, the server at its socket, the GUI at its\nwindow.",
+      "zh": "**运行意味着启动实际的应用程序并与其交互** —\n不是测试套件，不是内部函数的“导入”和\n`控制台.log`。该应用程序作为用户（人类或程序化）会满足\nit：CLI 在其命令上，服务器在其套接字上，GUI 在其上\n窗口。",
+      "ok": true
+    },
+    {
+      "original": "## First: does a project skill already cover this?",
+      "zh": "## 首先：项目技能是否已经涵盖了这一点？",
+      "ok": true
+    },
+    {
+      "original": "A project skill that launches this app is the repo's verified path —\nits author already cold-started from a Linux container and committed\nwhat worked: the exact `apt-get` line, the env vars, the patches, the\ndriver. Use it instead of rediscovering.",
+      "zh": "启动此应用程序的项目技能是存储库的验证路径 -\n它的作者已经从 Linux 容器冷启动并承诺\n什么有效：确切的“apt-get”行、环境变量、补丁、\n司机。使用它而不是重新发现。",
+      "ok": true
+    },
+    {
+      "original": "```bash\nd=$PWD; while :; do\n  grep -Hm1 '^description:' \"$d\"/.claude/skills/*/SKILL.md 2>/dev/null\n  [ -e \"$d/.git\" ] || [ \"$d\" = / ] && break\n  d=$(dirname \"$d\")\ndone\n```",
+      "zh": "````bash\nd=$PWD；尽管 ：;做\n  grep -Hm1 '^描述：' \"$d\"/.claude/skills/*/SKILL.md 2>/dev/null\n  [ -e \"$d/.git\" ] || [“$d”= / ] && 中断\n  d=$(目录名“$d”)\n完成\n````",
+      "ok": true
+    },
+    {
+      "original": "- **One describes launching/driving this app** → read that SKILL.md\n  and follow it verbatim. Don't paraphrase; don't skip the patches.\n- **Mega-repo, several plausible, no clear match** → ask the user\n  which unit to run.\n- **Stale** (fails on mechanics unrelated to your task) → tell the\n  user; offer to refresh it via `/run-skill-generator`.\n- **Nothing about running** → fall back to the patterns below.",
+      "zh": "- **其中描述了启动/驱动此应用程序** → 阅读 SKILL.md\n  并逐字遵循。不要转述；不要跳过补丁。\n- **大型仓库，几个看似合理的，没有明确匹配** →询问用户\n  运行哪个单元。\n- **陈旧**（与你的任务无关的机制失败）→告诉\n  用户；提供通过“/run-skill-generator”刷新它。\n- **与跑步无关** → 回到下面的模式。",
+      "ok": true
+    },
+    {
+      "original": "## Otherwise: match the shape, use the pattern",
+      "zh": "## 否则：匹配形状，使用模式",
+      "ok": true
+    },
+    {
+      "original": "Pick the row closest to your project. Each example walks through\nlaunch + first interaction; ignore any trailing \"write the skill\"\nsection — you're using the recipe, not authoring one.",
+      "zh": "选择最接近您的项目的行。每个示例都经过\n启动+首次互动；忽略任何结尾的“写技能”\n部分 - 您正在使用食谱，而不是创作食谱。",
+      "ok": true
+    },
+    {
+      "original": "| Project type | Handle | Example |\n|---|---|---|\n| CLI tool | direct invocation, exit code, stdin/stdout | examples/cli.md |\n| Web server / API | background launch + `curl` smoke | examples/server.md |\n| TUI / interactive terminal | tmux `send-keys` / `capture-pane` | examples/tui.md |\n| Electron / desktop GUI | Playwright `_electron` REPL under xvfb | examples/electron.md |\n| Browser-driven | dev server + `chromium-cli` script | examples/playwright.md |\n| Library / SDK | import-and-call smoke script at the package boundary | examples/library.md |",
+      "zh": "|项目类型 |手柄|示例|\n|---|---|---|\n| CLI 工具 |直接调用、退出代码、stdin/stdout |示例/cli.md |\n|网络服务器/API |后台启动 + `curl` 烟雾 |示例/server.md |\n| TUI/交互终端| tmux `发送密钥` / `捕获窗格` |示例/tui.md |\n|电子/桌面 GUI | xvfb 下的剧作家`_ Electron` REPL |示例/电子.md |\n|浏览器驱动|开发服务器 + `chromium-cli` 脚本 |示例/playwright.md |\n|库/SDK |在包边界导入并调用烟雾脚本 |示例/library.md |",
+      "ok": true
+    },
+    {
+      "original": "If nothing fits, start from the closest match and adapt. For a web\napp, examples/playwright.md — drive it with `chromium-cli`, no custom\ndriver needed. For a desktop app, examples/electron.md — it has the\n`_electron` REPL driver skeleton and the tmux wrapping.",
+      "zh": "如果没有合适的，请从最接近的匹配开始并进行调整。对于一个网络\n应用程序，examples/playwright.md — 使用 `chromium-cli` 驱动它，无需自定义\n需要司机。对于桌面应用程序，examples/electron.md — 它具有\n`_ Electron` REPL 驱动程序框架和 tmux 包装。",
+      "ok": true
+    },
+    {
+      "original": "## Drive it, don't just launch it",
+      "zh": "## 驱动它，而不仅仅是启动它",
+      "ok": true
+    },
+    {
+      "original": "Launching with no interaction proves the entrypoint resolves. That's\nnot running the app — it's typechecking with extra steps. Drive it to\na point where a user would see something:",
+      "zh": "在没有交互的情况下启动证明入口点已解析。那是\n不运行应用程序 - 它是通过额外步骤进行类型检查。驾驶它到\n用户会看到某些内容的点：",
+      "ok": true
+    },
+    {
+      "original": "- CLI → type a representative command, check the exit code and output.\n- Server → hit the route the diff touches with `curl`, read the body.\n- TUI → `send-keys` a navigation, `capture-pane` the result.\n- GUI → click the button, screenshot the window. **Look at the\n  screenshot.** A blank frame is a failure to launch.",
+      "zh": "- CLI → 输入代表性命令，检查退出代码和输出。\n- 服务器 → 使用“curl”点击 diff 接触的路线，读取正文。\n- TUI → `send-keys` 导航，`capture-pane` 结果。\n- GUI → 单击按钮，截屏窗口。 **看看\n  屏幕截图。** 空白框表示启动失败。",
+      "ok": true
+    },
+    {
+      "original": "If the fallback pattern didn't work out of the box — you had to\ninstall packages, set env vars, patch config, or write a driver —\nrecommend `/run-skill-generator` in your report so that work gets\ncaptured as a project skill. If it just worked, don't.",
+      "zh": "如果回退模式无法立即使用 - 您必须这样做\n安装软件包、设置环境变量、修补配置或编写驱动程序 —\n在您的报告中推荐“/run-skill-generator”，以便工作得到\n捕获为项目技能。如果它只是有效，那就不要。",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "# examples/cli.md — CLI tool",
+      "zh": "# example/cli.md — CLI 工具",
+      "ok": true
+    },
+    {
+      "original": "CLIs are the simplest case — there's usually no background process to\nmanage, no ports, no lifecycle. The skill focuses on **installation**,\n**representative invocations**, and **testing**.",
+      "zh": "CLI 是最简单的情况 — 通常没有后台进程\n管理，没有端口，没有生命周期。技能重点是**安装**，\n**代表性调用**和**测试**。",
+      "ok": true
+    },
+    {
+      "original": "## What matters",
+      "zh": "## 重要的是",
+      "ok": true
+    },
+    {
+      "original": "- **How to get the binary on `PATH`.** Installed globally? Run via\n  `npx`/`uv run`? Built to `./target/release/foo`? Be explicit.\n- **Two or three example invocations** that cover the main use cases.\n  Include expected output so a reader can tell it worked.\n- **Exit codes** if they're meaningful (e.g. linter returns 1 on findings).\n- **Stdin behavior** if the tool reads from stdin.",
+      "zh": "- **如何获取`PATH`上的二进制文件。**全局安装？运行通过\n  `npx`/`uv run`？构建为“./target/release/foo”？明确一点。\n- **两个或三个示例调用**，涵盖主要用例。\n  包括预期的输出，以便读者可以知道它有效。\n- **退出代码**，如果它们有意义（例如 linter 在发现结果时返回 1）。\n- **标准输入行为**（如果工具从标准输入读取）。",
+      "ok": true
+    },
+    {
+      "original": "## Example snippet",
+      "zh": "## 示例片段",
+      "ok": true
+    },
+    {
+      "original": "> ---\n> name: run-mytool\n> description: Build, install, and run mytool. Use when asked to run mytool, test it, or verify it's installed correctly.\n> ---\n>\n> ## Setup\n>\n> ```bash\n> pip install -e .\n> ```\n>\n> This puts `mytool` on PATH. Verify:\n>\n> ```bash\n> mytool --version\n> # → mytool 0.3.1\n> ```\n>\n> ## Run\n>\n> Process a single file:\n>\n> ```bash\n> mytool process input.json\n> # → Processed 42 records, wrote output.json\n> ```\n>\n> Read from stdin, write to stdout:\n>\n> ```bash\n> cat input.json | mytool process -\n> ```\n>\n> Lint a directory (exits non-zero on problems):\n>\n> ```bash\n> mytool lint ./src\n> echo $?  # 0 if clean, 1 if issues found\n> ```\n>\n> ## Test\n>\n> ```bash\n> pytest\n> ```",
+      "zh": "> ---\n> 名称：运行-mytool\n> 描述：构建、安装和运行 mytool。当要求运行 mytool、测试它或验证它是否正确安装时使用。\n> ---\n>\n> ## 设置\n>\n> ```bash\n> pip install -e 。\n> ```\n>\n> 这会将 `mytool` 放在 PATH 上。验证：\n>\n> ```bash\n> mytool --版本\n> # → mytool 0.3.1\n> ```\n>\n> ## 运行\n>\n> 处理单个文件：\n>\n> ```bash\n> mytool 处理 input.json\n> # → 处理了42条记录，写入output.json\n> ```\n>\n> 从 stdin 读取，写入 stdout：\n>\n> ```bash\n> 猫输入.json |我的工具进程-\n> ```\n>\n> Lint 目录（出现问题时退出非零）：\n>\n> ```bash\n> mytool lint ./src\n> 回声 $?  # 0 如果干净，1 如果发现问题\n> ```\n>\n> ## 测试\n>\n> ```bash\n> py测试\n> ```",
+      "ok": true
+    },
+    {
+      "original": "## Keep it short",
+      "zh": "## 保持简短",
+      "ok": true
+    },
+    {
+      "original": "A CLI's run skill can be very compact. Don't pad it with every flag —\nthe `--help` output covers that. Just show enough that an agent can\n(a) build it, (b) confirm it works, (c) run the tests.",
+      "zh": "CLI 的运行技巧可以非常紧凑。不要用每个标志来填充它 -\n`--help` 输出涵盖了这一点。只需展示足够的信息即可让代理商可以\n(a) 构建它，(b) 确认它有效，(c) 运行测试。",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "# examples/server.md — Web server / API",
+      "zh": "# example/server.md — Web 服务器/API",
+      "ok": true
+    },
+    {
+      "original": "The distinguishing concern for servers is **lifecycle**: an agent needs to\nstart the server in the background, verify it's up, interact with it, then\ncleanly shut it down. A foreground `npm start` that blocks the shell is\nuseless to an agent.",
+      "zh": "服务器的显着关注点是**生命周期**：代理需要\n在后台启动服务器，验证它是否已启动，与其交互，然后\n干净地关闭它。阻止 shell 的前台“npm start”是\n对代理没用。",
+      "ok": true
+    },
+    {
+      "original": "## Structure to follow",
+      "zh": "## 遵循的结构",
+      "ok": true
+    },
+    {
+      "original": "A good server run skill has:",
+      "zh": "良好的服务器运行技能具有：",
+      "ok": true
+    },
+    {
+      "original": "1. **Prerequisites & setup** — same as any project.\n2. **Run** — the background-launch pattern (below), not a blocking command.\n3. **Verify** — a `curl` or similar that confirms the server is actually up.\n4. **Stop** — how to cleanly terminate the background process.",
+      "zh": "1. **先决条件和设置** — 与任何项目相同。\n2. **运行** — 后台启动模式（如下），而不是阻塞命令。\n3. **验证** — `curl` 或类似的内容，确认服务器确实已启动。\n4. **停止** — 如何干净地终止后台进程。",
+      "ok": true
+    },
+    {
+      "original": "If the background-launch + readiness-poll + smoke-curl sequence is more\nthan a couple of lines, put it in a `smoke.sh` inside the skill directory\nand have `SKILL.md` say \"run the smoke script.\" One command, exit code\ntells you if the server is healthy.",
+      "zh": "如果后台启动+就绪轮询+烟雾卷曲序列更多\n比几行，将其放在技能目录中的`smoke.sh`中\n并让“SKILL.md”说“运行烟雾脚本”。一条命令，退出代码\n告诉您服务器是否健康。",
+      "ok": true
+    },
+    {
+      "original": "## Background-launch pattern",
+      "zh": "## 后台启动模式",
+      "ok": true
+    },
+    {
+      "original": "Don't write:",
+      "zh": "不要写：",
+      "ok": true
+    },
+    {
+      "original": "> ```bash\n> npm start\n> ```",
+      "zh": "> ```bash\n> npm 启动\n> ```",
+      "ok": true
+    },
+    {
+      "original": "That blocks. Instead, show how to launch in the background, wait for\nreadiness, and find the PID later:",
+      "zh": "那会阻塞。相反，展示如何在后台启动，等待\n准备就绪，稍后查找 PID：",
+      "ok": true
+    },
+    {
+      "original": "> ```bash\n> npm start &> /tmp/server.log &\n> SERVER_PID=$!\n>\n> # Wait for the server to come up (adjust timeout/port as needed)\n> for i in {1..30}; do\n>   curl -sf http://localhost:3000/health > /dev/null && break\n>   sleep 1\n> done\n> ```",
+      "zh": "> ```bash\n> npm 启动 &> /tmp/server.log &\n> SERVER_PID=$!\n>\n> # 等待服务器启动（根据需要调整超时/端口）\n> 对于 {1..30} 中的 i；做\n> curl -sf http://localhost:3000/health > /dev/null && 中断\n> 睡眠 1\n> 完成\n> ```",
+      "ok": true
+    },
+    {
+      "original": "Then the verification step:",
+      "zh": "然后是验证步骤：",
+      "ok": true
+    },
+    {
+      "original": "> ```bash\n> curl http://localhost:3000/health\n> # → {\"status\":\"ok\"}\n> ```",
+      "zh": "> ```bash\n> 卷曲 http://localhost:3000/health\n> # → {\"状态\":\"确定\"}\n> ```",
+      "ok": true
+    },
+    {
+      "original": "And stopping:",
+      "zh": "并停止：",
+      "ok": true
+    },
+    {
+      "original": "> ```bash\n> kill $SERVER_PID\n> # or, if you've lost the PID:\n> pkill -f \"node.*server.js\"\n> ```",
+      "zh": "> ```bash\n> 杀死 $SERVER_PID\n> # 或者，如果您丢失了 PID：\n> pkill -f “node.*server.js”\n> ```",
+      "ok": true
+    },
+    {
+      "original": "## Details worth documenting",
+      "zh": "## 值得记录的细节",
+      "ok": true
+    },
+    {
+      "original": "- **Which port.** Make it explicit and say how to override it (`PORT=4000 npm start`).\n- **What \"ready\" looks like.** A specific log line or a health endpoint to hit.\n- **Required env vars.** Database URL, API keys, etc. — with a template `.env`\n  if the list is long.\n- **Hot reload vs production mode.** If they differ meaningfully, say which\n  to use and when.\n- **Dependent services.** If the server needs Redis/Postgres/etc., either\n  point at a docker-compose that brings them up, or include the `docker run`\n  command directly.",
+      "zh": "- **哪个端口。** 明确并说明如何覆盖它（`PORT=4000 npm start`）。\n- **“就绪”是什么样的。** 要命中的特定日志行或运行状况端点。\n- **必需的环境变量。** 数据库 URL、API 密钥等 — 使用模板 `.env`\n  如果清单很长。\n- **热重载与生产模式。** 如果它们有显着差异，请说明是哪一个\n  使用以及何时使用。\n- **依赖服务。** 如果服务器需要Redis/Postgres/等，则\n  指向启动它们的 docker-compose，或者包含“docker run”\n  直接命令。",
+      "ok": true
+    },
+    {
+      "original": "## Example snippet",
+      "zh": "## 示例片段",
+      "ok": true
+    },
+    {
+      "original": "Here's what a Run section for a typical Node API might look like:",
+      "zh": "典型 Node API 的运行部分可能如下所示：",
+      "ok": true
+    },
+    {
+      "original": "> ## Run\n>\n> Start the dev server in the background:\n>\n> ```bash\n> npm run dev &> /tmp/api.log &\n> ```\n>\n> The server listens on port 3000. Wait for it to be ready, then verify:\n>\n> ```bash\n> for i in {1..20}; do\n>   curl -sf http://localhost:3000/health && break\n>   sleep 0.5\n> done\n> curl http://localhost:3000/health\n> # → {\"status\":\"ok\",\"version\":\"1.2.3\"}\n> ```\n>\n> Logs are at `/tmp/api.log`. Stop with:\n>\n> ```bash\n> pkill -f \"tsx watch src/index.ts\"\n> ```\n>\n> ### Environment\n>\n> | Variable | Required | Default | Notes |\n> |---|---|---|---|\n> | `DATABASE_URL` | Yes | — | Postgres connection string |\n> | `PORT` | No | `3000` | |\n> | `LOG_LEVEL` | No | `info` | `debug` / `info` / `warn` / `error` |",
+      "zh": "> ## 运行\n>\n> 在后台启动开发服务器：\n>\n> ```bash\n> npm run dev &> /tmp/api.log &\n> ```\n>\n> 服务器侦听端口 3000。等待其准备就绪，然后验证：\n>\n> ```bash\n> 对于 {1..20} 中的 i；做\n>curl -sf http://localhost:3000/health && 中断\n> 睡眠 0.5\n> 完成\n> 卷曲 http://localhost:3000/health\n> # → {\"status\":\"ok\",\"version\":\"1.2.3\"}\n> ```\n>\n> 日志位于`/tmp/api.log`。停止：\n>\n> ```bash\n> pkill -f \"tsx watch src/index.ts\"\n> ```\n>\n> ### 环境\n>\n> |变量|必填 |默认|笔记|\n> |---|---|---|---|\n> | `DATABASE_URL` |是的 | — | Postgres 连接字符串 |\n> | `端口` |没有 | `3000` | |\n> | `LOG_LEVEL` |没有 | `信息` | `调试`/`信息`/`警告`/`错误` |",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "# examples/tui.md — TUI / interactive terminal app",
+      "zh": "# example/tui.md — TUI / 交互式终端应用程序",
+      "ok": true
+    },
+    {
+      "original": "Interactive terminal apps (text editors, REPLs, curses-based UIs) can't\nbe driven directly by an agent's bash tool — they take over the terminal.\nThe skill must show how to wrap them in `tmux` so the agent can send\ninput, capture output, and take screenshots.",
+      "zh": "交互式终端应用程序（文本编辑器、REPL、基于curses的UI）不能\n由代理的 bash 工具直接驱动——它们接管终端。\n该技能必须展示如何将它们包装在“tmux”中，以便代理可以发送\n输入、捕获输出并截取屏幕截图。",
+      "ok": true
+    },
+    {
+      "original": "## The tmux pattern",
+      "zh": "## tmux 模式",
+      "ok": true
+    },
+    {
+      "original": "This is the standard approach:",
+      "zh": "这是标准方法：",
+      "ok": true
+    },
+    {
+      "original": "1. Start the TUI inside a detached tmux session\n2. Send keystrokes with `tmux send-keys`\n3. Read screen contents with `tmux capture-pane`\n4. Clean up with `tmux kill-session`",
+      "zh": "1. 在分离的 tmux 会话中启动 TUI\n2. 使用`tmux send-keys`发送击键\n3. 使用`tmux capture-pane`读取屏幕内容\n4. 使用 `tmux Kill-Session` 进行清理",
+      "ok": true
+    },
+    {
+      "original": "The skill's `SKILL.md` should present this as the primary way to drive\nthe app. A small `driver.sh` that wraps the launch+attach sequence can\nlive in the skill directory, but for most TUIs the raw tmux commands in\nthe skill body are enough.",
+      "zh": "该技能的“SKILL.md”应将其呈现为主要的驾驶方式\n该应用程序。包装启动+附加序列的小“driver.sh”可以\n位于技能目录中，但对于大多数 TUI，原始 tmux 命令位于\n技能本体就够了。",
+      "ok": true
+    },
+    {
+      "original": "## Example snippet",
+      "zh": "## 示例片段",
+      "ok": true
+    },
+    {
+      "original": "> ## Run (interactive, for agents)\n>\n> Start the TUI inside tmux:\n>\n> ```bash\n> tmux new-session -d -s app -x 120 -y 40 './myapp'\n> ```\n>\n> Poll until the ready marker appears (faster + more reliable than a fixed sleep —\n> returns the instant the app is up, fails loudly if it isn't):\n>\n> ```bash\n> timeout 10 bash -c 'until tmux capture-pane -t app -p | grep -q \"Ready\"; do sleep 0.2; done'\n> tmux capture-pane -t app -p\n> ```\n>\n> Send input (this example navigates to the Settings screen and toggles\n> an option):\n>\n> ```bash\n> tmux send-keys -t app 's'\n> timeout 5 bash -c 'until tmux capture-pane -t app -p | grep -q \"Settings\"; do sleep 0.2; done'\n> tmux send-keys -t app 'Down' 'Down' 'Space'  # navigate + toggle\n> timeout 5 bash -c 'until tmux capture-pane -t app -p | grep -qF \"[x]\"; do sleep 0.2; done'\n> tmux capture-pane -t app -p\n> ```\n>\n> If you find yourself writing more than a couple of these poll lines, pull\n> them into a `wait_for()` helper in a `driver.sh` next to the skill.\n>\n> Quit:\n>\n> ```bash\n> tmux send-keys -t app 'q'\n> tmux kill-session -t app 2>/dev/null || true\n> ```\n>\n> ### Key reference\n>\n> | Key | Action |\n> |---|---|\n> | `j` / `k` or `Down` / `Up` | Navigate lis",
+      "zh": "> ## 运行（交互式，针对代理）\n>\n> 在 tmux 内启动 TUI：\n>\n> ```bash\n> tmux 新会话 -d -s 应用程序 -x 120 -y 40 './myapp'\n> ```\n>\n> 轮询直到出现就绪标记（比固定睡眠更快+更可靠 —\n> 在应用程序启动时立即返回，如果没有启动，则会失败）：\n>\n> ```bash\n> 超时 10 bash -c ' 直到 tmux capture-pane -t app -p | grep -q“准备好”；睡0.2；完成'\n> tmux 捕获窗格 -t 应用程序 -p\n> ```\n>\n> 发送输入（此示例导航至“设置”屏幕并切换\n> 一个选项）：\n>\n> ```bash\n> tmux 发送键 -t 应用程序的'\n> 超时 5 bash -c ' 直到 tmux capture-pane -t app -p | grep -q“设置”；睡0.2；完成'\n> tmux send-keys -t app 'Down' 'Down' 'Space' # 导航 + 切换\n> 超时 5 bash -c ' 直到 tmux capture-pane -t app -p | grep -qF“[x]”；睡0.2；完成'\n> tmux 捕获窗格 -t 应用程序 -p\n> ```\n>\n> 如果您发现自己写了不止几行这样的民意调查，请拉\n> 将它们放入技能旁边的“driver.sh”中的“wait_for()”助手中。\n>\n> 退出：\n>\n> ```bash\n> tmux 发送键 -t 应用程序 'q'\n> tmux Kill-session -t app 2>/dev/null ||真实\n> ```\n>\n> ### 关键参考\n>\n> |关键|行动|\n> |---|---|\n> | `j` / `k` 或 `向下` / `向上` |导航 lis",
+      "ok": true
+    },
+    {
+      "original": "t |\n> | `Enter` | Select |\n> | `s` | Settings |\n> | `q` | Quit |",
+      "zh": "t |\n> | `输入` |选择 |\n> | `s` |设置 |\n> | `q` |退出 |",
+      "ok": true
+    },
+    {
+      "original": "## Details worth documenting",
+      "zh": "## 值得记录的细节",
+      "ok": true
+    },
+    {
+      "original": "- **Terminal size.** Some TUIs break or hide content at small widths.\n  Specify a known-good size in the `tmux new-session -x -y` args.\n- **Startup time.** Poll for a ready marker (`until tmux capture-pane | grep -q X`)\n  rather than a fixed `sleep N` — returns the instant the app is up, and fails\n  usefully when it never does. Say what string means ready.\n- **Keybinding reference.** A table of the main keys. This is the \"API\"\n  of a TUI — an agent needs it to drive the app.\n- **Exit cleanly.** Show the quit keystroke *and* `tmux kill-session` as\n  a fallback.\n- **Color/unicode quirks.** If `capture-pane` output is hard to read,\n  note flags that help (`-e` for escape sequences, `-J` to join wrapped\n  lines).",
+      "zh": "- **终端尺寸。** 某些 TUI 会破坏或隐藏小宽度的内容。\n  在“tmux new-session -x -y”参数中指定已知良好的大小。\n- **启动时间。** 轮询就绪标记（`until tmux capture-pane | grep -q X`）\n  而不是固定的“sleep N”——应用程序启动后立即返回，然后失败\n  当它从不这样做时很有用。说出什么字符串表示准备就绪。\n- **键绑定参考。** 主键表。这是“API”\n  TUI 的一部分 — 代理需要它来驱动应用程序。\n- **干净地退出。** 将退出击键 * 和 * `tmux Kill-session` 显示为\n  后备。\n- **颜色/unicode 怪癖。** 如果“capture-pane”输出难以阅读，\n  注意有助于的标志（“-e”用于转义序列，“-J”用于连接包装\n  线）。",
+      "ok": true
+    },
+    {
+      "original": "## Also document the direct invocation",
+      "zh": "## 还记录直接调用",
+      "ok": true
+    },
+    {
+      "original": "For a human running the app interactively, tmux is overkill. Include\nthe one-liner too:",
+      "zh": "对于以交互方式运行应用程序的人来说，tmux 太过分了。包括\n也是单行：",
+      "ok": true
+    },
+    {
+      "original": "> ## Run (direct, for humans)\n>\n> ```bash\n> ./myapp\n> ```\n>\n> Press `q` to quit.",
+      "zh": "> ## 运行（直接，对于人类）\n>\n> ```bash\n> ./myapp\n> ```\n>\n> 按“q”退出。",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "# examples/electron.md — Electron / desktop GUI app",
+      "zh": "# example/electron.md — Electron / 桌面 GUI 应用程序",
+      "ok": true
+    },
+    {
+      "original": "Electron apps have a window. A future agent in a headless container\ncan't see a window. So your deliverable here is not a markdown file\nthat says \"`npm start` opens a window\" — it's a **driver script** that\nlaunches the app under xvfb, exposes a REPL of commands (click, type,\nscreenshot), and lets an agent poke the UI by sending lines of text.",
+      "zh": "Electron 应用程序有一个窗口。无头容器中的未来特工\n看不到窗户。所以你的交付物不是一个 Markdown 文件\n上面写着“`npm start` 打开一个窗口”——这是一个 **驱动程序脚本**\n在 xvfb 下启动应用程序，公开命令的 REPL（单击、键入、\n屏幕截图），并让代理通过发送文本行来戳 UI。",
+      "ok": true
+    },
+    {
+      "original": "The skill's `SKILL.md` then becomes a short manual for that driver.",
+      "zh": "然后，该技能的“SKILL.md”将成为该驾驶员的简短手册。",
+      "ok": true
+    },
+    {
+      "original": "## What you're building",
+      "zh": "## 你正在构建什么",
+      "ok": true
+    },
+    {
+      "original": "```\napps/desktop/\n  .claude/skills/run-desktop/\n    SKILL.md               ← short. \"run the driver, here are the commands\"\n    driver.mjs             ← REPL: stdin commands → Playwright actions\n```",
+      "zh": "````\n应用程序/桌面/\n  .claude/skills/run-desktop/\n    SKILL.md ← 简短。 “运行驱动程序，这是命令”\n    driver.mjs ← REPL：stdin 命令 → Playwright 操作\n````",
+      "ok": true
+    },
+    {
+      "original": "The driver IS the product. Without it, the skill describes a GUI an\nagent can never touch.",
+      "zh": "驱动程序就是产品。如果没有它，该技能将描述一个 GUI\n代理永远无法触及。",
+      "ok": true
+    },
+    {
+      "original": "**Graduation path:** if the driver grows launch helpers the project's\nreal e2e suite wants to share, move it to `e2e-playwright/driver.mjs`\n(or `scripts/drive.mjs`) and update the skill's paths. The skill stays\nat `.claude/skills/run-desktop/`; the driver finds a better home.",
+      "zh": "**毕业路径：**如果驱动程序增长了项目的启动帮助程序\n真正的e2e套件想要分享，将其移至`e2e-playwright/driver.mjs`\n（或`scripts/drive.mjs`）并更新技能的路径。技能保持不变\n在`.claude/skills/run-desktop/`；司机找到了更好的家。",
+      "ok": true
+    },
+    {
+      "original": "## Step 1 — get the app to launch AT ALL under xvfb",
+      "zh": "## 步骤 1 — 让应用程序在 xvfb 下启动",
+      "ok": true
+    },
+    {
+      "original": "This is usually the hardest part and produces most of the Gotchas. The\nREADME will say \"macOS/Windows only.\" Ignore that. Install xvfb + the\nChromium shared libs, find the Electron binary, and launch it:",
+      "zh": "这通常是最难的部分，并且会产生大部分问题。的\n自述文件将显示“仅限 macOS/Windows”。忽略这一点。安装 xvfb +\nChromium 共享库，找到 Electron 二进制文件，然后启动它：",
+      "ok": true
+    },
+    {
+      "original": "```bash\napt-get install -y xvfb libnss3 libgbm1 libasound2t64 libgtk-3-0 \\\n  libxss1 libxkbcommon0 libatk-bridge2.0-0 libcups2 libdrm2",
+      "zh": "````bash\napt-get install -y xvfb libnss3 libgbm1 libasound2t64 libgtk-3-0 \\\n  libxss1 libxkbcommon0 libatk-bridge2.0-0 libcups2 libdrm2",
+      "ok": true
+    },
+    {
+      "original": "# Build the app first. Often the \"dev\" script is electron-forge which\n# does a Vite/webpack build THEN launches. You want just the build:\nnpm install\nnpx electron-forge start &   # builds .vite/build/ or dist/\nsleep 20 && kill %1          # kill it once built — you'll launch yourself",
+      "zh": "# 首先构建应用程序。通常“dev”脚本是 electro-forge 的\n# 进行 Vite/webpack 构建然后启动。你只想要构建：\nnpm 安装\nnpx electro-forge start & # builds .vite/build/ 或 dist/\nsleep 20 && Kill %1 # 一旦构建就杀死它 - 你将自己启动",
+      "ok": true
+    },
+    {
+      "original": "# Now try the raw launch\nxvfb-run -a node -e \"\n  const { _electron } = require('playwright-core');\n  _electron.launch({\n    executablePath: './node_modules/electron/dist/electron',\n    args: ['--no-sandbox', '.'],\n    timeout: 30000,\n  }).then(app => {\n    console.log('launched, windows:', app.windows().map(w => w.url()));\n    return app.close();\n  });\n\"\n```",
+      "zh": "# 现在尝试原始启动\nxvfb-运行-a节点-e“\n  const { _ Electron } = require('playwright-core');\n  _电子.发射({\n    可执行路径：'./node_modules/electron/dist/electron',\n    args: ['--无沙箱', '.'],\n    超时：30000，\n  }).then(应用=> {\n    console.log('启动，windows:', app.windows().map(w => w.url()));\n    返回app.close();\n  });\n”\n````",
+      "ok": true
+    },
+    {
+      "original": "Iterate until it launches. Each missing `.so` → one more `apt-get`\npackage → one more line in Prerequisites. Each launch timeout → check\nthe `nodeCliInspect` fuse isn't disabled, check the build output exists.",
+      "zh": "迭代直至启动。每缺少一个 `.so` → 多一个 `apt-get`\n包 → 先决条件中多一行。每次启动超时→检查\n`nodeCliInspect` 保险丝未禁用，请检查构建输出是否存在。",
+      "ok": true
+    },
+    {
+      "original": "**`--no-sandbox` is almost always needed in containers.** Electron's\nsandbox needs CAP_SYS_ADMIN or user namespaces. Neither by default.",
+      "zh": "**容器中几乎总是需要`--no-sandbox`。** Electron 的\n沙箱需要 CAP_SYS_ADMIN 或用户命名空间。默认情况下都不是。",
+      "ok": true
+    },
+    {
+      "original": "## Step 2 — build the REPL driver",
+      "zh": "## 步骤 2 — 构建 REPL 驱动程序",
+      "ok": true
+    },
+    {
+      "original": "Once you can launch it, turn that throwaway script into a REPL. Start\nminimal — you will add commands as you need them. **The REPL is the\nright shape** because an agent can run it inside tmux and iterate\nwithout relaunching the (slow) app on every interaction.",
+      "zh": "一旦您可以启动它，请将一次性脚本转换为 REPL。开始\n最小化——您可以根据需要添加命令。 **REPL 是\n正确的形状**，因为代理可以在 tmux 内运行它并迭代\n无需在每次交互时重新启动（缓慢的）应用程序。",
+      "ok": true
+    },
+    {
+      "original": "```javascript\n// .claude/skills/run-<unit>/driver.mjs\n// REPL driver for <app>. Run under xvfb on headless Linux.\n// Designed for agents: wrap in tmux, send-keys commands, capture-pane output.\nimport { _electron as electron } from 'playwright-core';\nimport * as readline from 'node:readline';\nimport * as fs from 'node:fs';\nimport * as path from 'node:path';",
+      "zh": "```javascript\n// .claude/skills/run-<unit>/driver.mjs\n// <app> 的 REPL 驱动程序。在无头 Linux 上的 xvfb 下运行。\n// 专为代理设计：封装在 tmux、发送键命令、捕获窗格输出中。\n从“playwright-core”导入{_电子作为电子}；\n从“节点：readline”导入*作为readline；\n从 'node:fs' 导入 * as fs;\n从 'node:path' 导入 * 作为路径；",
+      "ok": true
+    },
+    {
+      "original": "const APP_DIR = path.resolve(import.meta.dirname, '../../..');\nconst SHOT_DIR = process.env.SCREENSHOT_DIR || '/tmp/shots';\nfs.mkdirSync(SHOT_DIR, { recursive: true });",
+      "zh": "const APP_DIR = path.resolve(import.meta.dirname, '../../..');\nconst SHOT_DIR = process.env.SCREENSHOT_DIR || '/tmp/镜头';\nfs.mkdirSync(SHOT_DIR, { 递归: true });",
+      "ok": true
+    },
+    {
+      "original": "let app = null;\nlet page = null;   // the window/page you actually interact with",
+      "zh": "让应用程序=空；\n让页面=空；   // 您实际与之交互的窗口/页面",
+      "ok": true
+    },
+    {
+      "original": "const electronBin = process.platform === 'darwin'\n  ? path.join(APP_DIR, 'node_modules/electron/dist/Electron.app/Contents/MacOS/Electron')\n  : path.join(APP_DIR, 'node_modules/electron/dist/electron');",
+      "zh": "const electroBin = process.platform === 'darwin'\n  ？路径.join（APP_DIR，'node_modules / electron / dist / Electron.app / Contents / MacOS / Electron'）\n  : path.join(APP_DIR, 'node_modules/电子/dist/电子');",
+      "ok": true
+    },
+    {
+      "original": "const COMMANDS = {\n  async launch() {\n    if (app) return console.log('already launched');\n    app = await electron.launch({\n      executablePath: electronBin,\n      args: ['--no-sandbox', APP_DIR],\n      env: { ...process.env, DISPLAY: process.env.DISPLAY || ':99' },\n      timeout: 30_000,\n    });\n    await new Promise(r => setTimeout(r, 8_000));\n    page = app.windows().find(w => !w.url().startsWith('devtools://'))\n        ?? await app.firstWindow();\n    console.log('launched.', app.windows().length, 'windows:');\n    for (const w of app.windows()) console.log(' ', w.url());\n  },",
+      "zh": "常量命令 = {\n  异步启动() {\n    if (app) return console.log('已经启动');\n    应用程序 = 等待电子.launch({\n      可执行路径：电子Bin，\n      args: ['--no-sandbox', APP_DIR],\n      env: { ...process.env, DISPLAY: process.env.DISPLAY || '：99'}，\n      超时：30_000，\n    });\n    等待新的 Promise(r => setTimeout(r, 8_000));\n    页面 = app.windows().find(w => !w.url().startsWith('devtools://'))\n        ??等待应用程序.firstWindow();\n    console.log('启动。', app.windows().length, 'windows:');\n    for (const w of app.windows()) console.log(' ', w.url());\n  },",
+      "ok": true
+    },
+    {
+      "original": "async ss(name) {\n    if (!page) return console.log('ERROR: launch first');\n    const f = path.join(SHOT_DIR, (name || `ss-${Date.now()}`) + '.png');\n    await page.screenshot({ path: f });\n    console.log('screenshot:', f);\n  },",
+      "zh": "异步 ss(名称) {\n    if (!page) return console.log('错误：首先启动');\n    const f = path.join(SHOT_DIR, (name || `ss-${Date.now()}`) + '.png');\n    等待页面.screenshot({ 路径: f });\n    console.log('屏幕截图：', f);\n  },",
+      "ok": true
+    },
+    {
+      "original": "async click(sel) {\n    if (!page) return console.log('ERROR: launch first');\n    const r = await page.evaluate(s => {\n      const el = document.querySelector(s);\n      if (!el) return 'NOT_FOUND';\n      el.click(); return 'OK';\n    }, sel);\n    console.log('click', sel, '→', r);\n  },",
+      "zh": "异步点击(sel) {\n    if (!page) return console.log('错误：首先启动');\n    const r = 等待 page.evaluate(s => {\n      const el = document.querySelector(s);\n      if (!el) 返回“NOT_FOUND”；\n      el.click();返回“确定”；\n    }，选择）；\n    console.log('点击', sel, '→', r);\n  },",
+      "ok": true
+    },
+    {
+      "original": "async 'click-text'(text) {\n    if (!page) return console.log('ERROR: launch first');\n    const r = await page.evaluate(t => {\n      const els = [...document.querySelectorAll('button, a, [role=\"button\"]')];\n      const el = els.find(e => e.textContent?.trim() === t)\n              ?? els.find(e => e.textContent?.includes(t));\n      if (!el) return 'NOT_FOUND';\n      el.click(); return 'OK: ' + el.tagName;\n    }, text);\n    console.log('click-text', JSON.stringify(text), '→', r);\n  },",
+      "zh": "异步“点击文本”（文本）{\n    if (!page) return console.log('错误：首先启动');\n    const r = 等待 page.evaluate(t => {\n      const els = [...document.querySelectorAll('button, a, [role=\"button\"]')];\n      const el = els.find(e => e.textContent?.trim() === t)\n              ?? els.find(e => e.textContent?.includes(t));\n      if (!el) 返回“NOT_FOUND”；\n      el.click(); return '确定：' + el.tagName;\n    }，文本）；\n    console.log('点击文本', JSON.stringify(text), '→', r);\n  },",
+      "ok": true
+    },
+    {
+      "original": "async type(text)  { if (page) await page.keyboard.type(text, { delay: 30 }); },\n  async press(key)  { if (page) await page.keyboard.press(key); },",
+      "zh": "异步类型（文本）{ if（页面）等待页面.键盘.类型（文本，{延迟：30}）; },\n  异步按下（键）{ 如果（页面）等待页面.键盘.按下（键）; },",
+      "ok": true
+    },
+    {
+      "original": "async wait(sel) {\n    if (!page) return console.log('ERROR: launch first');\n    try { await page.waitForSelector(sel, { timeout: 10_000 }); console.log('found:', sel); }\n    catch { console.log('TIMEOUT:', sel); }\n  },",
+      "zh": "异步等待（sel）{\n    if (!page) return console.log('错误：首先启动');\n    尝试 { 等待 page.waitForSelector(sel, { 超时: 10_000 }); console.log('发现：', sel); }\n    catch { console.log('超时:', sel); }\n  },",
+      "ok": true
+    },
+    {
+      "original": "async eval(expr) {\n    if (!page) return console.log('ERROR: launch first');\n    try { console.log(JSON.stringify(await page.evaluate(expr))); }\n    catch (e) { console.log('ERROR:', e.message); }\n  },",
+      "zh": "异步 eval(expr) {\n    if (!page) return console.log('错误：首先启动');\n    尝试 { console.log(JSON.stringify(await page.evaluate(expr))); }\n    catch (e) { console.log('错误：', e.message); }\n  },",
+      "ok": true
+    },
+    {
+      "original": "async text(sel) {\n    if (!page) return console.log('ERROR: launch first');\n    console.log(await page.evaluate(\n      s => (s ? document.querySelector(s) : document.body)?.innerText ?? '(null)',\n      sel || null));\n  },",
+      "zh": "异步文本(sel) {\n    if (!page) return console.log('错误：首先启动');\n    console.log(等待页面.evaluate(\n      s => (s ? document.querySelector(s) : document.body)?.innerText ?? '（空）'，\n      塞尔||空））；\n  },",
+      "ok": true
+    },
+    {
+      "original": "async windows() {\n    if (!app) return console.log('ERROR: launch first');\n    for (const w of app.windows()) console.log(' ', w.url());\n    const wcs = await app.evaluate(({ webContents }) =>\n      webContents.getAllWebContents().map(w => ({ id: w.id, type: w.getType(), url: w.getURL() })));\n    console.log('webContents:');\n    for (const w of wcs) console.log(` [${w.id}] ${w.type}: ${w.url}`);\n  },",
+      "zh": "异步窗口() {\n    if (!app) return console.log('错误：首先启动');\n    for (const w of app.windows()) console.log(' ', w.url());\n    const wcs = 等待 app.evaluate(({ webContents }) =>\n      webContents.getAllWebContents().map(w => ({ id: w.id, type: w.getType(), url: w.getURL() })));\n    console.log('webContents:');\n    for (wcs 的 const w) console.log(` [${w.id}] ${w.type}: ${w.url}`);\n  },",
+      "ok": true
+    },
+    {
+      "original": "async quit() { if (app) await app.close().catch(()=>{}); app = null; page = null; },\n  help() { console.log('commands:', Object.keys(COMMANDS).join(', ')); },\n};",
+      "zh": "async quit() { if (app) wait app.close().catch(()=>{}); }应用=空；页面=空； },\n  help() { console.log('命令:', Object.keys(COMMANDS).join(', ')); },\n};",
+      "ok": true
+    },
+    {
+      "original": "const stdin = fs.createReadStream(null, { fd: fs.openSync('/dev/stdin', 'r') });\nconst rl = readline.createInterface({ input: stdin, output: process.stdout, prompt: 'driver> ' });",
+      "zh": "const stdin = fs.createReadStream(null, { fd: fs.openSync('/dev/stdin', 'r') });\nconst rl = readline.createInterface({ 输入：stdin，输出：process.stdout，提示：'driver> ' });",
+      "ok": true
+    },
+    {
+      "original": "rl.on('line', async line => {\n  const [cmd, ...rest] = line.trim().split(/\\s+/);\n  if (!cmd) return rl.prompt();\n  const fn = COMMANDS[cmd];\n  if (!fn) { console.log('unknown:', cmd, '— try: help'); return rl.prompt(); }\n  try { await fn(rest.join(' ')); } catch (e) { console.log('ERROR:', e.message); }\n  if (cmd === 'quit') { rl.close(); process.exit(0); }\n  rl.prompt();\n});\nrl.on('close', async () => { await COMMANDS.quit(); process.exit(0); });",
+      "zh": "rl.on('line', 异步线 => {\n  const [cmd, ...rest] = line.trim().split(/\\s+/);\n  if (!cmd) return rl.prompt();\n  const fn = 命令[cmd];\n  if (!fn) { console.log('未知：', cmd, '—尝试：帮助');返回 rl.prompt(); }\n  尝试 { 等待 fn(rest.join(' ')); } catch (e) { console.log('错误：', e.message); }\n  if (cmd === '退出') { rl.close();进程.退出(0); }\n  rl.prompt();\n});\nrl.on('close', async () => { wait COMMANDS.quit(); process.exit(0); });",
+      "ok": true
+    },
+    {
+      "original": "console.log('<app> driver — \"help\" for commands, \"launch\" to start');\nrl.prompt();\n```",
+      "zh": "console.log('<app> driver — “help”用于命令，“launch”用于启动');\nrl.prompt();\n````",
+      "ok": true
+    },
+    {
+      "original": "**This is a starting skeleton.** As you try to reach interesting parts\nof the app you'll add app-specific commands.",
+      "zh": "**这是一个起始骨架。** 当您尝试到达有趣的部分时\n您将添加应用程序特定的命令。",
+      "ok": true
+    },
+    {
+      "original": "## Step 3 — use it yourself, via tmux",
+      "zh": "## 步骤 3 — 通过 tmux 自己使用",
+      "ok": true
+    },
+    {
+      "original": "Run the driver the same way the next agent will:",
+      "zh": "以与下一个代理相同的方式运行驱动程序：",
+      "ok": true
+    },
+    {
+      "original": "```bash\ntmux new-session -d -s app -x 200 -y 50\ntmux send-keys -t app 'cd /workspace/apps/desktop && xvfb-run -a node .claude/skills/run-desktop/driver.mjs' Enter\ntimeout 20 bash -c 'until tmux capture-pane -t app -p | grep -q \"driver>\"; do sleep 0.2; done'\ntmux send-keys -t app 'launch' Enter\ntimeout 60 bash -c 'until tmux capture-pane -t app -p | grep -q \"launched\"; do sleep 0.2; done'\ntmux send-keys -t app 'ss 01-landing' Enter\ntimeout 10 bash -c 'until tmux capture-pane -t app -p | grep -q \"screenshot:\"; do sleep 0.2; done'\ntmux send-keys -t app 'windows' Enter    # which page has the real UI?\ntmux capture-pane -t app -p\n```",
+      "zh": "````bash\ntmux 新会话 -d -s 应用程序 -x 200 -y 50\ntmux send-keys -t app 'cd /workspace/apps/desktop && xvfb-run -a node .claude/skills/run-desktop/driver.mjs' Enter\n超时 20 bash -c '直到 tmux capture-pane -t app -p | grep -q“驱动程序>”；睡0.2；完成'\ntmux send-keys -t app 'launch' 输入\n超时 60 bash -c '直到 tmux capture-pane -t app -p | grep -q“启动”；睡0.2；完成'\ntmux send-keys -t app 'ss 01-landing' Enter\n超时 10 bash -c '直到 tmux capture-pane -t app -p | grep -q“屏幕截图：”；睡0.2；完成'\ntmux send-keys -t app 'windows' Enter # 哪个页面有真正的 UI？\ntmux 捕获窗格 -t 应用程序 -p\n````",
+      "ok": true
+    },
+    {
+      "original": "Then actually open `/tmp/shots/01-landing.png`. Is it the app? Is it\nblank? Is it a login screen? Each of these tells you what to do next.",
+      "zh": "然后实际打开`/tmp/shots/01-landing.png`。是应用程序吗？是吗\n空白？这是登录屏幕吗？其中每一个都会告诉您下一步该做什么。",
+      "ok": true
+    },
+    {
+      "original": "## Step 4 — write SKILL.md",
+      "zh": "## 步骤 4 — 编写 SKILL.md",
+      "ok": true
+    },
+    {
+      "original": "Keep it short. The driver is the meat; `SKILL.md` is the manual.",
+      "zh": "保持简短。司机就是肉； `SKILL.md` 是手册。",
+      "ok": true
+    },
+    {
+      "original": "## Obstacles you will hit (and they go in Gotchas)",
+      "zh": "## 你会遇到的障碍（它们会遇到陷阱）",
+      "ok": true
+    },
+    {
+      "original": "- **`firstWindow()` gives you a splash/loading screen,** not the app.\n- **The real UI is in a BrowserView, not a BrowserWindow.**\n- **`locator.click()` clicks the wrong thing.** Use `page.evaluate(el => el.click())`.\n- **Feature gates block the thing you need to test.**\n- **contentEditable inputs** (ProseMirror, Tiptap, Slate) aren't `<textarea>`.\n- **Electron steals stdin.** The `fs.openSync('/dev/stdin', 'r')` trick protects your REPL's input.\n- **Native modules fail to load** (keychain, notifications, etc.).",
+      "zh": "- **`firstWindow()` 为您提供启动/加载屏幕，** 而不是应用程序。\n- **真正的 UI 位于 BrowserView 中，而不是 BrowserWindow。**\n- **`locator.click()`点击了错误的东西。**使用`page.evaluate(el => el.click())`。\n- **功能门会阻止您需要测试的东西。**\n- **内容可编辑输入**（ProseMirror、Tiptap、Slate）不是“<textarea>”。\n- **Electron 窃取 stdin。** `fs.openSync('/dev/stdin', 'r')` 技巧可以保护您的 REPL 的输入。\n- **本机模块无法加载**（钥匙串、通知等）。",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "# examples/playwright.md — Browser-driven web app",
+      "zh": "# example/playwright.md — 浏览器驱动的 Web 应用程序",
+      "ok": true
+    },
+    {
+      "original": "You have a dev server that serves HTML to a browser. An agent in a\nheadless container can't open a browser window — so \"run the app\" means\nlaunching the dev server, driving a headless Chromium against it, and\nproducing a screenshot that proves the page rendered.",
+      "zh": "您有一个向浏览器提供 HTML 的开发服务器。代理人在一个\n无头容器无法打开浏览器窗口 - 所以“运行应用程序”意味着\n启动开发服务器，驱动一个无头 Chromium 来对抗它，以及\n生成证明页面呈现的屏幕截图。",
+      "ok": true
+    },
+    {
+      "original": "Don't write a browser driver. Use `chromium-cli`.",
+      "zh": "不要编写浏览器驱动程序。使用“chromium-cli”。",
+      "ok": true
+    },
+    {
+      "original": "## Dev server",
+      "zh": "## 开发服务器",
+      "ok": true
+    },
+    {
+      "original": "Find the dev command (`package.json` `scripts.dev`, `Makefile`,\nREADME), start it in the background, and wait for it to actually serve:",
+      "zh": "找到 dev 命令（`package.json`、`scripts.dev`、`Makefile`、\nREADME），在后台启动它，并等待它实际运行：",
+      "ok": true
+    },
+    {
+      "original": "```bash\nnpm run dev &   # or yarn dev, pnpm dev, make serve, ./dev.sh\necho $! > /tmp/dev.pid\ntimeout 30 bash -c 'until curl -sf http://localhost:3000 >/dev/null; do sleep 1; done'\n```",
+      "zh": "````bash\nnpm run dev & # 或yarn dev, pnpm dev, makeserve, ./dev.sh\n回声$！ > /tmp/dev.pid\n超时 30 bash -c '直到curl -sf http://localhost:3000 >/dev/null;睡觉1；完成'\n````",
+      "ok": true
+    },
+    {
+      "original": "## Drive",
+      "zh": "＃＃ 驾驶",
+      "ok": true
+    },
+    {
+      "original": "`chromium-cli` is a headless-Chromium REPL. Pipe a script to stdin:",
+      "zh": "`chromium-cli` 是一个无头 Chromium REPL。将脚本通过管道传输到标准输入：",
+      "ok": true
+    },
+    {
+      "original": "```bash\nchromium-cli --session app <<'EOF'\nnav http://localhost:3000\nwait-for text=Dashboard\nscreenshot\nclick button:has-text(\"New item\")\nfill input[name=\"title\"] Smoke test\npress Enter\nwait-for text=Smoke test\nscreenshot\nconsole --errors\nEOF\n```",
+      "zh": "````bash\nchromium-cli --session app <<'EOF'\n导航 http://localhost:3000\n等待文本=仪表板\n截图\n单击按钮：has-text(\"新项目\")\n填写输入[name=\"title\"] 冒烟测试\n按回车键\n等待文本=冒烟测试\n截图\n控制台--错误\nEOF\n````",
+      "ok": true
+    },
+    {
+      "original": "## What to put in the skill",
+      "zh": "## 技能里要放什么",
+      "ok": true
+    },
+    {
+      "original": "The project-specific bits only. `chromium-cli` handles the mechanics.",
+      "zh": "仅项目特定位。 `chromium-cli` 处理机制。",
+      "ok": true
+    },
+    {
+      "original": "- **Dev command + port + stop.**\n- **Auth.**\n- **One representative interaction.**\n- **App-specific gotchas.**",
+      "zh": "- **开发命令+端口+停止。**\n- **授权**\n- **一次代表性互动。**\n- **特定于应用程序的陷阱。**",
+      "ok": true
+    },
+    {
+      "original": "## Gotchas that recur",
+      "zh": "## 重复出现的问题",
+      "ok": true
+    },
+    {
+      "original": "- **React controlled inputs.** Use `fill` / `type`, not `eval el.value = '…'`.\n- **Websockets / long-poll.** `wait-idle` never settles. `wait-for` the element you actually need.\n- **Slow first paint.** Vite/Next compile routes on demand; the first `nav` can take 10s+.\n- **`screenshot-element <sel>`** crops to one element.\n- **Check `console --errors` before declaring success.**",
+      "zh": "- **反应控制输入。** 使用 `fill` / `type`，而不是 `eval el.value = '...'`。\n- **Websockets / long-poll.** `wait-idle` 永远不会解决。 “等待”您实际需要的元素。\n- **第一次绘制速度慢。** Vite/Next 按需编译路线；第一个“nav”可能需要 10 秒以上。\n- **`screenshot-element <sel>`** 裁剪为一个元素。\n- **在声明成功之前检查`console --errors`。**",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "# examples/library.md — Library / SDK",
+      "zh": "# example/library.md — 库/SDK",
+      "ok": true
+    },
+    {
+      "original": "Libraries don't have a \"run\" step in the process sense. For libraries, the run skill is about:",
+      "zh": "从流程意义上讲，库没有“运行”步骤。对于库来说，运行技能大约是：",
+      "ok": true
+    },
+    {
+      "original": "1. **Building** the library from source\n2. **Running the test suite**\n3. **A minimal working example** that exercises the library",
+      "zh": "1. **从源代码构建**库\n2. **运行测试套件**\n3. **一个最小的工作示例**，用于练习该库",
+      "ok": true
+    },
+    {
+      "original": "## The smoke-test example",
+      "zh": "## 冒烟测试示例",
+      "ok": true
+    },
+    {
+      "original": "> ```bash\n> python -c '\n> from mylib import Client\n> c = Client()\n> print(c.ping())\n> '\n> # → pong\n> ```",
+      "zh": "> ```bash\n> python -c '\n> 从 mylib 导入客户端\n> c = 客户端()\n> 打印(c.ping())\n> '\n> # → 乒乓球\n> ```",
+      "ok": true
+    },
+    {
+      "original": "## Things to consider documenting",
+      "zh": "## 需要考虑记录的事项",
+      "ok": true
+    },
+    {
+      "original": "- **Development mode vs installed mode.**\n- **Optional dependencies.**\n- **Generated code.**",
+      "zh": "- **开发模式与安装模式。**\n- **可选依赖项。**\n- **生成的代码。**",
+      "ok": true
+    }
+  ]
+}

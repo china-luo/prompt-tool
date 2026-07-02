@@ -1,0 +1,111 @@
+{
+  "id": "3888584ff397ce85",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/run-skill-generator/examples/server.md",
+  "generatedAt": "2026-07-01T09:32:07.539Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 20,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "# Example: Web server / API",
+      "zh": "# 示例：Web 服务器/API",
+      "ok": true
+    },
+    {
+      "original": "The distinguishing concern for servers is **lifecycle**: an agent needs to\nstart the server in the background, verify it's up, interact with it, then\ncleanly shut it down. A foreground `npm start` that blocks the shell is\nuseless to an agent.",
+      "zh": "服务器的显着关注点是**生命周期**：代理需要\n在后台启动服务器，验证它是否已启动，与其交互，然后\n干净地关闭它。阻止 shell 的前台“npm start”是\n对代理没用。",
+      "ok": true
+    },
+    {
+      "original": "## Structure to follow",
+      "zh": "## 遵循的结构",
+      "ok": true
+    },
+    {
+      "original": "A good server run skill has:",
+      "zh": "良好的服务器运行技能具有：",
+      "ok": true
+    },
+    {
+      "original": "1. **Prerequisites & setup** — same as any project.\n2. **Run** — the background-launch pattern (below), not a blocking command.\n3. **Verify** — a `curl` or similar that confirms the server is actually up.\n4. **Stop** — how to cleanly terminate the background process.",
+      "zh": "1. **先决条件和设置** — 与任何项目相同。\n2. **运行** — 后台启动模式（如下），而不是阻塞命令。\n3. **验证** — `curl` 或类似的内容，确认服务器确实已启动。\n4. **停止** — 如何干净地终止后台进程。",
+      "ok": true
+    },
+    {
+      "original": "If the background-launch + readiness-poll + smoke-curl sequence is more\nthan a couple of lines, put it in a `smoke.sh` inside the skill directory\nand have `SKILL.md` say \"run the smoke script.\" One command, exit code\ntells you if the server is healthy.",
+      "zh": "如果后台启动+就绪轮询+烟雾卷曲序列更多\n比几行，将其放在技能目录中的`smoke.sh`中\n并让“SKILL.md”说“运行烟雾脚本”。一条命令，退出代码\n告诉您服务器是否健康。",
+      "ok": true
+    },
+    {
+      "original": "## Background-launch pattern",
+      "zh": "## 后台启动模式",
+      "ok": true
+    },
+    {
+      "original": "Don't write:",
+      "zh": "不要写：",
+      "ok": true
+    },
+    {
+      "original": "> ```bash\n> npm start\n> ```",
+      "zh": "> ```bash\n> npm 启动\n> ```",
+      "ok": true
+    },
+    {
+      "original": "That blocks. Instead, show how to launch in the background, wait for\nreadiness, and find the PID later:",
+      "zh": "那会阻塞。相反，展示如何在后台启动，等待\n准备就绪，稍后查找 PID：",
+      "ok": true
+    },
+    {
+      "original": "> ```bash\n> npm start &> /tmp/server.log &\n> SERVER_PID=$!\n>\n> # Wait for the server to come up (adjust timeout/port as needed)\n> for i in {1..30}; do\n>   curl -sf http://localhost:3000/health > /dev/null && break\n>   sleep 1\n> done\n> ```",
+      "zh": "> ```bash\n> npm 启动 &> /tmp/server.log &\n> SERVER_PID=$!\n>\n> # 等待服务器启动（根据需要调整超时/端口）\n> 对于 {1..30} 中的 i；做\n> curl -sf http://localhost:3000/health > /dev/null && 中断\n> 睡眠 1\n> 完成\n> ```",
+      "ok": true
+    },
+    {
+      "original": "Then the verification step:",
+      "zh": "然后是验证步骤：",
+      "ok": true
+    },
+    {
+      "original": "> ```bash\n> curl http://localhost:3000/health\n> # → {\"status\":\"ok\"}\n> ```",
+      "zh": "> ```bash\n> 卷曲 http://localhost:3000/health\n> # → {\"状态\":\"确定\"}\n> ```",
+      "ok": true
+    },
+    {
+      "original": "And stopping:",
+      "zh": "并停止：",
+      "ok": true
+    },
+    {
+      "original": "> ```bash\n> kill $SERVER_PID\n> # or, if you've lost the PID:\n> pkill -f \"node.*server.js\"\n> ```",
+      "zh": "> ```bash\n> 杀死 $SERVER_PID\n> # 或者，如果您丢失了 PID：\n> pkill -f “node.*server.js”\n> ```",
+      "ok": true
+    },
+    {
+      "original": "## Details worth documenting",
+      "zh": "## 值得记录的细节",
+      "ok": true
+    },
+    {
+      "original": "- **Which port.** Make it explicit and say how to override it (`PORT=4000 npm start`).\n- **What \"ready\" looks like.** A specific log line or a health endpoint to hit.\n- **Required env vars.** Database URL, API keys, etc. — with a template `.env`\n  if the list is long.\n- **Hot reload vs production mode.** If they differ meaningfully, say which\n  to use and when.\n- **Dependent services.** If the server needs Redis/Postgres/etc., either\n  point at a docker-compose that brings them up, or include the `docker run`\n  command directly.",
+      "zh": "- **哪个端口。** 明确并说明如何覆盖它（`PORT=4000 npm start`）。\n- **“就绪”是什么样的。** 要命中的特定日志行或运行状况端点。\n- **必需的环境变量。** 数据库 URL、API 密钥等 — 使用模板 `.env`\n  如果清单很长。\n- **热重载与生产模式。** 如果它们有显着差异，请说明是哪一个\n  使用以及何时使用。\n- **依赖服务。** 如果服务器需要Redis/Postgres/等，则\n  指向启动它们的 docker-compose，或者包含“docker run”\n  直接命令。",
+      "ok": true
+    },
+    {
+      "original": "## Example snippet",
+      "zh": "## 示例片段",
+      "ok": true
+    },
+    {
+      "original": "Here's what a Run section for a typical Node API might look like:",
+      "zh": "典型 Node API 的运行部分可能如下所示：",
+      "ok": true
+    },
+    {
+      "original": "> ## Run\n>\n> Start the dev server in the background:\n>\n> ```bash\n> npm run dev &> /tmp/api.log &\n> ```\n>\n> The server listens on port 3000. Wait for it to be ready, then verify:\n>\n> ```bash\n> for i in {1..20}; do\n>   curl -sf http://localhost:3000/health && break\n>   sleep 0.5\n> done\n> curl http://localhost:3000/health\n> # → {\"status\":\"ok\",\"version\":\"1.2.3\"}\n> ```\n>\n> Logs are at `/tmp/api.log`. Stop with:\n>\n> ```bash\n> pkill -f \"tsx watch src/index.ts\"\n> ```\n>\n> ### Environment\n>\n> | Variable | Required | Default | Notes |\n> |---|---|---|---|\n> | `DATABASE_URL` | Yes | — | Postgres connection string |\n> | `PORT` | No | `3000` | |\n> | `LOG_LEVEL` | No | `info` | `debug` / `info` / `warn` / `error` |",
+      "zh": "> ## 运行\n>\n> 在后台启动开发服务器：\n>\n> ```bash\n> npm run dev &> /tmp/api.log &\n> ```\n>\n> 服务器侦听端口 3000。等待其准备就绪，然后验证：\n>\n> ```bash\n> 对于 {1..20} 中的 i；做\n>curl -sf http://localhost:3000/health && 中断\n> 睡眠 0.5\n> 完成\n> 卷曲 http://localhost:3000/health\n> # → {\"status\":\"ok\",\"version\":\"1.2.3\"}\n> ```\n>\n> 日志位于`/tmp/api.log`。停止：\n>\n> ```bash\n> pkill -f \"tsx watch src/index.ts\"\n> ```\n>\n> ### 环境\n>\n> |变量|必填 |默认|笔记|\n> |---|---|---|---|\n> | `DATABASE_URL` |是的 | — | Postgres 连接字符串 |\n> | `端口` |没有 | `3000` | |\n> | `LOG_LEVEL` |没有 | `信息` | `调试`/`信息`/`警告`/`错误` |",
+      "ok": true
+    }
+  ]
+}

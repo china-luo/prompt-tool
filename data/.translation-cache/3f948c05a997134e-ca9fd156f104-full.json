@@ -1,0 +1,51 @@
+{
+  "id": "3f948c05a997134e",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/deep-research/SKILL.md",
+  "generatedAt": "2026-07-01T09:30:01.957Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 8,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "---\nname: deep-research\ndescription: Deep research harness — fan-out web searches, fetch sources, adversarially verify claims, synthesize a cited report.\nwhen_to_use: When the user wants a deep, multi-source, fact-checked research report on any topic. BEFORE invoking, check if the question is specific enough to research directly — if underspecified (e.g., \"what car to buy\" without budget/use-case/region), ask 2-3 clarifying questions to narrow scope. Then pass the refined question as args, weaving the answers in.\n---",
+      "zh": "---\n名称：深度研究\n描述：深度研究利用——扇出网络搜索、获取来源、对抗性验证主张、综合引用的报告。\nwhen_to_use：当用户想要关于任何主题的深入、多源、经过事实检查的研究报告时。在调用之前，检查问题是否足够具体以供直接研究 - 如果未指定（例如，“买什么车”而没有预算/用例/区域），请提出 2-3 个澄清问题以缩小范围。然后将经过提炼的问题作为参数传递，将答案编织进去。\n---",
+      "ok": true
+    },
+    {
+      "original": "Run the \"deep-research\" workflow.",
+      "zh": "运行“深入研究”工作流程。",
+      "ok": true
+    },
+    {
+      "original": "Deep research harness — fan-out web searches, fetch sources, adversarially verify claims, synthesize a cited report.",
+      "zh": "深度研究利用——扇出网络搜索、获取来源、对抗性验证主张、综合引用的报告。",
+      "ok": true
+    },
+    {
+      "original": "When the user wants a deep, multi-source, fact-checked research report on any topic. BEFORE invoking, check if the question is specific enough to research directly — if underspecified (e.g., \"what car to buy\" without budget/use-case/region), ask 2-3 clarifying questions to narrow scope. Then pass the refined question as args, weaving the answers in.",
+      "zh": "当用户想要关于任何主题的深入、多源、经过事实核查的研究报告时。在调用之前，检查问题是否足够具体以供直接研究 - 如果未指定（例如，“买什么车”而没有预算/用例/区域），请提出 2-3 个澄清问题以缩小范围。然后将经过提炼的问题作为参数传递，将答案编织进去。",
+      "ok": true
+    },
+    {
+      "original": "Phases:\n- Scope: Decompose question (from args) into 5 search angles\n- Search: 5 parallel WebSearch agents, one per angle\n- Fetch: URL-dedup, fetch top 15 sources, extract falsifiable claims\n- Verify: 3-vote adversarial verification per claim (need 2/3 refutes to kill)\n- Synthesize: Merge semantic dupes, rank by confidence, cite sources",
+      "zh": "阶段：\n- 范围：将问题（来自参数）分解为 5 个搜索角度\n- 搜索：5 个并行 WebSearch 代理，每个角度一个\n- 获取：URL 去重、获取前 15 个来源、提取可伪造的声明\n- 验证：每个主张进行 3 票对抗性验证（需要 2/3 反驳才能杀死）\n- 综合：合并语义欺骗、按置信度排名、引用来源",
+      "ok": true
+    },
+    {
+      "original": "Invoke: Workflow({ name: \"deep-research\" })",
+      "zh": "调用：Workflow({ name: \"deep-research\" })",
+      "ok": true
+    },
+    {
+      "original": "## Workflow Script",
+      "zh": "## 工作流程脚本",
+      "ok": true
+    },
+    {
+      "original": "[scripts/workflow-script.js](scripts/workflow-script.js)",
+      "zh": "[脚本/workflow-script.js](脚本/workflow-script.js)",
+      "ok": true
+    }
+  ]
+}

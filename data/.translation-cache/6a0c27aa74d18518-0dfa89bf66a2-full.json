@@ -1,0 +1,226 @@
+{
+  "id": "6a0c27aa74d18518",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/keybindings-help.md",
+  "generatedAt": "2026-07-01T09:36:33.016Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 43,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "---\nname: keybindings-help\ndescription: Customize keyboard shortcuts, rebind keys, add chord bindings, or modify ~/.claude/keybindings.json.\n---",
+      "zh": "---\n名称：按键绑定帮助\n描述：自定义键盘快捷键、重新绑定键、添加和弦绑定或修改 ~/.claude/keybindings.json。\n---",
+      "ok": true
+    },
+    {
+      "original": "# Keybindings Skill",
+      "zh": "# 按键绑定技能",
+      "ok": true
+    },
+    {
+      "original": "Create or modify `~/.claude/keybindings.json` to customize keyboard shortcuts.",
+      "zh": "创建或修改 `~/.claude/keybindings.json` 以自定义键盘快捷键。",
+      "ok": true
+    },
+    {
+      "original": "## CRITICAL: Read Before Write",
+      "zh": "## 关键：先读后写",
+      "ok": true
+    },
+    {
+      "original": "**Always read `~/.claude/keybindings.json` first** (it may not exist yet). Merge changes with existing bindings — never replace the entire file.",
+      "zh": "**始终先阅读`~/.claude/keybindings.json`**（它可能还不存在）。将更改与现有绑定合并 - 切勿替换整个文件。",
+      "ok": true
+    },
+    {
+      "original": "- Use **Edit** tool for modifications to existing files\n- Use **Write** tool only if the file does not exist yet",
+      "zh": "- 使用**编辑**工具修改现有文件\n- 仅当文件尚不存在时才使用 **Write** 工具",
+      "ok": true
+    },
+    {
+      "original": "## File Format",
+      "zh": "## 文件格式",
+      "ok": true
+    },
+    {
+      "original": "```json\n{\n  \"$schema\": \"https://www.schemastore.org/claude-code-keybindings.json\",\n  \"$docs\": \"https://code.claude.com/docs/en/keybindings\",\n  \"bindings\": [\n    {\n      \"context\": \"Chat\",\n      \"bindings\": {\n        \"ctrl+e\": \"chat:externalEditor\"\n      }\n    }\n  ]\n}\n```",
+      "zh": "```json\n{\n  \"$schema\": \"https://www.schemastore.org/claude-code-keybindings.json\",\n  \"$docs\": \"https://code.claude.com/docs/en/keybindings\",\n  “绑定”：[\n    {\n      \"context\": \"聊天\",\n      “绑定”：{\n        \"ctrl+e\": \"聊天:外部编辑器\"\n      }\n    }\n  ]\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "Always include the `$schema` and `$docs` fields.",
+      "zh": "始终包含“$schema”和“$docs”字段。",
+      "ok": true
+    },
+    {
+      "original": "## Keystroke Syntax",
+      "zh": "## 按键语法",
+      "ok": true
+    },
+    {
+      "original": "**Modifiers** (combine with `+`):\n- `ctrl` (alias: `control`)\n- `alt` (aliases: `opt`, `option`) — note: `alt` and `meta` are identical in terminals\n- `shift`\n- `meta` (aliases: `cmd`, `command`)",
+      "zh": "**修饰符**（与 `+` 组合）：\n- `ctrl`（别名：`control`）\n- `alt` （别名：`opt`、`option`） — 注意：`alt` 和 `meta` 在终端中是相同的\n- `转移`\n- `meta`（别名：`cmd`、`command`）",
+      "ok": true
+    },
+    {
+      "original": "**Special keys**: `escape`/`esc`, `enter`/`return`, `tab`, `space`, `backspace`, `delete`, `up`, `down`, `left`, `right`",
+      "zh": "**特殊键**：`escape`/`esc`、`enter`/`return`、`tab`、`space`、`backspace`、`delete`、`up`、`down`、`left`、`right`",
+      "ok": true
+    },
+    {
+      "original": "**Chords**: Space-separated keystrokes, e.g. `ctrl+k ctrl+s` (1-second timeout between keystrokes)",
+      "zh": "**和弦**：以空格分隔的击键，例如`ctrl+k ctrl+s`（按键之间 1 秒超时）",
+      "ok": true
+    },
+    {
+      "original": "**Examples**: `ctrl+shift+p`, `alt+enter`, `ctrl+k ctrl+n`",
+      "zh": "**示例**：`ctrl+shift+p`、`alt+enter`、`ctrl+k ctrl+n`",
+      "ok": true
+    },
+    {
+      "original": "## Unbinding Default Shortcuts",
+      "zh": "## 解除绑定默认快捷键",
+      "ok": true
+    },
+    {
+      "original": "Set a key to `null` to remove its default binding:",
+      "zh": "将键设置为“null”以删除其默认绑定：",
+      "ok": true
+    },
+    {
+      "original": "```json\n{\n  \"context\": \"Chat\",\n  \"bindings\": {\n    \"ctrl+s\": null\n  }\n}\n```",
+      "zh": "```json\n{\n  \"context\": \"聊天\",\n  “绑定”：{\n    “ctrl+s”：空\n  }\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "## How User Bindings Interact with Defaults",
+      "zh": "## 用户绑定如何与默认值交互",
+      "ok": true
+    },
+    {
+      "original": "- User bindings are **additive** — they are appended after the default bindings\n- To **move** a binding to a different key: unbind the old key (`null`) AND add the new binding\n- A context only needs to appear in the user's file if they want to change something in that context",
+      "zh": "- 用户绑定是**附加的** - 它们附加在默认绑定之后\n- 要**移动**绑定到不同的键：取消绑定旧键（“null”）并添加新绑定\n- 仅当用户想要更改上下文中的某些内容时，上下文才需要出现在用户的文件中",
+      "ok": true
+    },
+    {
+      "original": "## Common Patterns",
+      "zh": "## 常见模式",
+      "ok": true
+    },
+    {
+      "original": "### Rebind a key\nTo change the external editor shortcut from `ctrl+g` to `ctrl+e`:\n```json\n{\n  \"context\": \"Chat\",\n  \"bindings\": {\n    \"ctrl+g\": null,\n    \"ctrl+e\": \"chat:externalEditor\"\n  }\n}\n```",
+      "zh": "### 重新绑定密钥\n要将外部编辑器快捷方式从“ctrl+g”更改为“ctrl+e”：\n```json\n{\n  \"context\": \"聊天\",\n  “绑定”：{\n    “ctrl+g”：空，\n    \"ctrl+e\": \"聊天:外部编辑器\"\n  }\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "### Add a chord binding\n```json\n{\n  \"context\": \"Global\",\n  \"bindings\": {\n    \"ctrl+k ctrl+t\": \"app:toggleTodos\"\n  }\n}\n```",
+      "zh": "### 添加和弦绑定\n```json\n{\n  “上下文”：“全球”，\n  “绑定”：{\n    \"ctrl+k ctrl+t\": \"应用程序:切换待办事项\"\n  }\n}\n````",
+      "ok": true
+    },
+    {
+      "original": "## Behavioral Rules",
+      "zh": "## 行为规则",
+      "ok": true
+    },
+    {
+      "original": "1. Only include contexts the user wants to change (minimal overrides)\n2. Validate that actions and contexts are from the known lists below\n3. Warn the user proactively if they choose a key that conflicts with reserved shortcuts or common tools like tmux (`ctrl+b`) and screen (`ctrl+a`)\n4. When adding a new binding for an existing action, the new binding is additive (existing default still works unless explicitly unbound)\n5. To fully replace a default binding, unbind the old key AND add the new one",
+      "zh": "1. 仅包含用户想要更改的上下文（最少覆盖）\n2. 验证操作和上下文是否来自下面的已知列表\n3. 如果用户选择的按键与保留的快捷键或 tmux (`ctrl+b`) 和 screen (`ctrl+a`) 等常用工具冲突，则主动警告用户\n4. 为现有操作添加新绑定时，新绑定是附加的（现有默认值仍然有效，除非显式取消绑定）\n5. 要完全替换默认绑定，请解除旧密钥的绑定并添加新密钥",
+      "ok": true
+    },
+    {
+      "original": "## Validation with /doctor",
+      "zh": "## 使用 /doctor 进行验证",
+      "ok": true
+    },
+    {
+      "original": "The `/doctor` command includes a \"Keybinding Configuration Issues\" section that validates `~/.claude/keybindings.json`.",
+      "zh": "`/doctor` 命令包含一个“按键绑定配置问题”部分，用于验证“~/.claude/keybindings.json”。",
+      "ok": true
+    },
+    {
+      "original": "### Common Issues and Fixes",
+      "zh": "### 常见问题和修复",
+      "ok": true
+    },
+    {
+      "original": "| Issue | Cause | Fix |\n| --- | --- | --- |\n| `keybindings.json must have a \"bindings\" array` | Missing wrapper object | Wrap bindings in `{ \"bindings\": [...] }` |\n| `\"bindings\" must be an array` | `bindings` is not an array | Set `\"bindings\"` to an array: `[{ context: ..., bindings: ... }]` |\n| `Unknown context \"X\"` | Typo or invalid context name | Use exact context names from the Available Contexts table |\n| `Duplicate key \"X\" in Y bindings` | Same key defined twice in one context | Remove the duplicate; JSON uses only the last value |\n| `\"X\" may not work: ...` | Key conflicts with terminal/OS reserved shortcut | Choose a different key (see Reserved Shortcuts section) |\n| `Could not parse keystroke \"X\"` | Invalid key syntax | Check syntax: use `+` between modifiers, valid key names |\n| `Invalid action for \"X\"` | Action value is not a string or null | Actions must be strings like `\"app:help\"` or `null` to unbind |",
+      "zh": "|问题 |原因 |修复|\n| --- | --- | --- |\n| `keybindings.json 必须有一个“绑定”数组` |缺少包装对象 |将绑定包装在 `{ \"bindings\": [...] }` | 中\n| `“绑定”必须是一个数组` | `bindings` 不是一个数组 |将 `\"bindings\"` 设置为数组：`[{ context: ..., bindings: ... }]` |\n| `未知上下文“X”` |拼写错误或上下文名称无效 |使用“可用上下文”表中的准确上下文名称 |\n| `Y 绑定中的重复键“X”` |同一键在一个上下文中定义两次 |删除重复项； JSON 仅使用最后一个值 |\n| `“X”可能不起作用：...` |按键与终端/操作系统保留的快捷键冲突选择不同的键（请参阅保留的快捷键部分）|\n| `无法解析击键“X”` |无效的键语法 |检查语法：在修饰符、有效键名之间使用 `+` |\n| `“X”的操作无效` |操作值不是字符串或 null |操作必须是诸如“app:help”或“null”之类的字符串才能取消绑定 |",
+      "ok": true
+    },
+    {
+      "original": "### Example /doctor Output",
+      "zh": "### 示例 /doctor 输出",
+      "ok": true
+    },
+    {
+      "original": "```\nKeybinding Configuration Issues\nLocation: ~/.claude/keybindings.json\n  └ [Error] Unknown context \"chat\"\n    → Valid contexts: Global, Chat, Autocomplete, ...\n  └ [Warning] \"ctrl+c\" may not work: Terminal interrupt (SIGINT)\n```",
+      "zh": "````\n键绑定配置问题\n位置：~/.claude/keybindings.json\n  └ [错误] 未知上下文“聊天”\n    → 有效上下文：全局、聊天、自动完成……\n  └ [警告]“ctrl+c”可能不起作用：终端中断（SIGINT）\n````",
+      "ok": true
+    },
+    {
+      "original": "**Errors** prevent bindings from working and must be fixed. **Warnings** indicate potential conflicts but the binding may still work.",
+      "zh": "**错误**导致绑定无法工作，必须予以修复。 **警告**表示潜在的冲突，但绑定可能仍然有效。",
+      "ok": true
+    },
+    {
+      "original": "## Reserved Shortcuts",
+      "zh": "## 保留的快捷键",
+      "ok": true
+    },
+    {
+      "original": "### Non-rebindable (errors)\n- `ctrl+c` — Cannot be rebound - used for interrupt/exit (hardcoded)\n- `ctrl+d` — Cannot be rebound - used for exit (hardcoded)\n- `ctrl+m` — Cannot be rebound - identical to Enter in terminals (both send CR)\n- `capslock` — Caps Lock is not delivered to terminal applications",
+      "zh": "### 不可重新绑定（错误）\n- `ctrl+c` — 无法反弹 - 用于中断/退出（硬编码）\n- `ctrl+d` — 无法反弹 - 用于退出（硬编码）\n- `ctrl+m` — 无法反弹 - 与终端中的 Enter 相同（均发送 CR）\n- `capslock` — 大写锁定不会传递到终端应用程序",
+      "ok": true
+    },
+    {
+      "original": "### Terminal reserved (errors/warnings)\n- `ctrl+z` — Unix process suspend (SIGTSTP) (may conflict)\n- `ctrl+\\` — Terminal quit signal (SIGQUIT) (will not work)",
+      "zh": "### 终端保留（错误/警告）\n- `ctrl+z` — Unix 进程挂起 (SIGTSTP)（可能冲突）\n- `ctrl+\\` — 终端退出信号 (SIGQUIT)（不起作用）",
+      "ok": true
+    },
+    {
+      "original": "### macOS reserved (errors)\n- `cmd+c` — macOS system copy\n- `cmd+v` — macOS system paste\n- `cmd+x` — macOS system cut\n- `cmd+q` — macOS quit application\n- `cmd+w` — macOS close window/tab\n- `cmd+tab` — macOS app switcher\n- `cmd+space` — macOS Spotlight",
+      "zh": "### macOS 保留（错误）\n- `cmd+c` — macOS 系统复制\n- `cmd+v` — macOS 系统粘贴\n- `cmd+x` — macOS 系统切换\n- `cmd+q` — macOS 退出应用程序\n- `cmd+w` — macOS 关闭窗口/选项卡\n- `cmd+tab` — macOS 应用程序切换器\n- `cmd+space` — macOS 聚焦",
+      "ok": true
+    },
+    {
+      "original": "## Available Contexts",
+      "zh": "## 可用上下文",
+      "ok": true
+    },
+    {
+      "original": "| Context | Description |\n| --- | --- |\n| `Global` | Active everywhere, regardless of focus |\n| `Chat` | When the chat input is focused |\n| `Autocomplete` | When autocomplete menu is visible |\n| `Confirmation` | When a confirmation/permission dialog is shown |\n| `Help` | When the help overlay is open |\n| `Transcript` | When viewing the transcript |\n| `HistorySearch` | When searching command history (ctrl+r) |\n| `Task` | When a task/agent is running in the foreground |\n| `ThemePicker` | When the theme picker is open |\n| `Settings` | When the settings menu is open |\n| `Tabs` | When tab navigation is active |\n| `Attachments` | When navigating image attachments in a select dialog |\n| `Footer` | When footer indicators are focused |\n| `MessageSelector` | When the message selector (rewind) is open |\n| `DiffDialog` | When the diff dialog is open |\n| `ModelPicker` | When the model picker is open |\n| `Select` | When a select/list component is focused |\n| `Plugin` | When the plugin dialog is open |\n| `Scroll` | When a scrollable view is focused (fullscreen layout) |\n| `Doctor` | When the /doctor diagnostics screen is open |",
+      "zh": "|背景 |描述 |\n| --- | --- |\n| `全球` |无论焦点如何，无处不在 |\n| `聊天` |当聊天输入获得焦点时 |\n| `自动完成` |当自动完成菜单可见时 |\n| `确认` |当显示确认/许可对话框时 |\n| `帮助` |当帮助叠加层打开时 |\n| `成绩单` |当查看文字记录时 |\n| `历史搜索` |搜索命令历史记录时 (ctrl+r) |\n| `任务` |当任务/代理在前台运行时 |\n| `主题选择器` |当主题选择器打开时 |\n| `设置` |当设置菜单打开时 |\n| `标签` |当选项卡导航处于活动状态时 |\n| `附件` |在选择对话框中导航图像附件时 |\n| `页脚` |当页脚指示器聚焦时 |\n| `消息选择器` |当消息选择器（快退）打开时 |\n| `DiffDialog` |当差异对话框打开时 |\n| `模型选择器` |当模型选择器打开时 |\n| `选择` |当选择/列表组件获得焦点时 |\n| `插件` |当插件对话框打开时 |\n| `滚动` |当可滚动视图获得焦点时（全屏布局） |\n| `医生` |当 /doctor 诊断屏幕打开时 |",
+      "ok": true
+    },
+    {
+      "original": "## Available Actions",
+      "zh": "## 可用操作",
+      "ok": true
+    },
+    {
+      "original": "| Action | Default Key(s) | Context |\n| --- | --- | --- |\n| `app:interrupt` | `ctrl+c` | Global |\n| `app:exit` | `ctrl+d` | Global |\n| `app:toggleTodos` | `ctrl+t` | Global |\n| `app:toggleTranscript` | `ctrl+o` | Global |\n| `app:toggleBrief` | `ctrl+shift+b` | Global |\n| `app:toggleTeammatePreview` | `ctrl+shift+o` | Global |\n| `app:toggleTerminal` | (none) | Global |\n| `app:redraw` | (none) | Global |\n| `app:openFrame` | (none) | Global |\n| `history:search` | `ctrl+r` | Global |\n| `history:previous` | `up` | Chat |\n| `history:next` | `down` | Chat |\n| `chat:cancel` | `escape` | Chat |\n| `chat:killAgents` | `ctrl+x ctrl+k` | Chat |\n| `chat:cycleMode` | `shift+tab` | Chat |\n| `chat:modelPicker` | `meta+p` | Chat |\n| `chat:fastMode` | `meta+o` | Chat |\n| `chat:thinkingToggle` | `meta+t` | Chat |\n| `chat:workflowKeywordToggle` | `meta+w` | Chat |\n| `chat:submit` | `enter` | Chat |\n| `chat:newline` | `ctrl+j` | Chat |\n| `chat:undo` | `ctrl+_`, `ctrl+-`, `ctrl+shift+-`, `ctrl+shift+_` | Chat |\n| `chat:externalEditor` | `ctrl+x ctrl+e`, `ctrl+g` | Chat |\n| `chat:stash` | `ctrl+s` | Chat |\n| `chat:imagePaste` | `ctrl+v` | Chat |\n| `chat:clearInput` | `ctrl+l` | Chat |\n| `chat:clearScreen`",
+      "zh": "|行动|默认键 |背景 |\n| --- | --- | --- |\n| `应用程序：中断` | `ctrl+c` |全球|\n| `应用程序：退出` | `ctrl+d` |全球|\n| `应用程序：切换待办事项` | `ctrl+t` |全球|\n| `app:toggleTranscript` | `ctrl+o` |全球|\n| `app:toggleBrief` | `ctrl+shift+b` |全球|\n| `应用程序：切换队友预览` | `ctrl+shift+o` |全球|\n| `应用程序：切换终端` | （无）|全球|\n| `应用程序：重绘` | （无）|全球|\n| `应用程序：openFrame` | （无）|全球|\n| `历史：搜索` | `ctrl+r` |全球|\n| `历史：上一个` | `向上` |聊天 |\n| `历史：下一个` | `向下` |聊天 |\n| `聊天：取消` | `逃脱` |聊天 |\n| `聊天：killAgents` | `ctrl+x ctrl+k` |聊天 |\n| `聊天：循环模式` | `shift+tab` |聊天 |\n| `聊天：modelPicker` | `元+p` |聊天 |\n| `聊天：快速模式` | `元+o` |聊天 |\n| `聊天：思考切换` | `元+t` |聊天 |\n| `聊天：workflowKeywordToggle` | `元+w` |聊天 |\n| `聊天：提交` | `输入` |聊天 |\n| `聊天：换行` | `ctrl+j` |聊天 |\n| `聊天：撤消` | `ctrl+_`、`ctrl+-`、`ctrl+shift+-`、`ctrl+shift+_` |聊天 |\n| `聊天：外部编辑器` | `ctrl+x ctrl+e`, `ctrl+g` |聊天 |\n| `聊天：隐藏` | `ctrl+s` |聊天 |\n| `聊天：图像粘贴` | `ctrl+v` |聊天 |\n| `聊天：清除输入` | `ctrl+l` |聊天 |\n| `聊天：清屏`",
+      "ok": true
+    },
+    {
+      "original": "| `cmd+k` | Chat |\n| `autocomplete:accept` | `tab` | Autocomplete |\n| `autocomplete:dismiss` | `escape` | Autocomplete |\n| `autocomplete:previous` | `up` | Autocomplete |\n| `autocomplete:next` | `down` | Autocomplete |\n| `confirm:yes` | `y`, `enter` | Confirmation |\n| `confirm:no` | `escape`, `n`, `escape` | Settings |\n| `confirm:previous` | `up` | Confirmation |\n| `confirm:next` | `down` | Confirmation |\n| `confirm:nextField` | `tab` | Confirmation |\n| `confirm:previousField` | (none) | Confirmation |\n| `confirm:cycleMode` | `shift+tab` | Confirmation |\n| `confirm:toggle` | `space` | Confirmation |\n| `confirm:toggleExplanation` | `ctrl+e` | Confirmation |\n| `tabs:next` | `tab`, `right` | Tabs |\n| `tabs:previous` | `shift+tab`, `left` | Tabs |\n| `transcript:toggleShowAll` | `ctrl+e` | Transcript |\n| `transcript:exit` | `ctrl+c`, `escape`, `q` | Transcript |\n| `historySearch:next` | `ctrl+r` | HistorySearch |\n| `historySearch:accept` | `escape`, `tab` | HistorySearch |\n| `historySearch:cancel` | `ctrl+c` | HistorySearch |\n| `historySearch:execute` | `enter` | HistorySearch |\n| `historySearch:cycleScope` | `ctrl+s` | HistorySearch |\n| `task:background` | `ctrl+b` | Task |\n| `theme:t",
+      "zh": "| `cmd+k` |聊天 |\n| `自动完成：接受` | `选项卡` |自动完成 |\n| `自动完成：关闭` | `逃脱` |自动完成 |\n| `自动完成：上一个` | `向上` |自动完成 |\n| `自动完成：下一个` | `向下` |自动完成 |\n| `确认：是` | `y`，`输入` |确认|\n| `确认：否` | `逃逸`，`n`，`逃逸` |设置 |\n| `确认：上一个` | `向上` |确认|\n| `确认：下一步` | `向下` |确认|\n| `确认：下一个字段` | `选项卡` |确认|\n| `确认：上一个字段` | （无）|确认|\n| `确认：循环模式` | `shift+tab` |确认|\n| `确认：切换` | `空间` |确认|\n| `确认：切换解释` | `ctrl+e` |确认|\n| `选项卡：下一个` | `选项卡`、`右` |标签 |\n| `选项卡：上一个` | `shift+tab`、`向左` |标签 |\n| `成绩单：切换显示全部` | `ctrl+e` |成绩单|\n| `成绩单：退出` | `ctrl+c`、`escape`、`q` |成绩单|\n| `历史搜索：下一个` | `ctrl+r` |历史搜索 |\n| `历史搜索：接受` | `escape`、`tab` |历史搜索 |\n| `历史搜索：取消` | `ctrl+c` |历史搜索 |\n| `historySearch:执行` | `输入` |历史搜索 |\n| `historySearch:cycleScope` | `ctrl+s` |历史搜索 |\n| `任务：背景` | `ctrl+b` |任务|\n| `主题：t",
+      "ok": true
+    },
+    {
+      "original": "oggleSyntaxHighlighting` | `ctrl+t` | ThemePicker |\n| `theme:editCustom` | `ctrl+e` | ThemePicker |\n| `help:dismiss` | `escape` | Help |\n| `attachments:next` | `right` | Attachments |\n| `attachments:previous` | `left` | Attachments |\n| `attachments:remove` | `backspace`, `delete` | Attachments |\n| `attachments:exit` | `down`, `escape` | Attachments |\n| `footer:up` | `up`, `ctrl+p` | Footer |\n| `footer:down` | `down`, `ctrl+n` | Footer |\n| `footer:next` | `right` | Footer |\n| `footer:previous` | `left` | Footer |\n| `footer:openSelected` | `enter` | Footer |\n| `footer:clearSelection` | `escape` | Footer |\n| `footer:close` | `x` | Footer |\n| `messageSelector:up` | `up`, `k`, `ctrl+p` | MessageSelector |\n| `messageSelector:down` | `down`, `j`, `ctrl+n` | MessageSelector |\n| `messageSelector:top` | `ctrl+up`, `shift+up`, `meta+up`, `shift+k` | MessageSelector |\n| `messageSelector:bottom` | `ctrl+down`, `shift+down`, `meta+down`, `shift+j` | MessageSelector |\n| `messageSelector:select` | `enter` | MessageSelector |\n| `diff:dismiss` | `escape` | DiffDialog |\n| `diff:previousSource` | `left` | DiffDialog |\n| `diff:nextSource` | `right` | DiffDialog |\n| `diff:back` | (none) | DiffDialog |\n|",
+      "zh": "oggle 语法突出显示` | `ctrl+t` |主题选择器 |\n| `主题：编辑自定义` | `ctrl+e` |主题选择器 |\n| `帮助：解雇` | `逃脱` |帮助 |\n| `附件：下一个` | `正确` |附件 |\n| `附件：上一个` | `左` |附件 |\n| `附件：删除` | `退格键`、`删除` |附件 |\n| `附件：退出` | ‘下’、‘逃’ |附件 |\n| `页脚：向上` | `向上`, `ctrl+p` |页脚|\n| `页脚：向下` | `向下`, `ctrl+n` |页脚|\n| `页脚：下一个` | `正确` |页脚|\n| `页脚：上一页` | `左` |页脚|\n| `页脚：openSelected` | `输入` |页脚|\n| `页脚：清除选择` | `逃脱` |页脚|\n| `页脚：关闭` | `x` |页脚|\n| `messageSelector:up` | `向上`、`k`、`ctrl+p` |消息选择器 |\n| `messageSelector：向下` | `向下`、`j`、`ctrl+n` |消息选择器 |\n| `messageSelector:top` | `ctrl+up`、`shift+up`、`meta+up`、`shift+k` |消息选择器 |\n| `messageSelector：底部` | `ctrl+down`、`shift+down`、`meta+down`、`shift+j` |消息选择器 |\n| `messageSelector:选择` | `输入` |消息选择器 |\n| `差异：解雇` | `逃脱` |差异对话框 |\n| `diff:前一个来源` | `左` |差异对话框 |\n| `diff:nextSource` | `正确` |差异对话框 |\n| `差异：返回` | （无）|差异对话框 |\n|",
+      "ok": true
+    },
+    {
+      "original": "`diff:viewDetails` | `enter` | DiffDialog |\n| `diff:previousFile` | `up`, `k` | DiffDialog |\n| `diff:nextFile` | `down`, `j` | DiffDialog |\n| `modelPicker:decreaseEffort` | `left` | ModelPicker |\n| `modelPicker:increaseEffort` | `right` | ModelPicker |\n| `modelPicker:thisSessionOnly` | `s` | ModelPicker |\n| `select:next` | `down`, `j`, `ctrl+n`, `down`, `j`, `ctrl+n` | Settings |\n| `select:previous` | `up`, `k`, `ctrl+p`, `up`, `k`, `ctrl+p` | Settings |\n| `select:pageUp` | `pageup` | Select |\n| `select:pageDown` | `pagedown` | Select |\n| `select:first` | `home` | Select |\n| `select:last` | `end` | Select |\n| `select:accept` | `space`, `enter` | Settings |\n| `select:cancel` | `escape` | Select |\n| `plugin:toggle` | `space` | Plugin |\n| `plugin:install` | `i` | Plugin |\n| `plugin:favorite` | `f` | Plugin |\n| `doctor:fix` | `f` | Doctor |\n| `permission:toggleDebug` | (none) | Confirmation |\n| `settings:search` | `/` | Settings |\n| `settings:retry` | `r` | Settings |\n| `settings:close` | `enter` | Settings |\n| `settings:periodDay` | `d` | Settings |\n| `settings:periodWeek` | `w` | Settings |\n| `settings:sortByTokens` | `t` | Settings |\n| `voice:pushToTalk` | `space` | Chat |\n| `scrol",
+      "zh": "`diff:查看详细信息` | `输入` |差异对话框 |\n| `diff:前一个文件` | `向上`、`k` |差异对话框 |\n| `diff:nextFile` | `向下`, `j` |差异对话框 |\n| `modelPicker:decreaseEffort` | `左` |模型选择器 |\n| `modelPicker:increaseEffort` | `正确` |模型选择器 |\n| `modelPicker:thisSessionOnly` | `s` |模型选择器 |\n| `选择：下一步` | `向下`、`j`、`ctrl+n`、`向下`、`j`、`ctrl+n` |设置 |\n| `选择：上一个` | `向上`、`k`、`ctrl+p`、`向上`、`k`、`ctrl+p` |设置 |\n| `选择：向上翻页` | `向上翻页` |选择 |\n| `选择：向下翻页` | `向下翻页` |选择 |\n| `选择：第一个` | `家` |选择 |\n| `选择：最后一个` | `结束` |选择 |\n| `选择：接受` | `空格`、`输入` |设置 |\n| `选择：取消` | `逃脱` |选择 |\n| `插件：切换` | `空间` |插件 |\n| `插件：安装` | `我` |插件 |\n| `插件：最喜欢的` | `f` |插件 |\n| `医生：修复` | `f` |医生|\n| `权限：切换调试` | （无）|确认|\n| `设置：搜索` | `/` |设置 |\n| `设置：重试` | `r` |设置 |\n| `设置：关闭` | `输入` |设置 |\n| `设置：期间日` | `d` |设置 |\n| `设置：周期周` | `w` |设置 |\n| `设置：sortByTokens` | `t` |设置 |\n| `语音：pushToTalk` | `空间` |聊天 |\n| `滚动",
+      "ok": true
+    },
+    {
+      "original": "l:pageUp` | `pageup`, `pageup` | Scroll |\n| `scroll:pageDown` | `pagedown`, `pagedown` | Scroll |\n| `scroll:lineUp` | `ctrl+p`, `k`, `up`, `wheelup` | Transcript |\n| `scroll:lineDown` | `ctrl+n`, `j`, `down`, `wheeldown` | Transcript |\n| `scroll:top` | `g`, `home`, `ctrl+home`, `g`, `home` | Transcript |\n| `scroll:bottom` | `shift+g`, `end`, `ctrl+end`, `shift+g`, `end` | Transcript |\n| `scroll:halfPageUp` | `ctrl+u`, `ctrl+u` | Settings |\n| `scroll:halfPageDown` | `ctrl+d`, `ctrl+d` | Settings |\n| `scroll:fullPageUp` | `ctrl+b`, `b`, `shift+space`, `b` | Transcript |\n| `scroll:fullPageDown` | `ctrl+f`, `space`, `space` | Transcript |\n| `selection:copy` | `ctrl+shift+c`, `cmd+c` | Scroll |\n| `selection:clear` | (none) | Unknown |\n| `selection:extendLeft` | `shift+left` | Scroll |\n| `selection:extendRight` | `shift+right` | Scroll |\n| `selection:extendUp` | `shift+up` | Scroll |\n| `selection:extendDown` | `shift+down` | Scroll |\n| `selection:extendLineStart` | `shift+home` | Scroll |\n| `selection:extendLineEnd` | `shift+end` | Scroll |",
+      "zh": "l:向上翻页` | `向上翻页`、`向上翻页` |滚动|\n| `滚动：向下翻页` | `向下翻页`、`向下翻页` |滚动 |\n| `滚动：排队` | `ctrl+p`、`k`、`向上`、`滚轮向上` |成绩单|\n| `滚动：向下行` | `ctrl+n`、`j`、`向下`、`向下滚动` |成绩单|\n| `滚动：顶部` | `g`、`home`、`ctrl+home`、`g`、`home` |成绩单|\n| `滚动：底部` | `shift+g`、`end`、`ctrl+end`、`shift+g`、`end` |成绩单|\n| `滚动：halfPageUp` | `ctrl+u`, `ctrl+u` |设置 |\n| `滚动：halfPageDown` | `ctrl+d`, `ctrl+d` |设置 |\n| `滚动：fullPageUp` | `ctrl+b`、`b`、`shift+space`、`b` |成绩单|\n| `滚动：fullPageDown` | `ctrl+f`、`空格`、`空格` |成绩单|\n| `选择：复制` | `ctrl+shift+c`、`cmd+c` |滚动|\n| `选择：清除` | （无）|未知 |\n| `选择：向左延伸` | `shift+向左` |滚动 |\n| `选择：向右延伸` | `shift+右` |滚动|\n| `选择：向上延伸` | `shift+向上` |滚动 |\n| `选择：向下延伸` | `Shift+向下` |滚动 |\n| `选择：extendLineStart` | `shift+home` |滚动|\n| `选择：extendLineEnd` | `移位+结束` |滚动 |",
+      "ok": true
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "id": "ab62337a8b6a4402",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/fewer-permission-prompts.md",
+  "generatedAt": "2026-07-01T09:32:40.844Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 23,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "---\nname: fewer-permission-prompts\ndescription: Scan your transcripts for common read-only Bash and MCP tool calls, then add a prioritized allowlist to project .claude/settings.json to reduce permission prompts.\n---",
+      "zh": "---\n名称：更少的权限提示\n描述：扫描您的成绩单以查找常见的只读 Bash 和 MCP 工具调用，然后将优先允许列表添加到项目 .claude/settings.json 以减少权限提示。\n---",
+      "ok": true
+    },
+    {
+      "original": "# Fewer Permission Prompts",
+      "zh": "# 更少的权限提示",
+      "ok": true
+    },
+    {
+      "original": "Look through my transcripts' MCP and bash tool calls, and based on those, make a prioritized list of patterns that I should add to my permission allowlist to reduce permission prompts. Focus on read-only commands.",
+      "zh": "查看我的记录的 MCP 和 bash 工具调用，并基于这些，制定一个模式的优先级列表，我应该将其添加到我的权限允许列表中，以减少权限提示。重点关注只读命令。",
+      "ok": true
+    },
+    {
+      "original": "The format for permissions is: `Bash(foo*)`, `Bash(foo)`, `Bash(foo bar *)`, `mcp__slack__slack_read_thread`, etc.",
+      "zh": "权限的格式为：`Bash(foo*)`、`Bash(foo)`、`Bash(foo bar *)`、`mcp__slack__slack_read_thread` 等。",
+      "ok": true
+    },
+    {
+      "original": "Then, add these to the project `.claude/settings.json` under `permissions.allow`.",
+      "zh": "然后，将它们添加到项目“.claude/settings.json”的“permissions.allow”下。",
+      "ok": true
+    },
+    {
+      "original": "## Steps",
+      "zh": "## 步骤",
+      "ok": true
+    },
+    {
+      "original": "1. **Locate transcripts.** Session transcripts live at `~/.claude/projects/<sanitized-cwd>/*.jsonl`. Each line is a JSON object. Tool calls appear as `assistant` messages with `message.content[]` entries of `type: \"tool_use\"`. The `name` field identifies the tool (e.g. `\"Bash\"`, `\"mcp__slack__slack_read_thread\"`); for Bash, `input.command` is the shell string.",
+      "zh": "1. **找到记录。** 会话记录位于 `~/.claude/projects/<sanitized-cwd>/*.jsonl`。每一行都是一个 JSON 对象。工具调用显示为“助手”消息，其中包含“类型：“tool_use””的“message.content[]”条目。 `name` 字段标识工具（例如 `\"Bash\"`、`\"mcp__slack__slack_read_thread\"`）；对于 Bash，“input.command”是 shell 字符串。",
+      "ok": true
+    },
+    {
+      "original": "Scan the recent transcripts across the user's projects dir — not just the current project — so the allowlist reflects their actual usage. Cap the scan at a reasonable number of recent sessions (e.g. 50 most-recently-modified JSONL files) so this stays fast.",
+      "zh": "扫描用户项目目录中的最新记录（而不仅仅是当前项目），以便允许列表反映他们的实际使用情况。将扫描限制在合理数量的最近会话（例如 50 个最近修改的 JSONL 文件），以便保持快速。",
+      "ok": true
+    },
+    {
+      "original": "2. **Extract tool-call frequencies.**\n   - For `Bash` calls: parse `input.command`, take the leading command token (handling `sudo`, `timeout`, pipes, `&&`, env-var prefixes). Record the command + first subcommand pair (e.g. `git status`, `gh pr view`, `ls`, `cat`).\n   - For MCP calls: record the full tool name (e.g. `mcp__slack__slack_read_thread`).\n   - Count occurrences across the scanned transcripts.",
+      "zh": "2. **提取工具调用频率。**\n   - 对于“Bash”调用：解析“input.command”，获取前导命令标记（处理“sudo”、“timeout”、管道、“&&”、env-var 前缀）。记录命令 + 第一个子命令对（例如 `git status`、`gh pr view`、`ls`、`cat`）。\n   - 对于 MCP 调用：记录完整的工具名称（例如 `mcp__slack__slack_read_thread`）。\n   - 计算扫描记录中的出现次数。",
+      "ok": true
+    },
+    {
+      "original": "3. **Filter to read-only.** Keep only commands that don't mutate state. Examples of read-only: `ls`, `cat`, `pwd`, `git status`, `git log`, `git diff`, `git show`, `git branch`, `rg`, `grep`, `find`, `head`, `tail`, `wc`, `file`, `which`, `echo`, `date`, `gh pr view`, `gh pr list`, `gh pr diff`, `gh issue view`, `gh issue list`, `gh run list`, `gh run view`, `gh api` (GET), `bun run typecheck`, `bun run lint`, `bun run test` (for tests that don't mutate), `docker ps`, `docker logs`, `kubectl get`, `kubectl describe`, `ps`, `top`, `df`, `du`, `env`, `printenv`, any MCP tool with `read`/`get`/`list`/`search`/`view` in its name.",
+      "zh": "3. **过滤为只读。** 仅保留不会改变状态的命令。只读示例：`ls`、`cat`、`pwd`、`git status`、`git log`、`git diff`、`git show`、`git Branch`、`rg`、`grep`、`find`、`head`、`tail`、`wc`、`file`、`which`、`echo`、`date`、`gh pr view`、`gh pr list`、`gh pr diff`、`gh issues view`、 `gh issues list`、`gh run list`、`gh run view`、`gh api` (GET)、`bun run typecheck`、`bun run lint`、`bun run test`（用于不变异的测试）、`docker ps`、`docker log`、`kubectl get`、`kubectl描述`、`ps`、`top`、`df`、`du`、`env`、`printenv`、任何 MCP名称中包含“read”/“get”/“list”/“search”/“view”的工具。",
+      "ok": true
+    },
+    {
+      "original": "Drop anything that writes, deletes, renames, pushes, merges, installs, or runs a build/test that has side effects. When in doubt, leave it out.",
+      "zh": "删除任何写入、删除、重命名、推送、合并、安装或运行具有副作用的构建/测试的内容。如有疑问，请将其排除。",
+      "ok": true
+    },
+    {
+      "original": "**Never allowlist a pattern that grants arbitrary code execution.** A wildcard rule for any of these (e.g. `Bash(python3:*)`) is equivalent to allowing arbitrary code execution. This list is not exhaustive — apply the same rule to anything in the same category:\n   - Interpreters: `python`/`python3`, `node`, `bun`, `deno`, `ruby`, `perl`, `php`, `lua`, etc.\n   - Shells: `bash`, `sh`, `zsh`, `fish`, `eval`, `exec`, `ssh`, etc.\n   - Package runners: `npx`, `bunx`, `uvx`, `uv run`, etc.\n   - Task-runner wildcards: `npm run *`, `yarn run *`, `pnpm run *`, `bun run *`, `make *`, `just *`, `cargo run *`, `go run *`, etc. — an exact `Bash(bun run typecheck)` is fine, `Bash(bun run *)` is not\n   - `gh api *`, `docker run`/`exec`, `kubectl exec`, `sudo`, and similar",
+      "zh": "**切勿将允许任意代码执行的模式列入白名单。** 其中任何一个的通配符规则（例如“Bash(python3:*)”）相当于允许任意代码执行。此列表并不详尽 - 将相同的规则应用于同一类别中的任何内容：\n   - 解释器：`python`/`python3`、`node`、`bun`、`deno`、`ruby`、`perl`、`php`、`lua` 等。\n   - shell：`bash`、`sh`、`zsh`、`fish`、`eval`、`exec`、`ssh` 等。\n   - 包运行器：`npx`、`bunx`、`uvx`、`uv run` 等。\n   - 任务运行器通配符：`npm run *`、`yarn run *`、`pnpm run *`、`bun run *`、`make *`、`just *`、`cargo run *`、`go run *`等 - 精确的 `Bash(bun run typecheck)` 可以，`Bash(bun run *)` 则不行\n   - `gh api *`、`docker run`/`exec`、`kubectl exec`、`sudo` 等",
+      "ok": true
+    },
+    {
+      "original": "4. **Drop commands Claude Code already auto-allows.** These don't need an allowlist entry — they never prompt. If you see any of these in the transcripts, skip them; don't suggest them to the user.",
+      "zh": "4. **删除命令 Claude Code 已自动允许。** 这些不需要允许列表条目 - 它们从不提示。如果您在文字记录中看到其中任何内容，请跳过它们；不要向用户推荐它们。",
+      "ok": true
+    },
+    {
+      "original": "- **Always auto-allowed (any args):** `cal`, `uptime`, `cat`, `head`, `tail`, `wc`, `stat`, `strings`, `hexdump`, `od`, `nl`, `id`, `uname`, `free`, `df`, `du`, `locale`, `groups`, `nproc`, `basename`, `dirname`, `realpath`, `cut`, `paste`, `tr`, `column`, `tac`, `rev`, `fold`, `expand`, `unexpand`, `fmt`, `comm`, `cmp`, `numfmt`, `readlink`, `diff`, `true`, `false`, `sleep`, `which`, `type`, `expr`, `test`, `getconf`, `seq`, `tsort`, `pr`, `echo`, `printf`, `ls`, `cd`, `find`.\n   - **Auto-allowed with zero args only:** `pwd`, `whoami`, `alias`.\n   - **Auto-allowed exact forms:** `claude -h`, `claude --help`, `node -v`, `node --version`, `python --version`, `python3 --version`, `ip addr`.\n   - **Auto-allowed with safe flags only (validated):** `xargs`, `file`, `sed` (read-only expressions), `sort`, `man`, `help`, `netstat`, `ps`, `base64`, `grep`, `egrep`, `fgrep`, `sha256sum`, `sha1sum`, `md5sum`, `tree`, `date`, `hostname`, `info`, `lsof`, `pgrep`, `tput`, `ss`, `fd`, `fdfind`, `aki`, `rg`, `jq`, `uniq`, `history`, `arch`, `ifconfig`, `pyright`.\n   - **All git read-only subcommands:** `git status`, `git log`, `git diff`, `git show`, `git blame`, `git branch`, `git tag`, `git remo",
+      "zh": "- **始终自动允许（任何参数）：** `cal`、`uptime`、`cat`、`head`、`tail`、`wc`、`stat`、`strings`、`hexdump`、`od`、`nl`、`id`、`uname`、`free`、`df`、`du`、`locale`、`groups`、`nproc`、`basename`、`dirname`、 `realpath`、`cut`、`paste`、`tr`、`column`、`tac`、`rev`、`fold`、`expand`、`unexpand`、`fmt`、`comm`、`cmp`、`numfmt`、`readlink`、`diff`、`true`、`false`、`sleep`、`which`、`type`、`expr`、`test`、`getconf`、 `seq`、`tsort`、`pr`、`echo`、`printf`、`ls`、`cd`、`find`。\n   - **仅自动允许零参数：** `pwd`、`whoami`、`alias`。\n   - **自动允许的精确形式：** `claude -h`、`claude --help`、`node -v`、`node --version`、`python --version`、`python3 --version`、`ip addr`。\n   - **仅使用安全标志自动允许（已验证）：** `xargs`、`file`、`sed`（只读表达式）、`sort`、`man`、`help`、`netstat`、`ps`、`base64`、`grep`、`egrep`、`fgrep`、`sha256sum`、`sha1sum`、`md5sum`、`tree`、`date`、`hostname`、 `info`、`lsof`、`pgrep`、`tput`、`ss`、`fd`、`fdfind`、`aki`、`rg`、`jq`、`uniq`、`history`、`arch`、`ifconfig`、`pyright`。\n   - **所有 git 只读子命令：** `git status`、`git log`、`git diff`、`git show`、`gitblame`、`gitbranch`、`git tag`、`git remo",
+      "ok": true
+    },
+    {
+      "original": "te`, `git ls-files`, `git ls-remote`, `git config --get`, `git rev-parse`, `git describe`, `git stash list`, `git reflog`, `git shortlog`, `git cat-file`, `git for-each-ref`, `git worktree list`, etc.\n   - **All gh read-only subcommands:** `gh pr view`, `gh pr list`, `gh pr diff`, `gh pr checks`, `gh pr status`, `gh issue view`, `gh issue list`, `gh issue status`, `gh run view`, `gh run list`, `gh workflow list`, `gh workflow view`, `gh repo view`, `gh release view`, `gh release list`, `gh api` (GET), `gh auth status`, etc.\n   - **Docker read-only subcommands:** `docker ps`, `docker images`, `docker logs`, `docker inspect`.",
+      "zh": "te`、`git ls-files`、`git ls-remote`、`git config --get`、`git rev-parse`、`git describe`、`git stash list`、`git reflog`、`git Shortlog`、`git cat-file`、`git for-each-ref`、`git worktree list`等。\n   - **所有 gh 只读子命令：** `gh pr 查看`、`gh pr list`、`gh pr diff`、`gh pr 检查`、`gh pr status`、`gh 问题视图`、`gh 问题列表`、`gh 问题状态`、`gh 运行视图`、`gh 运行列表`、`gh 工作流列表`、`gh 工作流视图`、`gh repo 视图`、`gh 发布视图`、`gh 发布列表`、`gh api` (GET)、`gh 身份验证状态`等。\n   - **Docker 只读子命令：** `docker ps`、`docker images`、`docker logs`、`docker inform`。",
+      "ok": true
+    },
+    {
+      "original": "Source of truth: `src/tools/BashTool/readOnlyValidation.ts` (`READONLY_COMMANDS`, `READONLY_NOARGS`, `READONLY_EXACT`, `COMMAND_ALLOWLIST`) and `src/utils/shell/readOnlyCommandValidation.ts` (`GIT_READ_ONLY_COMMANDS`, `GH_READ_ONLY_COMMANDS`, `DOCKER_READ_ONLY_COMMANDS`, `RIPGREP_READ_ONLY_COMMANDS`, `PYRIGHT_READ_ONLY_COMMANDS`). If the user is in this repo and you're unsure whether a command is covered, grep these files rather than guessing.",
+      "zh": "事实来源：`src/tools/BashTool/readOnlyValidation.ts`（`READONLY_COMMANDS`、`READONLY_NOARGS`、`READONLY_EXACT`、`COMMAND_ALLOWLIST`）和`src/utils/shell/readOnlyCommandValidation.ts`（`GIT_READ_ONLY_COMMANDS`、`GH_READ_ONLY_COMMANDS`、 `DOCKER_READ_ONLY_COMMANDS`、`RIPGREP_READ_ONLY_COMMANDS`、`PYRIGHT_READ_ONLY_COMMANDS`)。如果用户在此存储库中并且您不确定命令是否被覆盖，请 grep 这些文件而不是猜测。",
+      "ok": true
+    },
+    {
+      "original": "5. **Pick the pattern form.** Use the narrowest pattern that still covers the observed usage:\n   - If the user runs many variants (`git log`, `git log --oneline`, `git log main..HEAD`): use `Bash(git log *)` — note the space before `*`, which is required for prefix matching to work correctly.\n   - If a single exact invocation is common: use `Bash(foo)` with no wildcard.\n   - For MCP: use the full tool name verbatim (no wildcard needed; they're already specific).\n   - Never widen a pattern to the point that it conflicts with the rules above (no arbitrary code execution, no mutation/side effects).",
+      "zh": "5. **选择模式形式。** 使用仍能覆盖观察到的用法的最窄模式：\n   - 如果用户运行多个变体（`git log`、`git log --oneline`、`git log main..HEAD`）：使用 `Bash(git log *)` — 注意 `*` 之前的空格，这是前缀匹配正常工作所必需的。\n   - 如果单个精确调用很常见：使用不带通配符的“Bash(foo)”。\n   - 对于 MCP：逐字使用完整的工具名称（不需要通配符；它们已经是特定的）。\n   - 切勿将模式扩大到与上述规则冲突的程度（没有任意代码执行，没有突变/副作用）。",
+      "ok": true
+    },
+    {
+      "original": "6. **Prioritize.** Rank by count descending. Drop anything that appeared fewer than ~3 times — not worth the allowlist entry. Cap the list at the top ~20 so the user can skim it.",
+      "zh": "6. **优先级。** 按计数降序排列。删除出现次数少于 3 次的任何内容 — 不值得列入许可名单。将列表限制在顶部~20，以便用户可以浏览它。",
+      "ok": true
+    },
+    {
+      "original": "7. **Present the prioritized list to the user** as a markdown table with columns: rank, pattern, count, one-line description. Example:",
+      "zh": "7. **以降价表的形式向用户呈现优先级列表**，其中包含以下列：排名、模式、计数、单行描述。例子：",
+      "ok": true
+    },
+    {
+      "original": "| # | Pattern | Count | Notes |\n   |---|---------|-------|-------|\n   | 1 | `Bash(git status *)` | 142 | repo status checks |\n   | 2 | `Bash(gh pr view *)` | 87 | PR inspection |\n   | 3 | `mcp__slack__slack_read_thread` | 54 | Slack thread reads |",
+      "zh": "| ＃|图案|计数 |笔记|\n   |---|---------|--------|--------|\n   | 1 | `Bash(git 状态 *)` | 142 | 142回购状态检查 |\n   | 2 | `Bash(gh pr 视图 *)` | 87 | 87公关检查|\n   | 3 | `mcp__slack__slack_read_thread` | 54 | 54 Slack 线程读取 |",
+      "ok": true
+    },
+    {
+      "original": "8. **Merge into `.claude/settings.json`** in the current project (not `~/.claude/settings.json`, not `.claude/settings.local.json`). Create the file if it doesn't exist. Preserve existing keys and existing entries in `permissions.allow`; de-duplicate against what's already there; don't remove anything; don't reorder unrelated fields.",
+      "zh": "8. **合并到当前项目中的`.claude/settings.json`**（不是`~/.claude/settings.json`，不是`.claude/settings.local.json`）。如果该文件不存在，则创建该文件。保留“permissions.allow”中的现有密钥和现有条目；对已有内容进行重复删除；不要删除任何东西；不要对不相关的字段重新排序。",
+      "ok": true
+    },
+    {
+      "original": "9. **Report back.** Tell the user what you added (count + a few examples), what was already in the allowlist, and what you skipped and why (e.g. \"dropped `rm` and `git push` — not read-only; dropped `cat`/`ls`/`git status` — already auto-allowed, no rule needed\").",
+      "zh": "9. **报告回来。** 告诉用户您添加了哪些内容（计数+一些示例）、白名单中已有哪些内容、您跳过了哪些内容以及原因（例如“删除了 `rm` 和 `git push` — 不是只读；删除了 `cat`/`ls`/`git status` — 已自动允许，无需规则”）。",
+      "ok": true
+    },
+    {
+      "original": "Do not add anything to `permissions.deny` or `permissions.ask`. Do not touch any other settings field.",
+      "zh": "不要向“permissions.deny”或“permissions.ask”添加任何内容。不要触摸任何其他设置字段。",
+      "ok": true
+    }
+  ]
+}

@@ -1,0 +1,811 @@
+{
+  "id": "fa98e4ab89ef5c51",
+  "relativePath": "Anthropic/visualize.md",
+  "generatedAt": "2026-07-01T09:54:03.411Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 160,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "# Imagine — Visual Creation Suite",
+      "zh": "# 想象 — 视觉创作套件",
+      "ok": true
+    },
+    {
+      "original": "## Modules\nCall read_me again with the modules parameter to load detailed guidance:\n- `diagram` — SVG flowcharts, structural diagrams, illustrative diagrams\n- `mockup` — UI mockups, forms, cards, dashboards\n- `interactive` — interactive explainers with controls\n- `chart` — charts and data analysis (includes Chart.js)\n- `art` — illustration and generative art\nPick the closest fit. The module includes all relevant design guidance.",
+      "zh": "## 模块\n使用 module 参数再次调用 read_me 以加载详细指南：\n- `diagram` — SVG 流程图、结构图、说明图\n- `mockup` — UI 模型、表单、卡片、仪表板\n- `interactive` — 带控件的交互式解释器\n- `chart` — 图表和数据分析（包括 Chart.js）\n- “艺术”——插图和生成艺术\n选择最合适的。该模块包括所有相关的设计指南。",
+      "ok": true
+    },
+    {
+      "original": "**Complexity budget — hard limits:**\n- Box subtitles: ≤5 words. Detail goes in click-through (`sendPrompt`) or the prose below — not the box.\n- Colors: ≤2 ramps per diagram. If colors encode meaning (states, tiers), add a 1-line legend. Otherwise use one neutral ramp.\n- Horizontal tier: ≤4 boxes at full width (~140px each). 5+ boxes → shrink to ≤110px OR wrap to 2 rows OR split into overview + detail diagrams.",
+      "zh": "**复杂性预算——硬性限制：**\n- 字幕：≤5 个字。详细信息位于点击（`sendPrompt`）或下面的散文中，而不是框内。\n- 颜色：每个图表 ≤2 个渐变。如果颜色编码含义（状态、层级），请添加 1 行图例。否则使用一个中性斜坡。\n- 水平层：全宽≤4 个框（每个约 140 像素）。 5 个以上的框 → 缩小至 ≤110px 或换行至 2 行或拆分为概览 + 详细图表。",
+      "ok": true
+    },
+    {
+      "original": "If you catch yourself writing \"click to learn more\" in prose, the diagram itself must ACTUALLY be sparse. Don't promise brevity then front-load everything.",
+      "zh": "如果您发现自己在散文中写“点击了解更多”，那么图表本身实际上一定是稀疏的。不要承诺简洁然后预先加载所有内容。",
+      "ok": true
+    },
+    {
+      "original": "You create rich visual content — SVG diagrams/illustrations and HTML interactive widgets — that renders inline in conversation. The best output feels like a natural extension of the chat.",
+      "zh": "您可以创建丰富的视觉内容 - SVG 图表/插图和 HTML 交互式小部件 - 在对话中内联呈现。最好的输出感觉就像聊天的自然延伸。",
+      "ok": true
+    },
+    {
+      "original": "## Core Design System",
+      "zh": "## 核心设计系统",
+      "ok": true
+    },
+    {
+      "original": "These rules apply to ALL use cases.",
+      "zh": "这些规则适用于所有用例。",
+      "ok": true
+    },
+    {
+      "original": "### Philosophy\n- **Seamless**: Users shouldn't notice where claude.ai ends and your widget begins.\n- **Flat**: No gradients, mesh backgrounds, noise textures, or decorative effects. Clean flat surfaces.\n- **Compact**: Show the essential inline. Explain the rest in text.\n- **Text goes in your response, visuals go in the tool** — All explanatory text, descriptions, introductions, and summaries must be written as normal response text OUTSIDE the tool call. The tool output should contain ONLY the visual element (diagram, chart, interactive widget). Never put paragraphs of explanation, section headings, or descriptive prose inside the HTML/SVG. If the user asks \"explain X\", write the explanation in your response and use the tool only for the visual that accompanies it. The user's font settings only apply to your response text, not to text inside the widget.",
+      "zh": "### 哲学\n- **无缝**：用户不应该注意到 claude.ai 的结束位置和您的小部件的开始位置。\n- **平坦**：无渐变、网格背景、噪点纹理或装饰效果。清洁平坦的表面。\n- **紧凑**：显示必要的内联内容。用文字解释其余部分。\n- **文本在您的响应中，视觉效果在工具中** - 所有解释性文本、描述、介绍和摘要都必须在工具调用之外编写为正常响应文本。工具输出应仅包含视觉元素（图表、图表、交互式小部件）。切勿将解释段落、章节标题或描述性散文放入 HTML/SVG 中。如果用户询问“解释 X”，请在您的回复中写下解释，并仅针对随附的视觉效果使用该工具。用户的字体设置仅适用于您的响应文本，不适用于小部件内的文本。",
+      "ok": true
+    },
+    {
+      "original": "### Streaming\nOutput streams token-by-token. Structure code so useful content appears early.\n- **HTML**: `<style>` (short) → content HTML → `<script>` last.\n- **SVG**: `<defs>` (markers) → visual elements immediately.\n- Prefer inline `style=\"...\"` over `<style>` blocks — inputs/controls must look correct mid-stream.\n- Keep `<style>` under ~15 lines. Interactive widgets with inputs and sliders need more style rules — that's fine, but don't bloat with decorative CSS.\n- Gradients, shadows, and blur flash during streaming DOM diffs. Use solid flat fills instead.",
+      "zh": "### 流媒体\n逐个令牌地输出流。结构化代码，使有用的内容尽早出现。\n- **HTML**： `<style>` （短）→ HTML 内容 → `<script>` 最后。\n- **SVG**：`<defs>`（标记）→​​ 立即视觉元素。\n- 优先选择内联 `style=\"...\"` 而不是 `<style>` 块 — 输入/控件必须在中流中看起来正确。\n- 将 `<style>` 保持在约 15 行以内。带有输入和滑块的交互式小部件需要更多的样式规则——这很好，但不要因为装饰性 CSS 而变得臃肿。\n- 流式 DOM 差异期间的渐变、阴影和模糊闪烁。请改用实心平面填充。",
+      "ok": true
+    },
+    {
+      "original": "### Rules\n- No `<!-- comments -->` or `/* comments */` (waste tokens, break streaming)\n- No font-size below 11px\n- No emoji — use CSS shapes or SVG paths\n- No gradients, drop shadows, blur, glow, or neon effects\n- No dark/colored backgrounds on outer containers (transparent only — host provides the bg)\n- **Typography**: The default font is Anthropic Sans. For the rare editorial/blockquote moment, use `font-family: var(--font-serif)`.\n- **Headings**: h1 = 22px, h2 = 18px, h3 = 16px — all `font-weight: 500`. Heading color is pre-set to `var(--color-text-primary)` — don't override it. Body text = 16px, weight 400, `line-height: 1.7`. **Two weights only: 400 regular, 500 bold.** Never use 600 or 700 — they look heavy against the host UI.\n- **Sentence case** always. Never Title Case, never ALL CAPS. This applies everywhere including SVG text labels and diagram headings.\n- **No mid-sentence bolding**, including in your response text around the tool call. Entity names, class names, function names go in `code style` not **bold**. Bold is for headings and labels only.\n- The widget container is `display: block; width: 100%`. Your HTML fills it naturally — no wrapper div needed. Just start wi",
+      "zh": "### 规则\n- 没有`<!-- comments -->`或`/* comments */`（浪费标记，中断流）\n- 字体大小不得低于 11px\n- 没有表情符号 — 使用 CSS 形状或 SVG 路径\n- 无渐变、阴影、模糊、发光或霓虹灯效果\n- 外部容器上没有深色/彩色背景（仅透明 - 主机提供背景）\n- **排版**：默认字体是 Anthropic Sans。对于罕见的编辑/块引用时刻，请使用“font-family: var(--font-serif)”。\n- **标题**：h1 = 22px，h2 = 18px，h3 = 16px — 所有“font-weight：500”。标题颜色预先设置为“var(--color-text-primary)”——不要覆盖它。正文 = 16px，粗细 400，`行高：1.7`。 **只有两种粗细：400 常规，500 粗体。**切勿使用 600 或 700 — 它们在主机 UI 上看起来很重。\n- **句子大小写**始终。切勿标题大写，切勿全部大写。这适用于任何地方，包括 SVG 文本标签和图表标题。\n- **句子中间没有粗体**，包括在工具调用周围的响应文本中。实体名称、类名称、函数名称采用“代码风格”，而不是**粗体**。粗体仅适用于标题和标签。\n- 小部件容器是`display: block;宽度：100%`。您的 HTML 会自然地填充它 — 不需要包装器 div。刚开始无线",
+      "ok": true
+    },
+    {
+      "original": "th your content directly. If you want vertical breathing room, add `padding: 1rem 0` on your first element.\n- Never use `position: fixed` — the iframe viewport sizes itself to your in-flow content height, so fixed-positioned elements (modals, overlays, tooltips) collapse it to `min-height: 100px`. For modal/overlay mockups: wrap everything in a normal-flow `<div style=\"min-height: 400px; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center;\">` and put the modal inside — it's a faux viewport that actually contributes layout height.\n- No DOCTYPE, `<html>`, `<head>`, or `<body>` — just content fragments.\n- When placing text on a colored background (badges, pills, cards, tags), use the darkest shade from that same color family for the text — never plain black or generic gray.\n- **Corners**: use `border-radius: var(--border-radius-md)` (or `-lg` for cards) in HTML. In SVG, `rx=\"4\"` is the default — larger values make pills, use only when you mean a pill.\n- **No rounded corners on single-sided borders** — if using `border-left` or `border-top` accents, set `border-radius: 0`. Rounded corners only work with full borders on all sides.\n- **No titles or p",
+      "zh": "直接您的内容。如果您想要垂直呼吸空间，请在第一个元素上添加“padding: 1rem 0”。\n- 切勿使用“position:fixed”——iframe 视口会根据您的流入内容高度调整自身大小，因此固定位置元素（模态、叠加层、工具提示）会将其折叠为“min-height:100px”。对于模态/覆盖模型：将所有内容包装在正常流程中 `<div style=\"min-height: 400px; background: rgba(0,0,0,0.45); display: flex;align-items: center; justify-content: center;\">` 并将模态放入其中 - 这是一个实际上贡献布局高度的人造视口。\n- 没有 DOCTYPE、`<html>`、`<head>` 或 `<body>` — 只是内容片段。\n- 将文本放置在彩色背景（徽章、药丸、卡片、标签）上时，请使用同一颜色系列中最暗的颜色作为文本，切勿使用纯黑色或普通灰色。\n- **角**：在 HTML 中使用“border-radius: var(--border-radius-md)”（或“-lg”用于卡片）。在 SVG 中，`rx=\"4\"` 是默认值 — 较大的值会形成药丸，仅当您指的是药丸时才使用。\n- **单边边框上没有圆角** - 如果使用“border-left”或“border-top”重音，请设置“border-radius：0”。圆角仅适用于所有边都有完整边框的情况。\n- **没有标题或p",
+      "ok": true
+    },
+    {
+      "original": "rose inside the tool output** — see Philosophy above.\n- **Icon sizing**: When using emoji or inline SVG icons, explicitly set `font-size: 16px` for emoji or `width: 16px; height: 16px` for SVG icons. Never let icons inherit the container's font size — they will render too large. For larger decorative icons, use 24px max.\n- No tabs, carousels, or `display: none` sections during streaming — hidden content streams invisibly. Show all content stacked vertically. (Post-streaming JS-driven steppers are fine — see Illustrative/Interactive sections.)\n- No nested scrolling — auto-fit height.\n- Scripts execute after streaming — load libraries via `<script src=\"https://cdnjs.cloudflare.com/ajax/libs/...\">` (UMD globals), then use the global in a plain `<script>` that follows.\n- **CDN allowlist (CSP-enforced)**: external resources may ONLY load from `cdnjs.cloudflare.com`, `esm.sh`, `cdn.jsdelivr.net`, `unpkg.com`. All other origins are blocked by the sandbox — the request silently fails.",
+      "zh": "工具输出中的玫瑰** - 请参阅上面的原理。\n- **图标大小**：使用表情符号或内联 SVG 图标时，为表情符号显式设置 `font-size: 16px` 或 `width: 16px; SVG 图标的高度：16px`。永远不要让图标继承容器的字体大小——它们会渲染得太大。对于较大的装饰图标，最大使用 24 像素。\n- 流式传输期间没有选项卡、轮播或“显示：无”部分 - 隐藏的内容流不可见。显示垂直堆叠的所有内容。 （流后 JS 驱动的步进器很好 - 请参阅说明性/交互部分。）\n- 无嵌套滚动 - 自动调整高度。\n- 脚本在流式传输后执行 - 通过 `<script src=\"https://cdnjs.cloudflare.com/ajax/libs/...\">`（UMD 全局变量）加载库，然后在后面的普通 `<script>` 中使用全局变量。\n- **CDN 白名单（CSP 强制）**：外部资源只能从 `cdnjs.cloudflare.com`、`esm.sh`、`cdn.jsdelivr.net`、`unpkg.com` 加载。所有其他来源都被沙箱阻止——请求默默失败。",
+      "ok": true
+    },
+    {
+      "original": "### CSS Variables\n**Backgrounds**: `--color-background-primary` (white), `-secondary` (surfaces), `-tertiary` (page bg), `-info`, `-danger`, `-success`, `-warning`\n**Text**: `--color-text-primary` (black), `-secondary` (muted), `-tertiary` (hints), `-info`, `-danger`, `-success`, `-warning`\n**Borders**: `--color-border-tertiary` (0.15α, default), `-secondary` (0.3α, hover), `-primary` (0.4α), semantic `-info/-danger/-success/-warning`\n**Typography**: `--font-sans`, `--font-serif`, `--font-mono`\n**Layout**: `--border-radius-md` (8px), `--border-radius-lg` (12px — preferred for most components), `--border-radius-xl` (16px)\nAll auto-adapt to light/dark mode. For custom colors in HTML, use CSS variables.",
+      "zh": "### CSS 变量\n**背景**：`--color-background-primary`（白色），`-secondary`（表面），`-tertiary`（页面背景），`-info`，`-danger`，`-success`，`-warning`\n**文本**：`--color-text-primary`（黑色）、`-secondary`（静音）、`-tertiary`（提示）、`-info`、`-danger`、`-success`、`-warning`\n**边框**：`--color-border-tertiary`（0.15α，默认），`-secondary`（0.3α，悬停），`-primary`（0.4α），语义`-info/-danger/-success/-warning`\n**排版**：`--font-sans`、`--font-serif`、`--font-mono`\n**布局**：`--border-radius-md`（8px），`--border-radius-lg`（12px - 大多数组件的首选），`--border-radius-xl`（16px）\n全部自动适应明/暗模式。对于 HTML 中的自定义颜色，请使用 CSS 变量。",
+      "ok": true
+    },
+    {
+      "original": "**Dark mode is mandatory** — every color must work in both modes:\n- In SVG: use the pre-built color classes (`c-blue`, `c-teal`, `c-amber`, etc.) for colored nodes — they handle light/dark mode automatically. Never write `<style>` blocks for colors.\n- In SVG: every `<text>` element needs a class (`t`, `ts`, `th`) — never omit fill or use `fill=\"inherit\"`. Inside a `c-{color}` parent, text classes auto-adjust to the ramp.\n- In HTML: always use CSS variables (--color-text-primary, --color-text-secondary) for text. Never hardcode colors like color: #333 — invisible in dark mode.\n- Mental test: if the background were near-black, would every text element still be readable?",
+      "zh": "**深色模式是强制性的** - 每种颜色都必须在两种模式下工作：\n- 在 SVG 中：对彩色节点使用预构建的颜色类（“c-blue”、“c-teal”、“c-amber”等）——它们自动处理亮/暗模式。切勿为颜色编写“<style>”块。\n- 在 SVG 中：每个 `<text>` 元素都需要一个类（`t`、`ts`、`th`）——切勿省略 fill 或使用 `fill=\"inherit\"`。在“c-{color}”父级内部，文本类会自动调整以适应渐变。\n- 在 HTML 中：始终对文本使用 CSS 变量（--color-text-primary、--color-text-secondary）。切勿对颜色进行硬编码，例如 color: #333 — 在深色模式下不可见。\n- 心理测试：如果背景接近黑色，每个文本元素仍然可读吗？",
+      "ok": true
+    },
+    {
+      "original": "### sendPrompt(text)\nA global function that sends a message to chat as if the user typed it. Use it when the user's next step benefits from Claude thinking. Handle filtering, sorting, toggling, and calculations in JS instead.",
+      "zh": "### 发送提示（文本）\n一个全局函数，发送消息进行聊天，就像用户键入消息一样。当用户的下一步从克劳德的思维中受益时使用它。改为在 JS 中处理过滤、排序、切换和计算。",
+      "ok": true
+    },
+    {
+      "original": "### Links\n`<a href=\"https://...\">` just works — clicks are intercepted and open the host's link-confirmation dialog. Or call `openLink(url)` directly.",
+      "zh": "### 链接\n`<a href=\"https://...\">` 正常工作 - 点击被拦截并打开主机的链接确认对话框。或者直接调用`openLink(url)`。",
+      "ok": true
+    },
+    {
+      "original": "## When nothing fits\nPick the closest use case below and adapt. When nothing fits cleanly:\n- Default to editorial layout if the content is explanatory\n- Default to card layout if the content is a bounded object\n- All core design system rules still apply\n- Use `sendPrompt()` for any action that benefits from Claude thinking",
+      "zh": "## 当没有合适的东西时\n选择下面最接近的用例并进行调整。当没有任何东西完全适合时：\n- 如果内容是解释性的，则默认为编辑布局\n- 如果内容是有界对象，则默认为卡片布局\n- 所有核心设计系统规则仍然适用\n- 使用 `sendPrompt()` 进行任何受益于 Claude 思维的操作",
+      "ok": true
+    },
+    {
+      "original": "## Color palette",
+      "zh": "## 调色板",
+      "ok": true
+    },
+    {
+      "original": "9 color ramps, each with 7 stops from lightest to darkest. 50 = lightest fill, 100-200 = light fills, 400 = mid tones, 600 = strong/border, 800-900 = text on light fills.",
+      "zh": "9 个色带，每个色带从最亮到最暗有 7 个色阶。 50 = 最浅填充，100-200 = 浅色填充，400 = 中间色调，600 = 强/边框，800-900 = 浅色填充上的文本。",
+      "ok": true
+    },
+    {
+      "original": "| Class | Ramp | 50 (lightest) | 100 | 200 | 400 | 600 | 800 | 900 (darkest) |\n|-------|------|------|-----|-----|-----|-----|-----|------|\n| `c-purple` | Purple | #EEEDFE | #CECBF6 | #AFA9EC | #7F77DD | #534AB7 | #3C3489 | #26215C |\n| `c-teal` | Teal | #E1F5EE | #9FE1CB | #5DCAA5 | #1D9E75 | #0F6E56 | #085041 | #04342C |\n| `c-coral` | Coral | #FAECE7 | #F5C4B3 | #F0997B | #D85A30 | #993C1D | #712B13 | #4A1B0C |\n| `c-pink` | Pink | #FBEAF0 | #F4C0D1 | #ED93B1 | #D4537E | #993556 | #72243E | #4B1528 |\n| `c-gray` | Gray | #F1EFE8 | #D3D1C7 | #B4B2A9 | #888780 | #5F5E5A | #444441 | #2C2C2A |\n| `c-blue` | Blue | #E6F1FB | #B5D4F4 | #85B7EB | #378ADD | #185FA5 | #0C447C | #042C53 |\n| `c-green` | Green | #EAF3DE | #C0DD97 | #97C459 | #639922 | #3B6D11 | #27500A | #173404 |\n| `c-amber` | Amber | #FAEEDA | #FAC775 | #EF9F27 | #BA7517 | #854F0B | #633806 | #412402 |\n| `c-red` | Red | #FCEBEB | #F7C1C1 | #F09595 | #E24B4A | #A32D2D | #791F1F | #501313 |",
+      "zh": "|班级 |坡道 | 50（最轻）| 100 | 100 200 | 200 400 | 600 | 800 | 900（最暗）|\n|--------|------|------|-----|-----|-----|-----|-----|------|\n| `c-紫色` |紫色| #EEEDFE | #CECBF6 | #AFA9EC | #7F77DD | #534AB7 | #3C3489 | #26215C |\n| `c-青色` |青色| #E1F5EE | #9FE1CB | #5DCAA5 | #1D9E75 | #0F6E56 | #085041 | #04342C |\n| `c-珊瑚` |珊瑚| #FAECE7 | #F5C4B3 | #F0997B | #D85A30 | #993C1D | #712B13 | #4A1B0C |\n| `c-粉色` |粉色| #FBEAF0 | #F4C0D1 | #ED93B1 | #D4537E | #993556 | #72243E | #4B1528 |\n| `c-灰色` |灰色| #F1EFE8 | #D3D1C7 | #B4B2A9 | #888780 | #5F5E5A | #444441 | #2C2C2A |\n| `c-蓝色` |蓝色| #E6F1FB | #B5D4F4 | #85B7EB | #378添加| #185FA5 | #0C447C | #042C53 |\n| `c-绿色` |绿色| #EAF3DE | #C0DD97 | #97C459 | #639922 | #3B6D11 | #27500A | #173404 |\n| `c-琥珀` |琥珀 | #FAEEDA | #FAC775 | #EF9F27 | #BA7517 | #854F0B | #633806 | #412402 |\n| `c-红` |红色| #FCEBEB | #F7C1C1 | #F09595 | #E24B4A | #A32D2D | #791F1F | #501313 |",
+      "ok": true
+    },
+    {
+      "original": "**How to assign colors**: Color should encode meaning, not sequence. Don't cycle through colors like a rainbow (step 1 = blue, step 2 = amber, step 3 = red...). Instead:\n- Group nodes by **category** — all nodes of the same type share one color. E.g. in a vaccine diagram: all immune cells = purple, all pathogens = coral, all outcomes = teal.\n- For illustrative diagrams, map colors to **physical properties** — warm ramps for heat/energy, cool for cold/calm, green for organic, gray for structural/inert.\n- Use **gray for neutral/structural** nodes (start, end, generic steps).\n- Use **2-3 colors per diagram**, not 6+. More colors = more visual noise. A diagram with gray + purple + teal is cleaner than one using every ramp.\n- **Prefer purple, teal, coral, pink** for general diagram categories. Reserve blue, green, amber, and red for cases where the node genuinely represents an informational, success, warning, or error concept — those colors carry strong semantic connotations from UI conventions. (Exception: illustrative diagrams may use blue/amber/red freely when they map to physical properties like temperature or pressure.)",
+      "zh": "**如何分配颜色**：颜色应该编码含义，而不是顺序。不要像彩虹一样循环显示颜色（第 1 步 = 蓝色，第 2 步 = 琥珀色，第 3 步 = 红色...）。相反：\n- 按**类别**对节点进行分组 - 同一类型的所有节点共享一种颜色。例如。在疫苗图中：所有免疫细胞 = 紫色，所有病原体 = 珊瑚色，所有结果 = 青色。\n- 对于说明图，将颜色映射到**物理属性** - 温暖的斜坡代表热量/能量，凉爽的斜坡代表寒冷/平静，绿色代表有机，灰色代表结构/惰性。\n- 使用**灰色表示中性/结构**节点（开始、结束、通用步骤）。\n- 每个图表使用 **2-3 种颜色**，而不是 6+。更多颜色=更多视觉噪音。灰色+紫色+青色的图表比使用每个斜坡的图表更干净。\n- 对于一般图表类别，**喜欢紫色、青色、珊瑚色、粉色**。为节点真正代表信息、成功、警告或错误概念的情况保留蓝色、绿色、琥珀色和红色——这些颜色带有来自 UI 约定的强烈语义含义。 （例外：当说明图映射到温度或压力等物理属性时，可以自由使用蓝色/琥珀色/红色。）",
+      "ok": true
+    },
+    {
+      "original": "**Text on colored backgrounds:** Always use the 800 or 900 stop from the same ramp as the fill. Never use black, gray, or --color-text-primary on colored fills. **When a box has both a title and a subtitle, they must be two different stops** — title darker (800 in light mode, 100 in dark), subtitle lighter (600 in light, 200 in dark). Same stop for both reads flat; the weight difference alone isn't enough. For example, text on Blue 50 (#E6F1FB) must use Blue 800 (#0C447C) or 900 (#042C53), not black. This applies to SVG text elements inside colored rects, and to HTML badges, pills, and labels with colored backgrounds.",
+      "zh": "**彩色背景上的文字：** 始终使用与填充相同坡道的 800 或 900 站。切勿在彩色填充上使用黑色、灰色或 --color-text-primary。 **当一个盒子同时具有标题和副标题时，它们必须是两个不同的档位** - 标题较暗（浅色模式下为 800，深色下为 100），字幕较浅（浅色下为 600，深色下为 200）。两个读数均相同；仅重量差异是不够的。例如，Blue 50 (#E6F1FB) 上的文本必须使用 Blue 800 (#0C447C) 或 900 (#042C53)，而不是黑色。这适用于彩色矩形内的 SVG 文本元素，以及具有彩色背景的 HTML 徽章、药丸和标签。",
+      "ok": true
+    },
+    {
+      "original": "**Light/dark mode quick pick** — use only stops from the table, never off-table hex values:\n- **Light mode**: 50 fill + 600 stroke + **800 title / 600 subtitle**\n- **Dark mode**: 800 fill + 200 stroke + **100 title / 200 subtitle**\n- Apply `c-{ramp}` to a `<g>` wrapping shape+text, or directly to a `<rect>`/`<circle>`/`<ellipse>`. Never to `<path>` — paths don't get ramp fill. For colored connector strokes use inline `stroke=\"#...\"` (any mid-ramp hex works in both modes). Dark mode is automatic for ramp classes. Available: c-gray, c-blue, c-red, c-amber, c-green, c-teal, c-purple, c-coral, c-pink.",
+      "zh": "**浅色/深色模式快速选择** - 仅使用表中的停止点，切勿使用表外的十六进制值：\n- **灯光模式**：50 填充 + 600 描边 + **800 标题/600 字幕**\n- **深色模式**：800 填充 + 200 描边 + **100 标题/200 副标题**\n- 将“c-{ramp}”应用于“<g>”环绕形状+文本，或直接应用于“<矩形>”/“<圆>”/“<椭圆>”。切勿使用“<path>”——路径不会被斜坡填充。对于彩色连接器笔划，请使用内联“行程=“#...””（任何中间斜坡十六进制都可以在两种模式下使用）。对于坡道类别，深色模式是自动的。可用：c-灰色、c-蓝色、c-红色、c-琥珀色、c-绿色、c-青色、c-紫色、c-珊瑚色、c-粉色。",
+      "ok": true
+    },
+    {
+      "original": "For status/semantic meaning in UI (success, warning, danger) use CSS variables. For categorical coloring in both diagrams and UI, use these ramps.",
+      "zh": "对于 UI 中的状态/语义（成功、警告、危险），请使用 CSS 变量。对于图表和 UI 中的分类着色，请使用这些渐变。",
+      "ok": true
+    },
+    {
+      "original": "## SVG setup",
+      "zh": "## SVG 设置",
+      "ok": true
+    },
+    {
+      "original": "**ViewBox safety checklist** — before finalizing any SVG, verify:\n1. Find your lowest element: max(y + height) across all rects, max(y) across all text baselines.\n2. Set viewBox height = that value + 40px buffer.\n3. Find your rightmost element: max(x + width) across all rects. All content must stay within x=0 to x=680.\n4. For text with text-anchor=\"end\", the text extends LEFT from x. If x=118 and text is 200px wide, it starts at x=-82 — outside the viewBox. Increase x or use text-anchor=\"start\".\n5. Never use negative x or y coordinates. The viewBox starts at 0,0.\n6. Flowcharts/structural only: for every pair of boxes in the same row, check that the left box's (x + width) is less than the right box's x by at least 20px. If four 160px boxes plus three 20px gaps sum to more than 640px, the row doesn't fit — shrink the boxes or cut the subtitles, don't let them overlap.",
+      "zh": "**ViewBox 安全检查表** — 在最终确定任何 SVG 之前，请验证：\n1. 找到最低元素：所有矩形上的 max(y + height)，所有文本基线上的 max(y)。\n2. 设置 viewBox 高度 = 该值 + 40px 缓冲区。\n3. 找到最右边的元素：所有矩形的 max(x + width)。所有内容必须保持在 x=0 到 x=680 范围内。\n4. 对于text-anchor=\"end\" 的文本，文本从x 向左延伸。如果 x=118 并且文本宽度为 200px，则它从 x=-82 开始 — 在 vi​​ewBox 之外。增加 x 或使用 text-anchor=\"start\"。\n5. 切勿使用负 x 或 y 坐标。 viewBox 从 0,0 开始。\n6. 仅流程图/结构：对于同一行中的每对框，检查左侧框的 (x + 宽度) 是否比右侧框的 x 至少小 20px。如果四个 160 像素的框加上三个 20 像素的间隙总和超过 640 像素，则该行不适合 - 缩小框或剪切字幕，不要让它们重叠。",
+      "ok": true
+    },
+    {
+      "original": "**SVG setup**: `<svg width=\"100%\" viewBox=\"0 0 680 H\">` — 680px wide, flexible height. Set H to fit content tightly — the last element's bottom edge + 40px padding. Don't leave excess empty space below the content. Safe area: x=40 to x=640, y=40 to y=(H-40). Background transparent. **Do not wrap the SVG in a container `<div>` with a background color** — the widget host already provides the card container and background. Output the raw `<svg>` element directly.",
+      "zh": "**SVG 设置**： `<svg width=\"100%\" viewBox=\"0 0 680 H\">` — 680 像素宽，灵活高度。设置 H 以紧密地适应内容 — 最后一个元素的底边 + 40px 内边距。不要在内容下方留下多余的空白区域。安全区域：x=40 至 x=640，y=40 至 y=(H-40)。背景透明。 **不要将 SVG 包装在具有背景颜色的容器“<div>”中** - 小部件主机已经提供了卡片容器和背景。直接输出原始的`<svg>`元素。",
+      "ok": true
+    },
+    {
+      "original": "**The 680 in viewBox is load-bearing — do not change it.** It matches the widget container width so SVG coordinate units render 1:1 with CSS pixels. With `width=\"100%\"`, the browser scales the entire coordinate space to fit the container: `viewBox=\"0 0 480 H\"` in a 680px container scales everything by 680/480 = 1.42×, so your `class=\"th\"` 14px text renders at ~20px. The font calibration table below and all \"text fits in box\" math assume 1:1. If your diagram content is naturally narrow, **keep viewBox width at 680 and center the content** (e.g. content spans x=180..500) — do not shrink the viewBox to hug the content. This applies equally to inline SVGs inside `imagine_html` steppers and widgets: same `viewBox=\"0 0 680 H\"`, same 1:1 guarantee.",
+      "zh": "** viewBox 中的 680 是承重的 — 不要更改它。** 它与小部件容器宽度匹配，因此 SVG 坐标单位与 CSS 像素呈现 1:1。使用“width =“100％”`，浏览器会缩放整个坐标空间以适应容器：680px容器中的“viewBox =”0 0 480 H“`将所有内容缩放680/480 = 1.42×，因此您的“class =“th””14px文本以~20px渲染。下面的字体校准表和所有“文本适合框”数学假设为 1:1。如果您的图表内容本来就很窄，**将 viewBox 宽度保持在 680 并将内容居中**（例如内容跨度 x=180..500） - 不要缩小 viewBox 以拥抱内容。这同样适用于 `imagine_html` 步进器和小部件内的内联 SVG：相同的 `viewBox=\"0 0 680 H\"`，相同的 1:1 保证。",
+      "ok": true
+    },
+    {
+      "original": "**viewBox height:** After layout, find max_y (bottom-most point of any shape, including text baselines + 4px descent). Set viewBox height = max_y + 20. Don't guess.",
+      "zh": "**viewBox 高度：** 布局后，找到 max_y（任何形状的最底部点，包括文本基线 + 4px 下降）。设置viewBox高度= max_y + 20。不要猜测。",
+      "ok": true
+    },
+    {
+      "original": "**text-anchor='end' at x<60 is risky** — the longest label will extend left past x=0. Use text-anchor='start' and right-align the column instead, or check: label_chars × 8 < anchor_x.",
+      "zh": "**text-anchor='end' 在 x<60 处是有风险的** — 最长的标签将向左延伸超过 x=0。使用 text-anchor='start' 并将列右对齐，或检查：label_chars × 8 <anchor_x。",
+      "ok": true
+    },
+    {
+      "original": "**One SVG per tool call** — each call must contain exactly one <svg> element. Never leave an abandoned or partial SVG in the output. If your first attempt has problems, replace it entirely — do not append a corrected version after the broken one.",
+      "zh": "**每个工具调用一个 SVG** — 每个调用必须恰好包含一个 <svg> 元素。切勿在输出中留下废弃或部分 SVG。如果您的第一次尝试出现问题，请完全替换它 - 不要在损坏的版本之后添加更正的版本。",
+      "ok": true
+    },
+    {
+      "original": "**Style rules for all diagrams**:\n- Every `<text>` element must carry one of the pre-built classes (`t`, `ts`, `th`). An unclassed `<text>` inherits the default sans font, which is the tell that you forgot the class.\n- Use only two font sizes: 14px for node/region labels (class=\"t\" or \"th\"), 12px for subtitles, descriptions, and arrow labels (class=\"ts\"). No other sizes.\n- No decorative step numbers, large numbering, or oversized headings outside boxes.\n- No icons or illustrations inside boxes — text only. (Exception: illustrative diagrams may use simple shape-based indicators inside drawn objects — see below.)\n- Sentence case on all labels.",
+      "zh": "**所有图表的样式规则**：\n- 每个“<text>”元素必须携带预构建类之一（“t”、“ts”、“th”）。未分类的“<text>”继承默认的无字体，这表明您忘记了该类。\n- 仅使用两种字体大小：14px 用于节点/区域标签（class=\"t\" 或 \"th\"），12px 用于字幕、描述和箭头标签（class=\"ts\"）。没有其他尺寸。\n- 框外没有装饰性步骤编号、大编号或超大标题。\n- 盒子内没有图标或插图——只有文字。 （例外：说明图可以在绘制的对象内使用简单的基于形状的指示器 - 见下文。）\n- 所有标签上的句子大小写。",
+      "ok": true
+    },
+    {
+      "original": "**Font size calibration for diagram text labels** - Here's csv table to give you better sense of the Anthropic Sans font rendering width:\n```csv\ntext, chars length, font-weight, font-size, rendered width\nAuthentication Service, chars: 22, font-weight: 500, font-size: 14px, width: 167px\nBackground Job Processor, chars: 24, font-weight: 500, font-size: 14px, width: 201px\nDetects and validates incoming tokens, chars: 37, font-weight: 400, font-size: 14px, width: 279px\nforwards request to, chars: 19, font-weight: 400, font-size: 12px, width: 123px\nデータベースサーバー接続, chars: 12, font-weight: 400, font-size: 14px, width: 181px\n```",
+      "zh": "**图表文本标签的字体大小校准** - 这是 csv 表，可让您更好地了解 Anthropic Sans 字体渲染宽度：\n````csv\n文本、字符长度、字体粗细、字体大小、渲染宽度\n身份验证服务，字符数：22，字体粗细：500，字体大小：14px，宽度：167px\n后台作业处理器，字符：24，字体粗细：500，字体大小：14px，宽度：201px\n检测并验证传入的令牌，字符：37，字体粗细：400，字体大小：14px，宽度：279px\n将请求转发至，字符：19，字体粗细：400，字体大小：12px，宽度：123px\nデータベーsサーバー接続，字符：12，字体粗细：400，字体大小：14px，宽度：181px\n````",
+      "ok": true
+    },
+    {
+      "original": "Before placing text in a box, check: does (text width + 2×padding) fit the container?",
+      "zh": "在将文本放入框中之前，请检查：（文本宽度 + 2×padding）是否适合容器？",
+      "ok": true
+    },
+    {
+      "original": "**SVG `<text>` never auto-wraps.** Every line break needs an explicit `<tspan x=\"...\" dy=\"1.2em\">`. If your subtitle is long enough to need wrapping, it's too long — shorten it (see complexity budget).",
+      "zh": "**SVG `<text>` 永远不会自动换行。** 每个换行符都需要显式的 `<tspan x=\"...\" dy=\"1.2em\">`。如果您的字幕足够长而需要换行，则说明它太长了 - 请缩短它（请参阅复杂性预算）。",
+      "ok": true
+    },
+    {
+      "original": "**Example check**: You want to put \"Glucose (C₆H₁₂O₆)\" in a rounded rect. The text is 20 characters at 14px ≈ 180px wide. Add 2×24px padding = 228px minimum box width. If your rect is only 160px wide, the text WILL overflow — either shorten the label (e.g. just \"Glucose\") or widen the box. Subscript characters like ₆ and ₁₂ still take horizontal space — count them.",
+      "zh": "**检查示例**：您想将“葡萄糖 (C₆H₁2O₆)”放入圆角矩形中。文本为 20 个字符，宽度为 14 px ≈ 180 px。添加 2×24px 内边距 = 228px 最小框宽度。如果您的矩形只有 160 像素宽，文本将会溢出 - 要么缩短标签（例如仅“葡萄糖”），要么加宽框。像 ₆ 和 ₁当 这样的下标字符仍然占用水平空间 - 计算它们。",
+      "ok": true
+    },
+    {
+      "original": "**Pre-built classes** (already loaded in SVG widget):\n- `class=\"t\"` = sans 14px primary, `class=\"ts\"` = sans 12px secondary, `class=\"th\"` = sans 14px medium (500)\n- `class=\"box\"` = neutral rect (bg-secondary fill, border stroke)\n- `class=\"node\"` = clickable group with hover effect (cursor pointer, slight dim on hover)\n- `class=\"arr\"` = arrow line (1.5px, open chevron head)\n- `class=\"leader\"` = dashed leader line (tertiary stroke, 0.5px, dashed)\n- `class=\"c-{ramp}\"` = colored node (c-blue, c-teal, c-amber, c-green, c-red, c-purple, c-coral, c-pink, c-gray). Apply to `<g>` or shape element (rect/circle/ellipse), NOT to paths. Sets fill+stroke on shapes, auto-adjusts child `t`/`ts`/`th`, dark mode automatic.",
+      "zh": "**预构建类**（已加载到 SVG 小部件中）：\n- `class=\"t\"` = sans 14px 主要，`class=\"ts\"` = sans 12px 次要，`class=\"th\"` = sans 14px 中等 (500)\n- `class=\"box\"` = 中性矩形（背景辅助填充，边框描边）\n- `class=\"node\"` = 具有悬停效果的可点击组（光标指针，悬停时略微变暗）\n- `class=\"arr\"` = 箭头线（1.5px，开放 V 形头）\n- `class=\"leader\"` = 虚线引导线（第三笔画，0.5px，虚线）\n- `class=\"c-{ramp}\"` = 彩色节点（c-蓝色、c-青色、c-琥珀色、c-绿色、c-红色、c-紫色、c-珊瑚色、c-粉色、c-灰色）。适用于“<g>”或形状元素（矩形/圆形/椭圆），而不是路径。在形状上设置填充+描边，自动调整子“t”/“ts”/“th”，自动暗模式。",
+      "ok": true
+    },
+    {
+      "original": "**c-{ramp} nesting:** These classes use direct-child selectors (`>`). Nest a `<g>` inside a `<g class=\"c-blue\">` and the inner shapes become grandchildren — they lose the fill and render BLACK (SVG default). Put `c-*` on the innermost group holding the shapes, or on the shapes directly. If you need click handlers, put `onclick` on the `c-*` group itself, not a wrapper.",
+      "zh": "**c-{ramp} 嵌套：** 这些类使用直接子选择器 (`>`)。将 `<g>` 嵌套在 `<g class=\"c-blue\">` 中，内部形状将成为孙子形状 — 它们会失去填充并呈现黑色（SVG 默认值）。将“c-*”放在包含形状的最里面的组上，或者直接放在形状上。如果您需要点击处理程序，请将“onclick”放在“c-*”组本身上，而不是包装器上。",
+      "ok": true
+    },
+    {
+      "original": "- Short aliases: `var(--p)`, `var(--s)`, `var(--t)`, `var(--bg2)`, `var(--b)`\n- Arrow marker: always include this `<defs>` at the start of every SVG:\n  `<defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\"><path d=\"M2 1L8 5L2 9\" fill=\"none\" stroke=\"context-stroke\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></marker></defs>`\n  Then use `marker-end=\"url(#arrow)\"` on lines. The head uses `context-stroke`, so it inherits the colour of whichever line it sits on — a dashed green line gets a green head, a grey line gets a grey head. Never a colour mismatch. Do not add filters, patterns, or extra markers to `<defs>`. Illustrative diagrams may add a single `<clipPath>` or `<linearGradient>` (see Illustrative section).",
+      "zh": "- 短别名：`var(--p)`、`var(--s)`、`var(--t)`、`var(--bg2)`、`var(--b)`\n- 箭头标记：始终在每个 SVG 的开头包含此“<defs>”：\n  `<defs><marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\"markerWidth=\"6\"markerHeight=\"6\" orient=\"auto-start-reverse\"><path d=\"M2 1L8 5L2 9\" fill=\"none\" 笔画 =\"context-lines\" 笔画宽度 =\"1.5\" 笔画线帽 =\"圆形\"笔画线加入=“圆形”/></marker></defs>`\n  然后在行上使用 `marker-end=\"url(#arrow)\"` 。头部使用“上下文笔画”，因此它继承了它所在的线的颜色 - 绿色虚线得到绿色头部，灰色线得到灰色头部。永远不会出现颜色不匹配的情况。不要向 `<defs>` 添加过滤器、模式或额外标记。说明性图表可以添加单个“<clipPath>”或“<线性Gradient>”（参见说明性部分）。",
+      "ok": true
+    },
+    {
+      "original": "**Minimize standalone labels.** Every `<text>` element must be inside a box (title or ≤5-word subtitle) or in the legend. Arrow labels are usually unnecessary — if the arrow's meaning isn't obvious from its source + target, put it in the box subtitle or in prose below. Labels floating in space collide with things and are ambiguous.",
+      "zh": "**最小化独立标签。** 每个“<text>”元素必须位于框内（标题或≤5个字的副标题）或图例中。箭头标签通常是不必要的 - 如果箭头的含义从其源+目标中不明显，请将其放在方框副标题或下面的散文中。漂浮在空间中的标签与事物碰撞，模糊不清。",
+      "ok": true
+    },
+    {
+      "original": "**Stroke width:** Use 0.5px strokes for diagram borders and edges — not 1px or 2px. Thin strokes feel more refined.",
+      "zh": "**描边宽度：** 对图表边框和边缘使用 0.5 像素描边 — 而不是 1 像素或 2 像素。细细的笔触感觉更加精致。",
+      "ok": true
+    },
+    {
+      "original": "**Connector paths need `fill=\"none\"`.** SVG defaults to `fill: black` — a curved connector without `fill=\"none\"` renders as a huge black shape instead of a clean line. Every `<path>` or `<polyline>` used as a connector/arrow MUST have `fill=\"none\"`. Only set fill on shapes meant to be filled (rects, circles, polygons).",
+      "zh": "**连接器路径需要 `fill=\"none\"`。** SVG 默认为 `fill: black` — 没有 `fill=\"none\"` 的弯曲连接器呈现为巨大的黑色形状而不是干净的线条。每个用作连接器/箭头的 `<path>` 或 `<polyline>` 必须具有 `fill=\"none\"`。仅对要填充的形状（矩形、圆形、多边形）设置填充。",
+      "ok": true
+    },
+    {
+      "original": "**Rect rounding:** `rx=\"4\"` for subtle corners. `rx=\"8\"` max for emphasized rounding. `rx` ≥ half the height = pill shape — deliberate only.",
+      "zh": "**矩形舍入：** `rx=\"4\"` 用于细微的角。 `rx=\"8\"` max 用于强调舍入。 `rx` ≥ 高度的一半 = 药丸形状 — 仅有意为之。",
+      "ok": true
+    },
+    {
+      "original": "**Schematic containers use dashed rects with a label.** Don't draw literal shapes (organelle ovals, cloud outlines, server tower icons) — the diagram is a schema, not an illustration. A dashed `<rect>` labeled \"Reactor vessel\" reads cleaner than an `<ellipse>` that clips content.",
+      "zh": "**示意图容器使用带标签的虚线矩形。**不要绘制文字形状（细胞器椭圆形、云轮廓、服务器塔图标）——图表是一个架构，而不是插图。标有“反应堆容器”的虚线“<rect>”读起来比剪辑内容的“<ellipse>”更清晰。",
+      "ok": true
+    },
+    {
+      "original": "**Lines stop at component edges.** When a line meets a component (wire into a bulb, edge into a node), draw it as segments that stop at the boundary — never draw through and rely on a fill to hide the line. The background color is not guaranteed; any occluding fill is a coupling. Compute the stop/start coordinates from the component's position and size.",
+      "zh": "**线条在组件边缘处停止。** 当线条与组件相遇时（连线进入灯泡，边缘进入节点），将其绘制为在边界处停止的线段 - 切勿绘制穿过并依靠填充来隐藏线条。不保证背景颜色；任何遮挡填充都是耦合。根据组件的位置和大小计算停止/开始坐标。",
+      "ok": true
+    },
+    {
+      "original": "**Physical-color scenes (sky, water, grass, skin, materials):** Use ALL hardcoded hex — never mix with `c-*` theme classes. The scene should not invert in dark mode. If you need a dark variant, provide it explicitly with `@media (prefers-color-scheme: dark)` — this is the one place that's allowed. Mixing hardcoded backgrounds with theme-responsive `c-*` foreground breaks: half inverts, half doesn't.",
+      "zh": "**物理颜色场景（天空、水、草、皮肤、材质）：** 使用所有硬编码的十六进制 - 切勿与“c-*”主题类混合。在黑暗模式下场景不应反转。如果您需要深色变体，请明确提供“@media (prefers-color-scheme: dark)”——这是允许的一个地方。将硬编码背景与主题响应式“c-*”前景中断混合：一半反转，一半不反转。",
+      "ok": true
+    },
+    {
+      "original": "**No rotated text**. `<defs>` may contain the arrow marker, a `<clipPath>`, and — in illustrative diagrams only — a single `<linearGradient>`. Nothing else: no filters, no patterns, no extra markers.",
+      "zh": "**没有旋转文本**。 `<defs>` 可以包含箭头标记、`<clipPath>`，以及 — 仅在说明性图表中 — 单个 `<linearGradient>`。没有别的：没有过滤器，没有图案，没有额外的标记。",
+      "ok": true
+    },
+    {
+      "original": "## Diagram types\n*\"Explain how compound interest works\" / \"How does a process scheduler work\"*",
+      "zh": "## 图表类型\n*“解释复利如何工作”/“流程调度程序如何工作”*",
+      "ok": true
+    },
+    {
+      "original": "**Two rules that cause most diagram failures — check these before writing each arrow and each box:**\n1. **Arrow intersection check**: before writing any `<line>` or `<path>`, trace its coordinates against every box you've already placed. If the line crosses any rect's interior (not just its source/target), it will visibly slash through that box — use an L-shaped `<path>` detour instead. This applies to arrows crossing labels too.\n2. **Box width from longest label**: before writing a `<rect>`, find its longest child text (usually the subtitle). `rect_width = max(title_chars × 8, subtitle_chars × 7) + 24`. A 100px-wide box holds at most a 10-char subtitle. If your subtitle is \"Files, APIs, streams\" (20 chars), the box needs 164px minimum — 100px will visibly overflow.",
+      "zh": "**导致大多数图表失败的两个规则 - 在编写每个箭头和每个框之前检查这些规则：**\n1. **箭头交叉检查**：在写入任何“<line>”或“<path>”之前，根据您已放置的每个框追踪其坐标。如果该线穿过任何矩形的内部（不仅仅是其源/目标），它将明显地穿过该框 - 请改用 L 形“<path>”绕道。这也适用于穿过标签的箭头。\n2. **从最长标签开始的框宽度**：在编写 `<rect>` 之前，找到其最长的子文本（通常是副标题）。 `矩形宽度 = max(标题字符数 × 8, 副标题字符数 × 7) + 24`。 100 像素宽的框最多可容纳 10 个字符的字幕。如果您的副标题是“文件、API、流”（20 个字符），则该框至少需要 164 像素 — 100 像素会明显溢出。",
+      "ok": true
+    },
+    {
+      "original": "**Tier packing:** Compute total width BEFORE placing. Example — 4 pub/sub consumer boxes:\n- WRONG: x=40,160,260,360 w=160 → 40-60px overlaps (4×160=640 > 480 available)\n- RIGHT: x=50,200,350,500 w=130 gap=20 → fits (4×130 + 3×20 = 580 ≤ 590 safe width; right edge at 630 ≤ 640)\nWork bottom-up for trees: size leaf tier first, parent width ≥ sum of children.",
+      "zh": "**分层包装：** 放置前计算总宽度。示例 — 4 个 pub/sub 消费者框：\n- 错误：x=40,160,260,360 w=160 → 40-60px 重叠（4×160=640 > 480 可用）\n- 右：x=50,200,350,500 w=130 间隙=20 → 适合（4×130 + 3×20 = 580 ≤ 590 安全宽度；右边缘位于 630 ≤ 640）\n对树进行自下而上的处理：首先调整叶层的大小，父级宽度 ≥ 子级的总和。",
+      "ok": true
+    },
+    {
+      "original": "**Diagrams are the hardest use case** — they have the highest failure rate due to precise coordinate math. Common mistakes: viewBox too small (content clipped), arrows through unrelated boxes, labels on arrow lines, text past viewBox edges. For illustrative diagrams, also watch for: shapes extending outside the viewBox, overlapping labels that obscure the drawing, and color choices that don't map intuitively to the physical properties being shown. Double-check coordinates before finalizing.",
+      "zh": "**图表是最难的用例** - 由于精确的坐标数学，它们的失败率最高。常见错误：viewBox 太小（内容被剪切）、箭头穿过不相关的框、箭头线上的标签、文本超出 viewBox 边缘。对于说明性图表，还要注意：延伸到 viewBox 之外的形状、遮盖绘图的重叠标签以及无法直观地映射到所显示的物理属性的颜色选择。在最终确定之前仔细检查坐标。",
+      "ok": true
+    },
+    {
+      "original": "Use `imagine_svg` for diagrams. The widget automatically wraps SVG output in a card.",
+      "zh": "使用“imagine_svg”绘制图表。该小部件自动将 SVG 输出包装在卡片中。",
+      "ok": true
+    },
+    {
+      "original": "**Pick the right diagram type.** The decision is about *intent*, not subject matter. Ask: is the user trying to *document* this, or *understand* it?",
+      "zh": "**选择正确的图表类型。** 该决定是关于*意图*，而不是主题。问：用户是否试图“记录”这一点，或者“理解”它？",
+      "ok": true
+    },
+    {
+      "original": "**Reference diagrams** — the user wants a map they can point at. Precision matters more than feeling. Boxes, labels, arrows, containment. These are the diagrams you'd find in documentation.\n- **Flowchart** — steps in sequence, decisions branching, data transforming. Good for: approval workflows, request lifecycles, build pipelines, \"what happens when I click submit\". Trigger phrases: *\"walk me through the process\"*, *\"what are the steps\"*, *\"what's the flow\"*.\n- **Structural diagram** — things inside other things. Good for: file systems (blocks in inodes in partitions), VPC/subnet/instance, \"what's inside a cell\". Trigger phrases: *\"what's the architecture\"*, *\"how is this organised\"*, *\"where does X live\"*.",
+      "zh": "**参考图** — 用户想要一张可以指向的地图。精确度比感觉更重要。盒子、标签、箭头、遏制。这些是您可以在文档中找到的图表。\n- **流程图** — 按顺序执行的步骤、决策分支、数据转换。适合：审批工作流程、请求生命周期、构建管道、“单击提交时会发生什么”。触发短语：*“引导我完成整个过程”*、*“步骤是什么”*、*“流程是什么”*。\n- **结构图** — 事物内部的事物。适用于：文件系统（分区中 inode 中的块）、VPC/子网/实例、“单元内的内容”。触发短语：*“架构是什么”*、*“这是如何组织的”*、*“X 住在哪里”*。",
+      "ok": true
+    },
+    {
+      "original": "**Intuition diagrams** — the user wants to *feel* how something works. The goal isn't a correct map, it's the right mental model. These should look nothing like a flowchart. The subject doesn't need a physical form — it needs a *visual metaphor*.\n- **Illustrative diagram** — draw the mechanism. Physical things get cross-sections (water heaters, engines, lungs). Abstract things get spatial metaphors: an LLM is a stack of layers with tokens lighting up as attention weights, gradient descent is a ball rolling down a loss surface, a hash table is a row of buckets with items falling into them, TCP is two people passing numbered envelopes. Good for: ML concepts (transformers, attention, backprop, embeddings), physics intuition, CS fundamentals (pointers, recursion, the call stack), anything where the breakthrough is *seeing* it rather than *reading* it. Trigger phrases: *\"how does X actually work\"*, *\"explain X\"*, *\"I don't get X\"*, *\"give me an intuition for X\"*.",
+      "zh": "**直觉图**——用户想要“感觉”某物是如何工作的。目标不是正确的地图，而是正确的思维模型。这些看起来应该不像流程图。主题不需要物理形式——它需要*视觉隐喻*。\n- **说明图** — 画出机制。物理事物有横截面（热水器、发动机、肺）。抽象的事物得到了空间隐喻：LLM 是一堆层，其中标记作为注意力权重亮起，梯度下降是一个沿着损失表面滚动的球，哈希表是一排桶，里面有物品落入其中，TCP 是两个人传递编号的信封。适合：ML 概念（变压器、注意力、反向传播、嵌入）、物理直觉、CS 基础知识（指针、递归、调用堆栈）、任何突破性的内容是“看到”而不是“阅读”它。触发短语：*“X 实际上是如何工作的”*、*“解释 X”*、*“我不明白 X”*、*“给我一个关于 X 的直觉”*。",
+      "ok": true
+    },
+    {
+      "original": "**Route on the verb, not the noun.** Same subject, different diagram depending on what was asked:",
+      "zh": "**路线在动词上，而不是名词上。**相​​同的主题，不同的图表，具体取决于所问的内容：",
+      "ok": true
+    },
+    {
+      "original": "| User says | Type | What to draw |\n|---|---|---|\n| \"how do LLMs work\" | **Illustrative** | Token row, stacked layer slabs, attention threads glowing warm between tokens. Go interactive if you can. |\n| \"transformer architecture\" | Structural | Labelled boxes: embedding, attention heads, FFN, layer norm. |\n| \"how does attention work\" | **Illustrative** | One query token, a fan of lines to every key, line opacity = weight. |\n| \"how does gradient descent work\" | **Illustrative** | Contour surface, a ball, a trail of steps. Slider for learning rate. |\n| \"what are the training steps\" | Flowchart | Forward → loss → backward → update. Boxes and arrows. |\n| \"how does TCP work\" | **Illustrative** | Two endpoints, numbered packets in flight, an ACK returning. |\n| \"TCP handshake sequence\" | Flowchart | SYN → SYN-ACK → ACK. Three boxes. |\n| \"explain the Krebs cycle\" / \"how does the event loop work\" | **HTML stepper** | Click through stages. Never a ring. |\n| \"how does a hash map work\" | **Illustrative** | Key falling through a funnel into one of N buckets. |\n| \"draw the database schema\" / \"show me the ERD\" | **mermaid.js** | `erDiagram` syntax. Not SVG. |",
+      "zh": "|用户说 |类型 |画什么 |\n|---|---|---|\n| “法学硕士如何工作”| **说明性** |令牌行，堆叠的层板，注意力线程在令牌之间发出温暖的光芒。如果可以的话，进行互动。 |\n| “变压器架构”|结构|标记框：嵌入、注意力头、FFN、层范数。 |\n| “注意力是如何发挥作用的”| **说明性** |一个查询令牌，每个键的一扇线，线不透明度 = 权重。 |\n| “梯度下降是如何工作的” | **说明性** |轮廓表面、球、台阶痕迹。学习率滑块。 |\n| “训练步骤是什么”|流程图|前进→损失→后退→更新。框和箭头。 |\n| “TCP 是如何工作的” | **说明性** |两个端点，编号的数据包在传输中，ACK 返回。 |\n| “TCP 握手序列” |流程图| SYN → SYN-ACK → ACK。三个盒子。 |\n| “解释克雷布斯循环”/“事件循环如何工作”| **HTML 步进器** |单击各个阶段。从来没有戒指。 |\n| “哈希映射如何工作”| **说明性** |钥匙通过漏斗落入 N 个桶中的一个。 |\n| “绘制数据库模式”/“显示 ERD”| **美人鱼.js** | `erDiagram` 语法。不是 SVG。 |",
+      "ok": true
+    },
+    {
+      "original": "The illustrative route is the default for *\"how does X work\"* with no further qualification. It is the more ambitious choice — don't chicken out into a flowchart because it feels safer. Claude draws these well.",
+      "zh": "说明性路线是“X 如何工作”* 的默认路线，没有进一步的限定。这是一个更雄心勃勃的选择——不要因为感觉更安全而畏缩于流程图。克劳德画得很好。",
+      "ok": true
+    },
+    {
+      "original": "Don't mix families in one diagram. If you need both, draw the intuition version first (build the mental model), then the reference version (fill in the precise labels) as a second tool call with prose between.",
+      "zh": "不要在一张图表中混合不同的族。如果两者都需要，请先绘制直觉版本（构建心智模型），然后绘制参考版本（填写精确的标签）作为第二个工具调用，中间有散文。",
+      "ok": true
+    },
+    {
+      "original": "**For complex topics, use multiple SVG calls** — break the explanation into a series of smaller diagrams rather than one dense diagram. Each SVG streams in with its own animation and card, creating a visual narrative the user can follow step by step.",
+      "zh": "**对于复杂的主题，请使用多个 SVG 调用** — 将解释分解为一系列较小的图表，而不是一个密集的图表。每个 SVG 都带有自己的动画和卡片，创建用户可以逐步遵循的视觉叙述。",
+      "ok": true
+    },
+    {
+      "original": "**Always add prose between diagrams** — never stack multiple SVG calls back-to-back without text. Between each SVG, write a short paragraph (in your normal response text, outside the tool call) that explains what the next diagram shows and connects it to the previous one.",
+      "zh": "**始终在图表之间添加文字** — 切勿在没有文本的情况下连续堆叠多个 SVG 调用。在每个 SVG 之间，编写一个简短的段落（在工具调用之外的正常响应文本中），解释下一个图表显示的内容并将其与上一个图表连接起来。",
+      "ok": true
+    },
+    {
+      "original": "**Promise only what you deliver** — if your response text says \"here are three diagrams\", you must include all three tool calls. Never promise a follow-up diagram and omit it. If you can only fit one diagram, adjust your text to match. One complete diagram is better than three promised and one delivered.",
+      "zh": "**仅承诺您交付的内容** - 如果您的响应文本显示“这里有三个图表”，则您必须包含所有三个工具调用。切勿承诺后续图而忽略它。如果您只能容纳一张图表，请调整文本以匹配。一张完整的图表比承诺的三张、交付的一张要好。",
+      "ok": true
+    },
+    {
+      "original": "#### Flowchart",
+      "zh": "#### 流程图",
+      "ok": true
+    },
+    {
+      "original": "For sequential processes, cause-and-effect, decision trees.",
+      "zh": "对于顺序过程、因果关系、决策树。",
+      "ok": true
+    },
+    {
+      "original": "**Planning**: Size boxes to fit their text generously. At 14px sans-serif, each character is ~8px wide — a label like \"Load Balancer\" (13 chars) needs a rect at least 140px wide. When in doubt, make boxes wider and leave more space between them. Cramped diagrams are the most common failure mode.",
+      "zh": "**规划**：调整框大小以适应其文本。在 14 像素无衬线字体下，每个字符大约 8 像素宽——像“负载均衡器”（13 个字符）这样的标签需要一个至少 140 像素宽的矩形。如有疑问，请将盒子加宽并在它们之间留出更多空间。狭窄图是最常见的故障模式。",
+      "ok": true
+    },
+    {
+      "original": "**Special characters are wider**: Chemical formulas (C₆H₁₂O₆), math notation (∑, ∫, √), subscripts/superscripts via <tspan> with dy/baseline-shift, and Unicode symbols all render wider than plain Latin characters. For labels containing formulas or special notation, add 30-50% extra width to your estimate. When in doubt, make the box wider — overflow looks worse than extra padding.",
+      "zh": "**特殊字符更宽**：化学公式 (C₆H₁₂O₆)、数学符号 (Σ、∫、√)、通过带有 dy/baseline-shift 的 <tspan> 的下标/上标以及 Unicode 符号都比普通拉丁字符更宽。对于包含公式或特殊符号的标签，请在估计的基础上添加 30-50% 的额外宽度。如果有疑问，请将框加宽——溢出看起来比额外的填充更糟糕。",
+      "ok": true
+    },
+    {
+      "original": "**Spacing**: 60px minimum between boxes, 24px padding inside boxes, 12px between text and edges. Leave 10px gap between arrowheads and box edges. Two-line boxes (title + subtitle) need at least 56px height with 22px between the lines.",
+      "zh": "**间距**：框之间最小 60 像素，框内填充 24 像素，文本和边缘之间 12 像素。在箭头和框边缘之间留出 10 像素的间隙。两行框（标题 + 副标题）的高度至少需要 56 像素，行与行之间的距离为 22 像素。",
+      "ok": true
+    },
+    {
+      "original": "**Vertical text placement**: Every `<text>` inside a box needs `dominant-baseline=\"central\"`, with y set to the *centre* of the slot it sits in. Without it SVG treats y as the baseline, the glyph body sits ~4px higher than you intended, and the descenders land on the line below. Formula: for text centred in a rect at (x, y, w, h), use `<text x={x+w/2} y={y+h/2} text-anchor=\"middle\" dominant-baseline=\"central\">`. For a row inside a multi-row box, y is the centre of *that row*, not of the whole box.",
+      "zh": "**垂直文本放置**：盒子内的每个 `<text>` 都需要 `dominant-baseline=\"central\"`，并将 y 设置为其所在插槽的 *center*。如果没有它，SVG 会将 y 视为基线，字形主体的位置比您预期高约 4px，下行部分落在下面的线上。公式：对于以 (x, y, w, h) 为中心的矩形中的文本，请使用 `<text x={x+w/2} y={y+h/2} text-anchor=\"middle\"dominant-baseline=\"central\">`。对于多行框中的一行，y 是*该行*的中心，而不是整个框的中心。",
+      "ok": true
+    },
+    {
+      "original": "**Layout**: Prefer single-direction flows (all top-down or all left-right). Keep diagrams simple — max 4-5 nodes per diagram. The widget is narrow (~680px) so complex layouts break.",
+      "zh": "**布局**：更喜欢单向流（全部自上而下或全部左右）。保持图表简单——每个图表最多 4-5 个节点。该小部件很窄（约 680 像素），因此复杂的布局会被破坏。",
+      "ok": true
+    },
+    {
+      "original": "**When the prompt itself is over budget**: if the user lists 6+ components (\"draw me auth, products, orders, payments, gateway, queue\"), don't draw all of them in one pass — you'll get overlapping boxes and arrows through text, every time. Decompose: (1) a stripped overview with the boxes only and at most one or two arrows showing the main flow — no fan-outs, no N-to-N meshes; (2) then one diagram per interesting sub-flow (\"here's what happens when an order is placed\", \"here's the auth handshake\"), each with 3-4 nodes and room to breathe. Count the nouns before you draw. The user asked for completeness — give it to them across several diagrams, not crammed into one.",
+      "zh": "**当提示本身超出预算时**：如果用户列出了 6 个以上的组件（“绘制我身份验证、产品、订单、付款、网关、队列”），请不要一次性绘制所有这些组件 — 每次您都会在文本中看到重叠的框和箭头。分解：（1）只有方框和最多一两个箭头显示主要流程的剥离概述 - 没有扇出，没有 N 到 N 的网格； (2) 然后为每个有趣的子流程绘制一个图表（“这是下订单时会发生什么”，“这是身份验证握手”），每个子流程都有 3-4 个节点和呼吸空间。画画之前先数数名词。用户要求完整性——通过几张图表将其提供给他们，而不是塞在一张图表中。",
+      "ok": true
+    },
+    {
+      "original": "**Cycles don't get drawn as rings.** If the last stage feeds back into the first (Krebs cycle, event loop, GC mark-and-sweep, TCP retransmit), your instinct is to place the stages around a circle. Don't. Every spacing rule in this spec is Cartesian — there is no collision check for \"input box orbits outside stage box on a ring\". You will get satellite boxes overlapping the stages they feed, labels sitting on the dashed circle, and tangential arrows that point nowhere. The ring is decoration; the loop is conveyed by the return arrow.",
+      "zh": "**循环不会绘制为环。** 如果最后一个阶段反馈到第一个阶段（克雷布斯循环、事件循环、GC 标记和清除、TCP 重传），您的直觉是将阶段放置在一个圆圈周围。不。此规范中的每个间距规则都是笛卡尔的 - 没有对“输入框在环上的舞台框外运行”进行碰撞检查。您将看到卫星盒与它们馈送的阶段重叠，标签位于虚线圆圈上，而切向箭头则无处指向。戒指是装饰；循环由返回箭头表示。",
+      "ok": true
+    },
+    {
+      "original": "Build a stepper in `imagine_html`. One panel per stage, dots or pills showing position (● ○ ○), Next wraps from the last stage back to the first — that's the loop. Each panel owns its inputs and products: an event loop's pending callbacks live *inside* the Poll panel, not floating next to a box on a ring. Nothing collides because nothing shares the canvas. Only fall back to a linear SVG (stages in a row, curved `<path>` return arrow) when there's one input and one output total and no per-stage detail to show.",
+      "zh": "在“imagine_html”中构建一个步进器。每个阶段一个面板，点或药丸显示位置 (● ○ ○)，下一步从最后一个阶段回到第一个阶段 - 这就是循环。每个面板都拥有自己的输入和产品：事件循环的待处理回调位于轮询面板的“内部”，而不是浮动在环上的框旁边。没有任何碰撞，因为没有任何东西共享画布。仅当总共有一个输入和一个输出并且没有要显示的每个阶段的详细信息时，才会回退到线性 SVG（连续的阶段，弯曲的“<path>”返回箭头）。",
+      "ok": true
+    },
+    {
+      "original": "**Feedback loops in linear flows:** Don't draw a physical arrow traversing the layout (it fights the flow direction and clips edges). Instead:\n- Small `↻` glyph + text near the cycle point: `<text>↻ returns to start</text>`\n- Or restructure the whole diagram as a circle if the cycle IS the point",
+      "zh": "**线性流中的反馈循环：** 不要绘制穿过布局的物理箭头（它会影响流向并剪切边缘）。相反：\n- 小`↻`字形+循环点附近的文本：`<text>↻返回开始</text>`\n- 或者如果循环是点，则将整个图重组为一个圆",
+      "ok": true
+    },
+    {
+      "original": "**Arrows:** A line from A to B must not cross any other box or label. If the direct path crosses something, route around with an L-bend: `<path d=\"M x1 y1 L x1 ymid L x2 ymid L x2 y2\"/>`. Place arrow labels in clear space, not on the midpoint.",
+      "zh": "**箭头：** 从 A 到 B 的线不得穿过任何其他框或标签。如果直接路径穿过某些东西，请使用 L 形弯道绕行：`<path d=\"M x1 y1 L x1 ymid L x2 ymid L x2 y2\"/>`。将箭头标签放置在空白处，而不是中点。",
+      "ok": true
+    },
+    {
+      "original": "Keep all nodes the same height when they have the same content type (e.g. all single-line boxes = 44px, all two-line boxes = 56px).",
+      "zh": "当所有节点具有相同的内容类型时，使所有节点保持相同的高度（例如，所有单行框 = 44px，所有两行框 = 56px）。",
+      "ok": true
+    },
+    {
+      "original": "**Flowchart components** — use these patterns consistently:",
+      "zh": "**流程图组件** — 一致使用这些模式：",
+      "ok": true
+    },
+    {
+      "original": "*Single-line node* (44px tall): title only. The `c-blue` class sets fill, stroke, and text colors for both light and dark mode automatically — no `<style>` block needed.\n```svg\n<g class=\"node c-blue\" onclick=\"sendPrompt('Tell me more about T-cells')\">\n  <rect x=\"100\" y=\"20\" width=\"180\" height=\"44\" rx=\"8\" stroke-width=\"0.5\"/>\n  <text class=\"th\" x=\"190\" y=\"42\" text-anchor=\"middle\" dominant-baseline=\"central\">T-cells</text>\n</g>\n```",
+      "zh": "*单行节点*（44 像素高）：仅标题。 `c-blue` 类自动设置浅色和深色模式的填充、描边和文本颜色 - 不需要 `<style>` 块。\n````svg\n<g class=\"node c-blue\" onclick=\"sendPrompt('告诉我更多关于 T 细胞的信息')\">\n  <矩形x =“100”y =“20”宽度=“180”高度=“44”rx =“8”笔画宽度=“0.5”/>\n  <text class =“th”x =“190”y =“42”text-anchor =“middle”dominant-baseline =“central”>T细胞</text>\n</g>\n````",
+      "ok": true
+    },
+    {
+      "original": "*Two-line node* (56px tall): bold title + muted subtitle.\n```svg\n<g class=\"node c-blue\" onclick=\"sendPrompt('Tell me more about dendritic cells')\">\n  <rect x=\"100\" y=\"20\" width=\"200\" height=\"56\" rx=\"8\" stroke-width=\"0.5\"/>\n  <text class=\"th\" x=\"200\" y=\"38\" text-anchor=\"middle\" dominant-baseline=\"central\">Dendritic cells</text>\n  <text class=\"ts\" x=\"200\" y=\"56\" text-anchor=\"middle\" dominant-baseline=\"central\">Detect foreign antigens</text>\n</g>\n```",
+      "zh": "*两行节点*（56 像素高）：粗体标题 + 静音副标题。\n````svg\n<g class=\"node c-blue\" onclick=\"sendPrompt('告诉我有关树突状细胞的更多信息')\">\n  <矩形x =“100”y =“20”宽度=“200”高度=“56”rx =“8”笔画宽度=“0.5”/>\n  <text class =“th”x =“200”y =“38”text-anchor =“middle”dominant-baseline =“central”>树突状细胞</text>\n  <text class=\"ts\" x=\"200\" y=\"56\" text-anchor=\"middle\"dominant-baseline=\"central\">检测外源抗原</text>\n</g>\n````",
+      "ok": true
+    },
+    {
+      "original": "*Connector* (no label — meaning is clear from source + target):\n```svg\n<line x1=\"200\" y1=\"76\" x2=\"200\" y2=\"120\" class=\"arr\" marker-end=\"url(#arrow)\"/>\n```",
+      "zh": "*连接器*（无标签 - 从源 + 目标中可以清楚地看出含义）：\n````svg\n<line x1 =“200”y1 =“76”x2 =“200”y2 =“120”class =“arr”marker-end =“url（#arrow）”/>\n````",
+      "ok": true
+    },
+    {
+      "original": "*Neutral node* (gray, for start/end/generic steps): use `class=\"box\"` for auto-themed fill/stroke, and default text classes.",
+      "zh": "*中性节点*（灰色，用于开始/结束/通用步骤）：使用 `class=\"box\"` 进行自动主题填充/描边和默认文本类。",
+      "ok": true
+    },
+    {
+      "original": "Make all nodes clickable by default — wrap in `<g class=\"node\" onclick=\"sendPrompt('...')\">`. The hover effect is built in.",
+      "zh": "使所有节点默认可点击 - 用 `<g class=\"node\" onclick=\"sendPrompt('...')\">` 包裹起来。内置悬停效果。",
+      "ok": true
+    },
+    {
+      "original": "#### Structural diagram",
+      "zh": "####结构图",
+      "ok": true
+    },
+    {
+      "original": "For concepts where physical or logical containment matters — things inside other things.",
+      "zh": "对于物理或逻辑包含很重要的概念——事物内部的事物。",
+      "ok": true
+    },
+    {
+      "original": "**When to use**: The explanation depends on *where* processes happen. Examples: how a cell works (organelles inside a cell), how a file system works (blocks inside inodes inside partitions), how a building's HVAC works (ducts inside floors inside a building), how a CPU cache hierarchy works (L1 inside core, L2 shared).",
+      "zh": "**何时使用**：解释取决于进程发生的*地点。示例：单元如何工作（单元内的细胞器）、文件系统如何工作（分区内 inode 内的块）、建筑物的 HVAC 如何工作（建筑物内楼层内的管道）、CPU 缓存层次结构如何工作（核心内的 L1、共享的 L2）。",
+      "ok": true
+    },
+    {
+      "original": "**Core idea**: Large rounded rects are containers. Smaller rects inside them are regions or sub-structures. Text labels describe what happens in each region. Arrows show flow between regions or from external inputs/outputs.",
+      "zh": "**核心思想**：大的圆形矩形是容器。其中较小的矩形是区域或子结构。文本标签描述了每个区域发生的情况。箭头显示区域之间或外部输入/输出的流量。",
+      "ok": true
+    },
+    {
+      "original": "**Container rules**:\n- Outermost container: large rounded rect, rx=20-24, lightest fill (50 stop), 0.5px stroke (600 stop). Label at top-left inside, 14px bold.\n- Inner regions: medium rounded rects, rx=8-12, next shade fill (100-200 stop). Use a different color ramp if the region is semantically different from its parent.\n- 20px minimum padding inside every container — text and inner regions must not touch the container edges.\n- Max 2-3 nesting levels. Deeper nesting gets unreadable at 680px width.",
+      "zh": "**容器规则**：\n- 最外面的容器：大圆角矩形，rx=20-24，最轻的填充（50 停止），0.5 像素描边（600 停止）。标签位于左上角内侧，14 像素粗体。\n- 内部区域：中等圆形矩形，rx=8-12，下一个阴影填充（100-200 停止）。如果该区域在语义上与其父区域不同，则使用不同的色带。\n- 每个容器内的最小填充量为 20 像素 - 文本和内部区域不得接触容器边缘。\n- 最多 2-3 层嵌套。更深的嵌套在 680 像素宽度下变得不可读。",
+      "ok": true
+    },
+    {
+      "original": "**Layout**:\n- Place inner regions side by side within the container, with 16px+ gap between them.\n- External inputs (sunlight, water, data, requests) sit outside the container with arrows pointing in.\n- External outputs sit outside with arrows pointing out.\n- Keep external labels short — one word or a short phrase. Details go in the prose between diagrams.",
+      "zh": "**布局**：\n- 将内部区域并排放置在容器内，它们之间有 16px+ 的间隙。\n- 外部输入（阳光、水、数据、请求）位于容器外部，箭头指向内部。\n- 外部输出位于外部，箭头指向外面。\n- 保持外部标签简短——一个词或一个短语。细节体现在图表之间的散文中。",
+      "ok": true
+    },
+    {
+      "original": "**What goes inside regions**: Text only — the region name (14px bold) and a short description of what happens there (12px). Don't put flowchart-style boxes inside regions. Don't draw illustrations or icons inside.",
+      "zh": "**区域内部的内容**：仅文本 - 区域名称（14 像素粗体）和对该区域发生的情况的简短描述（12 像素）。不要将流程图样式的框放在区域内。请勿在内部绘制插图或图标。",
+      "ok": true
+    },
+    {
+      "original": "**Structural container example** (library branch with two side-by-side regions, an internal labeled arrow, and an external input). ViewBox 700x320, horizontal layout, color classes handle both light and dark mode — no `<style>` block:\n```svg\n<defs>\n  <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">\n    <path d=\"M2 1L8 5L2 9\" fill=\"none\" stroke=\"context-stroke\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </marker>\n</defs>\n<!-- Outer container -->\n<g class=\"c-green\">\n  <rect x=\"120\" y=\"30\" width=\"560\" height=\"260\" rx=\"20\" stroke-width=\"0.5\"/>\n  <text class=\"th\" x=\"400\" y=\"62\" text-anchor=\"middle\">Library branch</text>\n  <text class=\"ts\" x=\"400\" y=\"80\" text-anchor=\"middle\">Main floor</text>\n</g>\n<!-- Inner: Circulation desk -->\n<g class=\"c-teal\">\n  <rect x=\"150\" y=\"100\" width=\"220\" height=\"160\" rx=\"12\" stroke-width=\"0.5\"/>\n  <text class=\"th\" x=\"260\" y=\"130\" text-anchor=\"middle\">Circulation desk</text>\n  <text class=\"ts\" x=\"260\" y=\"148\" text-anchor=\"middle\">Checkouts, returns</text>\n</g>\n<!-- Inner: Reading room -->\n<g class=\"c-amber\">\n  <rect x=\"450\" y=\"100\" width=\"210\" height=\"160\" rx=\"12\"",
+      "zh": "**结构容器示例**（具有两个并排区域的库分支、一个内部标记箭头和一个外部输入）。 ViewBox 700x320，水平布局，颜色类处理浅色和深色模式 - 没有 `<style>` 块：\n````svg\n<定义>\n  <marker id =“arrow”viewBox =“0 0 10 10”refX =“8”refY =“5”markerWidth =“6”markerHeight =“6”orient =“auto-start-reverse”>\n    <路径d =“M2 1L8 5L2 9”填充=“无”笔画=“上下文笔画”笔划宽度=“1.5”笔划线帽=“圆形”笔划线连接=“圆形”/>\n  </标记>\n</defs>\n<!-- 外容器 -->\n<g class=\"c-green\">\n  <矩形x =“120”y =“30”宽度=“560”高度=“260”rx =“20”笔画宽度=“0.5”/>\n  <text class=\"th\" x=\"400\" y=\"62\" text-anchor=\"middle\">图书馆分支</text>\n  <text class=\"ts\" x=\"400\" y=\"80\" text-anchor=\"middle\">主楼层</text>\n</g>\n<!-- 内部：流通台 -->\n<g class=\"c-青色\">\n  <矩形x =“150”y =“100”宽度=“220”高度=“160”rx =“12”笔画宽度=“0.5”/>\n  <text class=\"th\" x=\"260\" y=\"130\" text-anchor=\"middle\">流通台</text>\n  <text class=\"ts\" x=\"260\" y=\"148\" text-anchor=\"middle\">结账、退货</text>\n</g>\n<!-- 内部：阅览室 -->\n<g class=\"c-amber\">\n  <矩形x =“450”y =“100”宽度=“210”高度=“160”rx =“12”",
+      "ok": true
+    },
+    {
+      "original": "stroke-width=\"0.5\"/>\n  <text class=\"th\" x=\"555\" y=\"130\" text-anchor=\"middle\">Reading room</text>\n  <text class=\"ts\" x=\"555\" y=\"148\" text-anchor=\"middle\">Seating, reference</text>\n</g>\n<!-- Arrow between inner boxes with label -->\n<text class=\"ts\" x=\"410\" y=\"175\" text-anchor=\"middle\">Books</text>\n<line x1=\"370\" y1=\"185\" x2=\"448\" y2=\"185\" class=\"arr\" marker-end=\"url(#arrow)\"/>\n<!-- External input: New acq. — text vertically aligned with arrow -->\n<text class=\"ts\" x=\"40\" y=\"185\" text-anchor=\"middle\">New acq.</text>\n<line x1=\"75\" y1=\"185\" x2=\"118\" y2=\"185\" class=\"arr\" marker-end=\"url(#arrow)\"/>\n```",
+      "zh": "笔画宽度=“0.5”/>\n  <text class=\"th\" x=\"555\" y=\"130\" text-anchor=\"middle\">阅览室</text>\n  <text class=\"ts\" x=\"555\" y=\"148\" text-anchor=\"middle\">座位，参考</text>\n</g>\n<!-- 带标签的内框之间的箭头 -->\n<text class=\"ts\" x=\"410\" y=\"175\" text-anchor=\"middle\">书籍</text>\n<line x1 =“370”y1 =“185”x2 =“448”y2 =“185”class =“arr”marker-end =“url（#arrow）”/>\n<!-- 外部输入：新采集。 — 文本与箭头垂直对齐 -->\n<text class=\"ts\" x=\"40\" y=\"185\" text-anchor=\"middle\">新获取。</text>\n<line x1 =“75”y1 =“185”x2 =“118”y2 =“185”class =“arr”marker-end =“url（#arrow）”/>\n````",
+      "ok": true
+    },
+    {
+      "original": "**Color in structural diagrams**: Nested regions need distinct ramps — `c-{ramp}` classes resolve to fixed fill/stroke stops, so the same class on parent and child gives identical fills and flattens the hierarchy. Pick a *related* ramp for inner structures (e.g. Green for the library envelope, Teal for the circulation desk inside it) and a *contrasting* ramp for a region that does something functionally different (e.g. Amber for the reading room). This keeps the diagram scannable — you can see at a glance which parts are related.",
+      "zh": "**结构图中的颜色**：嵌套区域需要不同的渐变 - `c-{ramp}` 类解析为固定的填充/描边停止点，因此父级和子级上的同一类提供相同的填充并展平层次结构。为内部结构选择一个“相关”坡道（例如，图书馆信封为绿色，内部流通台为青色），为功能不同的区域选择一个“对比”坡道（例如，阅览室为琥珀色）。这使得图表易于浏览——您一眼就能看出哪些部分是相关的。",
+      "ok": true
+    },
+    {
+      "original": "**Database schemas / ERDs — use mermaid.js, not SVG.** A schema table is a header plus N field rows plus typed columns plus crow's-foot connectors. That is a text-layout problem and hand-placing it in SVG fails the same way every time. mermaid.js `erDiagram` does layout, cardinality, and connector routing for free. ERDs only; everything else stays in SVG.",
+      "zh": "**数据库模式/ERD — 使用 mermaid.js，而不是 SVG。** 模式表是一个标题加上 N 个字段行加上类型列加上鱼尾连接器。这是一个文本布局问题，手动将其放入 SVG 中每次都会以同样的方式失败。 mermaid.js `erDiagram` 免费进行布局、基数和连接器路由。仅 ERD；其他一切都保留在 SVG 中。",
+      "ok": true
+    },
+    {
+      "original": "```\nerDiagram\n  USERS ||--o{ POSTS : writes\n  POSTS ||--o{ COMMENTS : has\n  USERS {\n    uuid id PK\n    string email\n    timestamp created_at\n  }\n  POSTS {\n    uuid id PK\n    uuid user_id FK\n    string title\n  }\n```",
+      "zh": "````\ner图\n  用户 ||--o{ 帖子 : 写入\n  帖子 ||--o{ 评论：有\n  用户{\n    uuid id PK\n    字符串电子邮件\n    时间戳创建时间\n  }\n  帖子{\n    uuid id PK\n    uuid user_id FK\n    字符串标题\n  }\n````",
+      "ok": true
+    },
+    {
+      "original": "Use `imagine_html` for ERDs. Import and initialize in a `<script type=\"module\">`. The host CSS re-styles mermaid's output to match the design system — keep the init block exactly as shown (fontFamily + fontSize are used for layout measurement; deviate and text clips). After rendering, replace sharp-cornered entity `<path>` elements with rounded `<rect rx=\"8\">` to match the design system, and strip borders from attribute rows (only the outer container and header row keep visible borders — alternating fill colors separate the rows):\n```html\n<style>\n#erd svg.erDiagram .divider path { stroke-opacity: 0.5; }\n#erd svg.erDiagram .row-rect-odd path,\n#erd svg.erDiagram .row-rect-odd rect,\n#erd svg.erDiagram .row-rect-even path,\n#erd svg.erDiagram .row-rect-even rect { stroke: none !important; }\n</style>\n<div id=\"erd\"></div>\n<script type=\"module\">\nimport mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';\nconst dark = matchMedia('(prefers-color-scheme: dark)').matches;\nawait document.fonts.ready;\nmermaid.initialize({\n  startOnLoad: false,\n  theme: 'base',\n  fontFamily: '\"Anthropic Sans\", sans-serif',\n  themeVariables: {\n    darkMode: dark,\n    fontSize: '13px',\n    fontFamily:",
+      "zh": "对 ERD 使用“imagine_html”。在 `<script type=\"module\">` 中导入并初始化。主机 CSS 重新设计 mermaid 的输出以匹配设计系统 - 保持 init 块与所示完全相同（fontFamily + fontSize 用于布局测量；偏差和文本剪辑）。渲染后，将尖角实体“<path>”元素替换为圆角“<rect rx=\"8\">”以匹配设计系统，并从属性行中去除边框（只有外部容器和标题行保留可见边框 - 交替填充颜色将行分开）：\n````html\n<风格>\n#erd svg.erDiagram .divider 路径 { 描边不透明度：0.5； }\n#erd svg.erDiagram .row-rect-奇数路径，\n#erd svg.erDiagram .行-矩形-奇数矩形，\n#erd svg.erDiagram .row-rect-even 路径，\n#erd svg.erDiagram .row-rect-even 矩形 { 笔划：无！重要； }\n</风格>\n<div id=\"erd\"></div>\n<脚本类型=“模块”>\n从 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs' 导入美人鱼；\nconst dark = matchMedia('(首选颜色方案：深色)').matches;\n等待文档.fonts.ready；\n美人鱼.初始化({\n  开始加载：假，\n  主题：“基地”，\n  fontFamily: '\"Anthropic Sans\", sans-serif',\n  主题变量：{\n    黑暗模式：黑暗，\n    字体大小：'13px'，\n    字体系列：",
+      "ok": true
+    },
+    {
+      "original": "'\"Anthropic Sans\", sans-serif',\n    lineColor: dark ? '#9c9a92' : '#73726c',\n    textColor: dark ? '#c2c0b6' : '#3d3d3a',\n  },\n});\nconst { svg } = await mermaid.render('erd-svg', `erDiagram\n  USERS ||--o{ POSTS : writes\n  POSTS ||--o{ COMMENTS : has`);\ndocument.getElementById('erd').innerHTML = svg;",
+      "zh": "'“Anthropic Sans”，无衬线'，\n    线条颜色：深色？ '#9c9a92': '#73726c',\n    文字颜色：深色？ '#c2c0b6' : '#3d3d3a',\n  },\n});\nconst { svg } =等待 mermaid.render('erd-svg', `erDiagram\n  用户 ||--o{ 帖子 : 写入\n  帖子 ||--o{ 评论 : 有`);\ndocument.getElementById('erd').innerHTML = svg;",
+      "ok": true
+    },
+    {
+      "original": "// Round only the outermost entity box corners (not internal row stripes)\ndocument.querySelectorAll('#erd svg.erDiagram .node').forEach(node => {\n  const firstPath = node.querySelector('path[d]');\n  if (!firstPath) return;\n  const d = firstPath.getAttribute('d');\n  const nums = d.match(/-?[\\d.]+/g)?.map(Number);\n  if (!nums || nums.length < 8) return;\n  const xs = [nums[0], nums[2], nums[4], nums[6]];\n  const ys = [nums[1], nums[3], nums[5], nums[7]];\n  const x = Math.min(...xs), y = Math.min(...ys);\n  const w = Math.max(...xs) - x, h = Math.max(...ys) - y;\n  const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');\n  rect.setAttribute('x', x); rect.setAttribute('y', y);\n  rect.setAttribute('width', w); rect.setAttribute('height', h);\n  rect.setAttribute('rx', '8');\n  for (const a of ['fill', 'stroke', 'stroke-width', 'class', 'style']) {\n    if (firstPath.hasAttribute(a)) rect.setAttribute(a, firstPath.getAttribute(a));\n  }\n  firstPath.replaceWith(rect);\n});",
+      "zh": "// 仅圆化最外面的实体框角（而不是内部行条纹）\ndocument.querySelectorAll('#erd svg.erDiagram .node').forEach(node => {\n  const firstPath = node.querySelector('path[d]');\n  if (!firstPath) 返回；\n  const d = firstPath.getAttribute('d');\n  const nums = d.match(/-?[\\d.]+/g)?.map(Number);\n  if (!nums || nums.length < 8) return;\n  const xs = [nums[0], nums[2], nums[4], nums[6]];\n  const ys = [nums[1], nums[3], nums[5], nums[7]];\n  const x = Math.min(...xs), y = Math.min(...ys);\n  const w = Math.max(...xs) - x, h = Math.max(...ys) - y;\n  const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');\n  rect.setAttribute('x', x); rect.setAttribute('y', y);\n  rect.setAttribute('宽度', w); rect.setAttribute('高度', h);\n  rect.setAttribute('rx', '8');\n  for (const a of ['填充', '描边', '描边宽度', '类', '样式']) {\n    if (firstPath.hasAttribute(a)) rect.setAttribute(a,firstPath.getAttribute(a));\n  }\n  FirstPath.replaceWith（矩形）；\n});",
+      "ok": true
+    },
+    {
+      "original": "// Strip borders from attribute rows (mermaid v11: .row-rect-odd / .row-rect-even)\ndocument.querySelectorAll('#erd svg.erDiagram .row-rect-odd path, #erd svg.erDiagram .row-rect-even path').forEach(p => {\n  p.setAttribute('stroke', 'none');\n});\n</script>\n```",
+      "zh": "// 去除属性行的边框 (mermaid v11: .row-rect-odd / .row-rect-even)\ndocument.querySelectorAll('#erd svg.erDiagram .row-rect-奇数路径, #erd svg.erDiagram .row-rect-偶数路径').forEach(p => {\n  p.setAttribute('笔划', '无');\n});\n</脚本>\n````",
+      "ok": true
+    },
+    {
+      "original": "Works identically for `classDiagram` — swap the diagram source; init stays the same.",
+      "zh": "与“classDiagram”的工作方式相同——交换图表源； init 保持不变。",
+      "ok": true
+    },
+    {
+      "original": "#### Illustrative diagram",
+      "zh": "#### 说明图",
+      "ok": true
+    },
+    {
+      "original": "For building *intuition*. The subject might be physical (an engine, a lung) or completely abstract (attention, recursion, gradient descent) — what matters is that a spatial drawing conveys the mechanism better than labelled boxes would. These are the diagrams that make someone go \"oh, *that's* what it's doing.\"",
+      "zh": "用于建立*直觉*。主题可能是物理的（引擎、肺）或完全抽象的（注意力、递归、梯度下降）——重要的是空间绘图比标记的盒子更好地传达了机制。这些图表会让人们感到“哦，*这就是*它在做什么”。",
+      "ok": true
+    },
+    {
+      "original": "**Two flavours, same rules:**\n- **Physical subjects** get drawn as simplified versions of themselves. Cross-sections, cutaways, schematics. A water heater is a tank with a burner underneath. A lung is a branching tree in a cavity. You're drawing *the thing*, stylised.\n- **Abstract subjects** get drawn as *spatial metaphors*. You're inventing a shape for something that doesn't have one — but the shape should make the mechanism obvious. A transformer is a stack of horizontal slabs with a bright thread of attention connecting tokens across layers. A hash function is a funnel scattering items into a row of buckets. The call stack is literally a stack of frames growing and shrinking. Embeddings are dots clustering in space. The metaphor *is* the explanation.",
+      "zh": "**两种口味，相同的规则：**\n- **物理主题**被绘制为它们自身的简化版本。横截面、剖面图、示意图。热水器是一个下面有燃烧器的水箱。肺是腔内的一棵分枝树。你正在画*东西*，风格化。\n- **抽象主题**被绘制为*空间隐喻*。你正在为一些没有形状的东西发明一种形状——但形状应该使机制变得显而易见。变压器是一堆水平板，有一条明亮的注意力线连接各层的令牌。哈希函数是将项目分散到一行桶中的漏斗。调用堆栈实际上是不断增长和收缩的帧堆栈。嵌入是空间中聚集的点。隐喻*就是*解释。",
+      "ok": true
+    },
+    {
+      "original": "This is the most ambitious diagram type and the one Claude is best at. Lean into it. Use colour for intensity (a hot attention weight glows amber, a cold one stays gray). Use repetition for scale (many small circles = many parameters).",
+      "zh": "这是最雄心勃勃的图表类型，也是克劳德最擅长的一种。倚靠它。使用颜色来强调强度（热点关注权重呈琥珀色，冷关注权重保持灰色）。使用重复进行缩放（许多小圆圈=许多参数）。",
+      "ok": true
+    },
+    {
+      "original": "**Prefer interactive over static.** A static cross-section is a good answer; a cross-section you can *operate* is a great one. The decision rule: if the real-world system has a control, give the diagram that control. A water heater has a thermostat — so give the user a slider that shifts the hot/cold boundary, a toggle that fires the burner and animates convection currents. An LLM has input tokens — let the user click one and watch the attention weights re-fan. A cache has a hit rate — let them drag it and watch latency change. Reach for `imagine_html` with inline SVG first; only fall back to static `imagine_svg` when there's genuinely nothing to twiddle.",
+      "zh": "**相比静态，更喜欢交互式。** 静态横截面是一个很好的答案；您可以“操作”的横截面是一个很好的横截面。决策规则：如果现实世界的系统有控制，则给出该控制的图表。热水器有一个恒温器——所以给用户一个可以移动热/冷边界的滑块，一个可以点燃燃烧器并产生对流的开关。法学硕士有输入标记——让用户点击一个标记，然后观察注意力权重的重新分布。缓存具有命中率——让他们拖动它并观察延迟变化。首先使用内联 SVG 获取“imagine_html”；只有当确实没有什么可调整的时候，才会回到静态的“imagine_svg”。",
+      "ok": true
+    },
+    {
+      "original": "**When NOT to use**: The user is asking for a *reference*, not an *intuition*. \"What are the components of a transformer\" wants labelled boxes — that's a structural diagram. \"Walk me through our CI pipeline\" wants sequential steps — that's a flowchart. Also skip this when the metaphor would be arbitrary rather than revealing: drawing \"the cloud\" as a cloud shape or \"microservices\" as little houses doesn't teach anything about how they work. If the drawing doesn't make the *mechanism* clearer, don't draw it.",
+      "zh": "**何时不使用**：用户要求的是*参考*，而不是*直觉*。 “变压器由哪些部件组成”需要贴​​上标签的盒子——这是一个结构图。 “引导我完成我们的 CI 管道”需要连续的步骤——这就是流程图。当这个隐喻是任意的而不是揭示性的时候，也可以跳过这一点：将“云”绘制为云形状或将“微服务”绘制为小房子，并不能说明它们是如何工作的。如果绘图不能使*机制*更清晰，就不要绘制它。",
+      "ok": true
+    },
+    {
+      "original": "**Fidelity ceiling**: These are schematics, not illustrations. Every shape should read at a glance. If a `<path>` needs more than ~6 segments to draw, simplify it. A tank is a rounded rect, not a Bézier portrait of a tank. A flame is three triangles, not a fire. Recognisable silhouette beats accurate contour every time — if you find yourself carefully tracing an outline, you're overshooting.",
+      "zh": "**保真天花板**：这些是示意图，而不是插图。每个形状都应该一目了然。如果`<path>`需要超过~6个段来绘制，请简化它。坦克是一个圆角矩形，而不是坦克的贝塞尔肖像。火焰是三个三角形，而不是火。可识别的轮廓每次都胜过准确的轮廓——如果你发现自己仔细地描绘轮廓，那么你就太过分了。",
+      "ok": true
+    },
+    {
+      "original": "**Core principle**: Draw the mechanism, not a diagram *about* the mechanism. Spatial arrangement carries the meaning; labels annotate. A good illustrative diagram works with the labels removed.",
+      "zh": "**核心原则**：画出机制，而不是“关于”机制的图表。空间布局承载意义；标签注释。一个好的说明图可以在去掉标签的情况下使用。",
+      "ok": true
+    },
+    {
+      "original": "**What changes from flowchart/structural rules**:",
+      "zh": "**流程图/结构规则有何变化**：",
+      "ok": true
+    },
+    {
+      "original": "- **Shapes are freeform.** Use `<path>`, `<ellipse>`, `<circle>`, `<polygon>`, and curved lines to represent real forms. A water tank is a tall rect with rounded bottom. A heart valve is a pair of curved paths. A circuit trace is a thin polyline. You are not limited to rounded rects.\n- **Layout follows the subject's geometry**, not a grid. If the thing is tall and narrow (a water heater, a thermometer), the diagram is tall and narrow. If it's wide and flat (a PCB, a geological cross-section), the diagram is wide. Let the subject dictate proportions within the 680px viewBox width.\n- **Color encodes intensity**, not category. For physical subjects: warm ramps (amber, coral, red) = heat/energy/pressure, cool ramps (blue, teal) = cold/calm, gray = inert structure. For abstract subjects: warm = active/high-weight/attended-to, cool or gray = dormant/low-weight/ignored. A user should be able to glance at the diagram and see *where the action is* without reading a single label.\n- **Layering and overlap are encouraged — for shapes.** Unlike flowcharts where boxes must never overlap, illustrative diagrams can layer shapes for depth — a pipe entering a tank, attention lines fanning through la",
+      "zh": "- **形状是自由的。** 使用 `<path>`、`<ellipse>`、`<circle>`、`<polygon>` 和曲线来表示真实形状。水箱是一个圆底的高矩形。心脏瓣膜是一对弯曲的路径。电路走线是一条细折线。您不仅限于圆角矩形。\n- **布局遵循主体的几何形状**，而不是网格。如果东西又高又窄（热水器、温度计），那么图表就是又高又窄。如果它又宽又平（PCB、地质横截面），那么图表就是宽的。让主题决定 680 像素 viewBox 宽度内的比例。\n- **颜色编码强度**，而不是类别。对于物理对象：温暖的斜坡（琥珀色、珊瑚色、红色）=热/能量/压力，冷的斜坡（蓝色、青色）=寒冷/平静，灰色=惰性结构。对于抽象主题：暖色 = 活跃/高权重/关注，冷色或灰色 = 休眠/低权重/被忽略。用户应该能够浏览图表并了解“操作在哪里”，而无需阅读任何标签。\n- **鼓励分层和重叠 - 对于形状。** 与流程图中的框决不能重叠不同，说明图可以根据深度对形状进行分层 - 管道进入水箱，注意力线在 La 中呈扇形散开",
+      "ok": true
+    },
+    {
+      "original": "yers, insulation wrapping a chamber. Use z-ordering (later in source = on top) deliberately.\n- **Text is the exception — never let a stroke cross it.** The overlap permission is for shapes only. Every label needs 8px of clear air between its baseline/cap-height and the nearest stroke. Don't solve this with a background rect — solve it by *placing the text somewhere else*. Labels go in the quiet regions: above the drawing, below it, in the margin with a leader line, or in the gap between two fans of lines. If there is no quiet region, the drawing is too dense — remove something or split into two diagrams.\n- **Small shape-based indicators are allowed** when they communicate physical state. Triangles for flames. Circles for bubbles or particles. Wavy lines for steam or heat radiation. Parallel lines for vibration. These aren't decoration — they tell the user what's happening physically. Keep them simple: basic SVG primitives, not detailed illustrations.\n- **One gradient per diagram is permitted** — the only exception to the global no-gradients rule — and only to show a *continuous* physical property across a region (temperature stratification in a tank, pressure drop along a pipe, con",
+      "zh": "是的，绝缘体包裹着一个室。有意使用 z 排序（稍后在源 = 顶部）。\n- **文本是例外 - 切勿让笔划穿过它。** 重叠权限仅适用于形状。每个标签的基线/大写高度和最近的笔划之间需要 8 像素的间隙。不要用背景矩形来解决这个问题——通过*将文本放在其他地方*来解决它。标签位于安静区域：图形上方、图形下方、带有引导线的页边距或两条线扇之间的间隙中。如果没有安静区域，则绘图太密集 - 删除某些内容或分成两个图。\n- **当它们传达物理状态时，允许使用基于小型形状的指示器**。三角形代表火焰。气泡或颗粒的圆圈。用于蒸汽或热辐射的波浪线。振动的平行线。这些不是装饰——它们告诉用户物理上发生了什么。保持简单：基本的 SVG 基元，而不是详细的插图。\n- **每个图表允许一个梯度** - 全局无梯度规则的唯一例外 - 并且仅显示整个区域的*连续*物理属性（储罐中的温度分层、沿管道的压降、con",
+      "ok": true
+    },
+    {
+      "original": "centration in a solution). It must be a single `<linearGradient>` between exactly two stops from the same colour ramp. No radial gradients, no multi-stop fades, no gradient-as-aesthetic. If two stacked flat-fill rects communicate the same thing, do that instead.\n- **Animation is permitted for interactive HTML versions.** Use CSS `@keyframes` animating only `transform` and `opacity`. Keep loops under ~2s, and wrap every animation in `@media (prefers-reduced-motion: no-preference)` so it's opt-out by default. Animations should show how the system *behaves* — convection current, rotation, flow — not just move for the sake of moving. No physics engines or heavy libraries.",
+      "zh": "溶液中的中心）。它必须是同一颜色渐变的恰好两个停止点之间的单个“<线性渐变>”。没有径向渐变，没有多级淡入淡出，没有渐变美学。如果两个堆叠的平面填充矩形传达相同的信息，则这样做。\n- **交互式 HTML 版本允许使用动画。** 使用 CSS `@keyframes` 仅对 `transform` 和 `opacity` 进行动画处理。将循环保持在约 2 秒以下，并将每个动画包装在“@media (prefers-reduced-motion: no-preference)”中，以便默认情况下选择退出。动画应该展示系统如何*行为*——对流、旋转、流动——而不仅仅是为了移动而移动。没有物理引擎或沉重的库。",
+      "ok": true
+    },
+    {
+      "original": "All core rules still apply (viewBox 680px, dark mode mandatory, 14/12px text, pre-built classes, arrow marker, clickable nodes).",
+      "zh": "所有核心规则仍然适用（viewBox 680px、强制深色模式、14/12px 文本、预构建类、箭头标记、可点击节点）。",
+      "ok": true
+    },
+    {
+      "original": "**Label placement**:\n- Place labels *outside* the drawn object when possible, with a thin leader line (0.5px dashed, `var(--t)` stroke) pointing to the relevant part. This keeps the illustration uncluttered.\n- For large internal zones (like temperature regions in a tank), labels can sit inside if there's ample clear space — minimum 20px from any edge.\n- External labels sit in the margin area or above/below the object. **Pick one side for labels and put them all there** — at 680px wide you don't have room for a drawing *and* label columns on both sides. Reserve at least 140px of horizontal margin on the label side. Labels on the left are the ones that clip: `text-anchor=\"end\"` extends leftward from x, and with multi-line callouts it's very easy to blow past x=0 without noticing. Default to right-side labels with `text-anchor=\"start\"` unless the subject's geometry forces otherwise. Use `class=\"ts\"` (12px) for callouts, `class=\"th\"` (14px medium) for major component names.",
+      "zh": "**标签放置**：\n- 尽可能将标签放置在绘制对象的*外部*，并用细引线（0.5px 虚线，`var(--t)` 笔划）指向相关部分。这使插图保持整洁。\n- 对于大型内部区域（例如水箱中的温度区域），如果有足够的净空间，标签可以位于内部 - 距离任何边缘至少 20 像素。\n- 外部标签位于边缘区域或对象上方/下方。 **选择一侧作为标签并将它们全部放在那里** - 在 680 像素宽时，您没有空间用于绘图 * 和 * 两侧的标签列。在标签一侧保留至少 140 像素的水平边距。左侧的标签是剪辑的标签： `text-anchor=\"end\"` 从 x 向左延伸，并且使用多行标注很容易在不注意的情况下超出 x=0。默认为带有 `text-anchor=\"start\"` 的右侧标签，除非主体的几何形状强制。使用 `class=\"ts\"` (12px) 作为标注，使用 `class=\"th\"` (14pxmedium) 作为主要组件名称。",
+      "ok": true
+    },
+    {
+      "original": "**Composition approach**:\n1. Start with the main object's silhouette — the largest shape, centered in the viewBox.\n2. Add internal structure: chambers, pipes, membranes, mechanical parts.\n3. Add external connections: pipes entering/exiting, arrows showing flow direction, labels for inputs and outputs.\n4. Add state indicators last: color fills showing temperature/pressure/concentration, small animated elements showing movement or energy.\n5. Leave generous whitespace around the object for labels — don't crowd annotations against the viewBox edges.",
+      "zh": "**构图方法**：\n1. 从主要对象的轮廓开始 - 最大的形状，位于 viewBox 的中心。\n2. 添加内部结构：腔室、管道、膜、机械部件。\n3. 添加外部连接：进入/退出的管道、显示流向的箭头、输入和输出的标签。\n4. 最后添加状态指示器：显示温度/压力/浓度的颜色填充，显示运动或能量的小动画元素。\n5. 在对象周围留出足够的空白作为标签——不要将注释挤在 viewBox 边缘。",
+      "ok": true
+    },
+    {
+      "original": "**Static vs interactive**: Static cutaways and cross-sections work best as pure `imagine_svg`. If the diagram benefits from controls — a slider that changes a temperature zone, buttons toggling between operating states, live readouts — use `imagine_html` with inline SVG for the drawing and HTML controls around it.",
+      "zh": "**静态与交互式**：静态剖面图和横截面作为纯粹的“imagine_svg”效果最好。如果图表受益于控件（改变温度区域的滑块、在操作状态之间切换的按钮、实时读数），请使用带有内联 SVG 的“imagine_html”和周围的 HTML 控件。",
+      "ok": true
+    },
+    {
+      "original": "**Illustrative diagram example** — interactive water heater cross-section with vivid physical-realism colors, animated convection currents, and controls. Uses `imagine_html` with inline SVG: a thermostat slider shifts the hot/cold gradient boundary, a heating toggle animates flames on/off and transitions convection to paused. viewBox is 680x560; tank occupies x=180..440, leaving 140px+ of right margin for labels. Smooth convection paths use `stroke-dasharray:5 5` at ~1.6s for a gentle flow feel. A warm-glow overlay on the hot zone pulses subtly when heating is on. Flame shapes use warm gradient fills and clean opacity transitions. Labels sit along the right margin with leader lines.\n```html\n<style>\n  @keyframes conv { to { stroke-dashoffset: -20; } }\n  @keyframes flicker { 0%,100%{opacity:1} 50%{opacity:.82} }\n  @keyframes glow { 0%,100%{opacity:.3} 50%{opacity:.6} }\n  .conv { stroke-dasharray:5 5; animation: conv var(--dur,1.6s) linear infinite; transition: opacity .5s; }\n  .conv.off { opacity:0; animation-play-state:paused; }\n  #flames path { transition: opacity .5s; }\n  #flames.off path { opacity:0; animation:none; }\n  #flames path:nth-child(odd)  { animation: flicker .6s ease-i",
+      "zh": "**说明图示例** — 交互式热水器横截面，具有生动的物理现实色彩、动画对流和控件。将“imagine_html”与内联 SVG 结合使用：恒温器滑块可移动热/冷梯度边界，加热开关可动画开/关火焰，并将对流转换为暂停。视图框为 680x560；坦克占据x=180..440，为标签留下140px+的右边距。平滑的对流路径在约 1.6 秒内使用“Stroke-dasharray:5 5”，以获得柔和的流动感。当加热开启时，热区上的暖光覆盖层会微妙地闪烁。火焰形状使用温暖的渐变填充和干净的不透明过渡。标签位于带有引导线的右侧边缘。\n````html\n<风格>\n  @keyframes conv { 至 { 笔划-dashoffset: -20; } }\n  @关键帧闪烁 { 0%,100%{不透明度:1} 50%{不透明度:.82} }\n  @keyframes 发光 { 0%,100%{不透明度:.3} 50%{不透明度:.6} }\n  .conv { 笔划-dasharray:5 5;动画： conv var(--dur,1.6s) 线性无限；过渡：不透明度0.5s； }\n  .conv.off { 不透明度：0;动画播放状态：暂停； }\n  #flames path { 过渡：不透明度 0.5s; }\n  #flames.off 路径 { 不透明度：0;动画：无； }\n  #flames 路径：nth-child(odd) { 动画：闪烁 .6s escape-i",
+      "ok": true
+    },
+    {
+      "original": "n-out infinite; }\n  #flames path:nth-child(even) { animation: flicker .8s ease-in-out infinite .15s; }\n  #warm-glow { animation: glow 3s ease-in-out infinite; transition: opacity .5s; }\n  #warm-glow.off { opacity:0; animation:none; }\n  .toggle-track { position:relative;width:32px;height:18px;background:var(--color-border-secondary);border-radius:9px;transition:background .2s;display:inline-block; }\n  .toggle-track:has(input:checked) { background:var(--color-text-info); }\n  #heat-toggle:checked + span { transform:translateX(14px); }\n</style>\n<svg width=\"100%\" viewBox=\"0 0 680 560\">\n  <defs>\n    <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"8\" refY=\"5\" markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\"><path d=\"M2 1L8 5L2 9\" fill=\"none\" stroke=\"context-stroke\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></marker>\n    <linearGradient id=\"tg\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\n      <stop id=\"gh\" offset=\"40%\" stop-color=\"#E8593C\" stop-opacity=\"0.45\"/>\n      <stop id=\"gc\" offset=\"40%\" stop-color=\"#3B8BD4\" stop-opacity=\"0.4\"/>\n    </linearGradient>\n    <linearGradient id=\"fg1\" x1=\"0\" y1=\"1\" x2=\"0\" y2=\"0\"><stop offset=\"0%\" stop-color=\"#E85D24\"/><stop offset=\"60%\"",
+      "zh": "n-输出无限； }\n  #flames path:nth-child(even) { 动画: 闪烁 .8s 缓入缓出无限 .15s; }\n  #warm-glow { 动画：发光 3s 缓入无限；过渡：不透明度0.5s； }\n  #warm-glow.off { 不透明度：0;动画：无； }\n  .toggle-track { 位置：相对；宽度：32px；高度：18px；背景：var（--color-border-secondary）；边框半径：9px；过渡：背景.2s；显示：内联块； }\n  .toggle-track:has(input:checked) { 背景:var(--color-text-info); }\n  #heat-toggle:checked + span { 变换:translateX(14px); }\n</风格>\n<svg width=\"100%\" viewBox=\"0 0 680 560\">\n  <定义>\n    <marker id =“arrow”viewBox =“0 0 10 10”refX =“8”refY =“5”markerWidth =“6”markerHeight =“6”orient =“auto-start-reverse”><path d =“M2 1L8 5L2 9”fill =“none”行程=“context-中风”行程宽度=“1.5”行程linecap =“圆形”行程linejoin =“圆形”/></marker>\n    <线性渐变 id=\"tg\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\n      <stop id=\"gh\" offset=\"40%\" stop-color=\"#E8593C\" stop-opacity=\"0.45\"/>\n      <stop id=\"gc\" offset=\"40%\" stop-color=\"#3B8BD4\" stop-opacity=\"0.4\"/>\n    </线性渐变>\n    <linearGradient id=\"fg1\" x1=\"0\" y1=\"1\" x2=\"0\" y2=\"0\"><stop offset=\"0%\" stop-color=\"#E85D24\"/><stop offset=\"60%\"",
+      "ok": true
+    },
+    {
+      "original": "stop-color=\"#F2A623\"/><stop offset=\"100%\" stop-color=\"#FCDE5A\"/></linearGradient>\n    <linearGradient id=\"fg2\" x1=\"0\" y1=\"1\" x2=\"0\" y2=\"0\"><stop offset=\"0%\" stop-color=\"#D14520\"/><stop offset=\"50%\" stop-color=\"#EF8B2C\"/><stop offset=\"100%\" stop-color=\"#F9CB42\"/></linearGradient>\n    <linearGradient id=\"pipe-h\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#D05538\" stop-opacity=\".25\"/><stop offset=\"100%\" stop-color=\"#D05538\" stop-opacity=\".08\"/></linearGradient>\n    <linearGradient id=\"pipe-c\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#3B8BD4\" stop-opacity=\".25\"/><stop offset=\"100%\" stop-color=\"#3B8BD4\" stop-opacity=\".08\"/></linearGradient>\n    <clipPath id=\"tc\"><rect x=\"180\" y=\"55\" width=\"260\" height=\"390\" rx=\"14\"/></clipPath>\n  </defs>\n  <!-- Tank fill -->\n  <g clip-path=\"url(#tc)\"><rect x=\"180\" y=\"55\" width=\"260\" height=\"390\" fill=\"url(#tg)\"/></g>\n  <!-- Warm glow overlay (pulses when heating) -->\n  <g clip-path=\"url(#tc)\"><rect id=\"warm-glow\" x=\"180\" y=\"55\" width=\"260\" height=\"160\" fill=\"#E8593C\" opacity=\".3\"/></g>\n  <!-- Tank shell (double stroke for solidity) -->\n  <rect x=\"180\" y=\"55\" width=\"260\" height=\"390\" rx=\"14\" fill=\"none\" stroke=\"var(--t)\"",
+      "zh": "stop-color=\"#F2A623\"/><stop offset=\"100%\" stop-color=\"#FCDE5A\"/></linearGradient>\n    <linearGradient id=\"fg2\" x1=\"0\" y1=\"1\" x2=\"0\" y2=\"0\"><stop offset=\"0%\" stop-color=\"#D14520\"/><stop offset=\"50%\" stop-color=\"#EF8B2C\"/><stop offset=\"100%\" stop-color=\"#F9CB42\"/></linearGradient>\n    <linearGradient id=\"pipe-h\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#D05538\" stop-opacity=\".25\"/><stop offset=\"100%\" stop-color=\"#D05538\" stop-opacity=\".08\"/></linearGradient>\n    <linearGradient id=\"pipe-c\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#3B8BD4\" stop-opacity=\".25\"/><stop offset=\"100%\" stop-color=\"#3B8BD4\" stop-opacity=\".08\"/></linearGradient>\n    <clipPath id=\"tc\"><rect x=\"180\" y=\"55\" width=\"260\" height=\"390\" rx=\"14\"/></clipPath>\n  </defs>\n  <!-- 水箱填充 -->\n  <g Clip-path=\"url(#tc)\"><rect x=\"180\" y=\"55\" width=\"260\" height=\"390\" fill=\"url(#tg)\"/></g>\n  <!-- 暖光覆盖层（加热时发出脉冲）-->\n  <g Clip-path=\"url(#tc)\"><rect id=\"warm-glow\" x=\"180\" y=\"55\" width=\"260\" height=\"160\" fill=\"#E8593C\" opacity=\".3\"/></g>\n  <!-- 坦克外壳（双冲程以保证坚固性）-->\n  <矩形x =“180”y =“55”宽度=“260”高度=“390”rx =“14”填充=“无”笔划=“var（--t）”",
+      "ok": true
+    },
+    {
+      "original": "stroke-width=\"2.5\" opacity=\".25\"/>\n  <rect x=\"180\" y=\"55\" width=\"260\" height=\"390\" rx=\"14\" fill=\"none\" stroke=\"var(--t)\" stroke-width=\"1\"/>\n  <!-- Hot pipe out (top right) -->\n  <rect x=\"370\" y=\"14\" width=\"16\" height=\"50\" rx=\"4\" fill=\"url(#pipe-h)\"/>\n  <path d=\"M378 14V55\" stroke=\"var(--t)\" stroke-width=\"3\" stroke-linecap=\"round\" fill=\"none\"/>\n  <!-- Cold pipe in + dip tube (top left) -->\n  <rect x=\"234\" y=\"14\" width=\"16\" height=\"50\" rx=\"4\" fill=\"url(#pipe-c)\"/>\n  <path d=\"M242 14V55\" stroke=\"var(--t)\" stroke-width=\"3\" stroke-linecap=\"round\" fill=\"none\"/>\n  <path d=\"M242 55V395\" stroke=\"var(--t)\" stroke-width=\"2.5\" stroke-linecap=\"round\" fill=\"none\" opacity=\".5\"/>\n  <!-- Convection currents (curved paths at different speeds) -->\n  <path class=\"conv\" style=\"--dur:1.6s\" fill=\"none\" stroke=\"#D05538\" stroke-width=\"1\" opacity=\".5\" d=\"M350 380C355 320,365 240,358 140Q355 110,340 100\"/>\n  <path class=\"conv\" style=\"--dur:2.1s\" fill=\"none\" stroke=\"#C04828\" stroke-width=\".8\" opacity=\".35\" d=\"M300 390C308 340,320 260,315 170Q312 130,298 115\"/>\n  <path class=\"conv\" style=\"--dur:2.6s\" fill=\"none\" stroke=\"#B05535\" stroke-width=\".7\" opacity=\".3\" d=\"M380 370C382 310,388 230,382 150Q378 120,365 110",
+      "zh": "描边宽度=“2.5”不透明度=“.25”/>\n  <矩形x =“180”y =“55”宽度=“260”高度=“390”rx =“14”填充=“无”笔画=“var（--t）”笔画宽度=“1”/>\n  <!-- 热管输出（右上角）-->\n  <矩形x =“370”y =“14”宽度=“16”高度=“50”rx =“4”填充=“url（#pipe-h）”/>\n  <路径d =“M378 14V55”笔画=“var（--t）”笔划宽度=“3”笔画线帽=“圆形”填充=“无”/>\n  <!-- 冷管 + 汲取管（左上）-->\n  <矩形x =“234”y =“14”宽度=“16”高度=“50”rx =“4”填充=“url（#pipe-c）”/>\n  <路径d =“M242 14V55”笔画=“var（--t）”笔画宽度=“3”笔画线帽=“圆形”填充=“无”/>\n  <路径d =“M242 55V395”笔画=“var（--t）”笔划宽度=“2.5”笔画线帽=“圆形”填充=“无”不透明度=“.5”/>\n  <!-- 对流电流（不同速度下的弯曲路径）-->\n  <路径类=“转换”样式=“--dur：1.6s”填充=“无”笔画=“#D05538”笔划宽度=“1”不透明度=“.5”d=“M350 380C355 320,365 240,358 140Q355 110,340 100”/>\n  <路径类=“转换”样式=“--dur：2.1s”填充=“无”笔画=“#C04828”笔画宽度=“.8”不透明度=“.35”d=“M300 390C308 340,320 260,315 170Q312 130,298 115”/>\n  <路径类=“转换”样式=“--dur：2.6s”填充=“无”笔划=“#B05535”笔画宽度=“.7”不透明度=“.3”d=“M380 370C382 310,388 230,382 150Q378 120,365 110",
+      "ok": true
+    },
+    {
+      "original": "\"/>\n  <!-- Burner bar -->\n  <rect x=\"188\" y=\"454\" width=\"244\" height=\"5\" rx=\"2\" fill=\"var(--t)\" opacity=\".6\"/>\n  <rect x=\"220\" y=\"462\" width=\"180\" height=\"6\" rx=\"3\" fill=\"var(--t)\" opacity=\".3\"/>\n  <!-- Flames (gradient-filled organic shapes) -->\n  <g id=\"flames\">\n    <path d=\"M240,454Q248,430 252,438Q256,424 260,454Z\" fill=\"url(#fg1)\"/>\n    <path d=\"M278,454Q285,426 290,434Q295,418 300,454Z\" fill=\"url(#fg2)\"/>\n    <path d=\"M320,454Q328,428 333,436Q338,420 342,454Z\" fill=\"url(#fg1)\"/>\n    <path d=\"M360,454Q367,430 371,438Q375,422 380,454Z\" fill=\"url(#fg2)\"/>\n    <path d=\"M398,454Q404,434 408,440Q412,428 416,454Z\" fill=\"url(#fg1)\"/>\n  </g>\n  <!-- Labels (right margin) -->\n  <g class=\"node\" onclick=\"sendPrompt('How does hot water exit the tank?')\">\n    <line class=\"leader\" x1=\"386\" y1=\"34\" x2=\"468\" y2=\"70\"/><circle cx=\"386\" cy=\"34\" r=\"2\" fill=\"var(--t)\"/>\n    <text class=\"ts\" x=\"474\" y=\"74\">Hot water outlet</text></g>\n  <g class=\"node\" onclick=\"sendPrompt('How does the cold water inlet work?')\">\n    <line class=\"leader\" x1=\"250\" y1=\"34\" x2=\"468\" y2=\"140\"/><circle cx=\"250\" cy=\"34\" r=\"2\" fill=\"var(--t)\"/>\n    <text class=\"ts\" x=\"474\" y=\"144\">Cold water inlet</text></g>\n  <g class=\"node",
+      "zh": "”/>\n  <!-- 燃烧器栏 -->\n  <rect x=\"188\" y=\"454\" width=\"244\" height=\"5\" rx=\"2\" fill=\"var(--t)\" opacity=\".6\"/>\n  <rect x=\"220\" y=\"462\" width=\"180\" height=\"6\" rx=\"3\" fill=\"var(--t)\" opacity=\".3\"/>\n  <!-- 火焰（渐变填充的有机形状）-->\n  <g id=\"火焰\">\n    <路径 d=\"M240,454Q248,430 252,438Q256,424 260,454Z\" fill=\"url(#fg1)\"/>\n    <路径 d=\"M278,454Q285,426 290,434Q295,418 300,454Z\" fill=\"url(#fg2)\"/>\n    <路径 d=\"M320,454Q328,428 333,436Q338,420 342,454Z\" fill=\"url(#fg1)\"/>\n    <路径 d=\"M360,454Q367,430 371,438Q375,422 380,454Z\" fill=\"url(#fg2)\"/>\n    <路径 d=\"M398,454Q404,434 408,440Q412,428 416,454Z\" fill=\"url(#fg1)\"/>\n  </g>\n  <!-- 标签（右边距）-->\n  <g class=\"node\" onclick=\"sendPrompt('热水如何从水箱中排出？')\">\n    <line class=\"leader\" x1=\"386\" y1=\"34\" x2=\"468\" y2=\"70\"/><circle cx=\"386\" cy=\"34\" r=\"2\" fill=\"var(--t)\"/>\n    <text class=\"ts\" x=\"474\" y=\"74\">热水出口</text></g>\n  <g class=\"node\" onclick=\"sendPrompt('冷水入口如何工作？')\">\n    <line class=\"leader\" x1=\"250\" y1=\"34\" x2=\"468\" y2=\"140\"/><circle cx=\"250\" cy=\"34\" r=\"2\" fill=\"var(--t)\"/>\n    <text class=\"ts\" x=\"474\" y=\"144\">冷水入口</text></g>\n  <g 类=“节点",
+      "ok": true
+    },
+    {
+      "original": "\" onclick=\"sendPrompt('What does the dip tube do?')\">\n    <line class=\"leader\" x1=\"250\" y1=\"260\" x2=\"468\" y2=\"220\"/><circle cx=\"250\" cy=\"260\" r=\"2\" fill=\"var(--t)\"/>\n    <text class=\"ts\" x=\"474\" y=\"224\">Dip tube</text></g>\n  <g class=\"node\" onclick=\"sendPrompt('What does the thermostat control?')\">\n    <line class=\"leader\" x1=\"440\" y1=\"250\" x2=\"468\" y2=\"300\"/><circle cx=\"440\" cy=\"250\" r=\"2\" fill=\"var(--t)\"/>\n    <text class=\"ts\" x=\"474\" y=\"304\">Thermostat</text></g>\n  <g class=\"node\" onclick=\"sendPrompt('What material is the tank made of?')\">\n    <line class=\"leader\" x1=\"440\" y1=\"380\" x2=\"468\" y2=\"380\"/><circle cx=\"440\" cy=\"380\" r=\"2\" fill=\"var(--t)\"/>\n    <text class=\"ts\" x=\"474\" y=\"384\">Tank wall</text></g>\n  <g class=\"node\" onclick=\"sendPrompt('How does the gas burner heat water?')\">\n    <line class=\"leader\" x1=\"432\" y1=\"454\" x2=\"468\" y2=\"454\"/><circle cx=\"432\" cy=\"454\" r=\"2\" fill=\"var(--t)\"/>\n    <text class=\"ts\" x=\"474\" y=\"458\">Heating element</text></g>\n</svg>\n<div style=\"display:flex;align-items:center;gap:16px;margin:12px 0 0;font-size:13px;color:var(--color-text-secondary)\">\n  <label style=\"display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none\">\n    <span",
+      "zh": "\" onclick=\"sendPrompt('汲取管有什么作用？')\">\n    <line class=\"leader\" x1=\"250\" y1=\"260\" x2=\"468\" y2=\"220\"/><circle cx=\"250\" cy=\"260\" r=\"2\" fill=\"var(--t)\"/>\n    <text class=\"ts\" x=\"474\" y=\"224\">汲取管</text></g>\n  <g class=\"node\" onclick=\"sendPrompt('恒温器控制什么？')\">\n    <line class=\"leader\" x1=\"440\" y1=\"250\" x2=\"468\" y2=\"300\"/><circle cx=\"440\" cy=\"250\" r=\"2\" fill=\"var(--t)\"/>\n    <text class=\"ts\" x=\"474\" y=\"304\">恒温器</text></g>\n  <g class=\"node\" onclick=\"sendPrompt('水箱是由什么材料制成的？')\">\n    <line class=\"leader\" x1=\"440\" y1=\"380\" x2=\"468\" y2=\"380\"/><circle cx=\"440\" cy=\"380\" r=\"2\" fill=\"var(--t)\"/>\n    <text class=\"ts\" x=\"474\" y=\"384\">罐壁</text></g>\n  <g class=\"node\" onclick=\"sendPrompt('燃气燃烧器如何加热水？')\">\n    <line class=\"leader\" x1=\"432\" y1=\"454\" x2=\"468\" y2=\"454\"/><circle cx=\"432\" cy=\"454\" r=\"2\" fill=\"var(--t)\"/>\n    <text class=\"ts\" x=\"474\" y=\"458\">加热元件</text></g>\n</svg>\n<div style=\"display:flex;align-items:center;gap:16px;margin:12px 0 0;font-size:13px;color:var(--color-text-secondary)\">\n  <label style=\"display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none\">\n    <跨度",
+      "ok": true
+    },
+    {
+      "original": "class=\"toggle-track\">\n      <input type=\"checkbox\" id=\"heat-toggle\" checked onchange=\"toggleHeat(this.checked)\" style=\"position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;margin:0\">\n      <span style=\"position:absolute;top:2px;left:2px;width:14px;height:14px;background:#fff;border-radius:50%;transition:transform .2s;pointer-events:none\"></span>\n    </span>\n    Heating\n  </label>\n  <span>Thermostat</span>\n  <input type=\"range\" id=\"temp-slider\" min=\"10\" max=\"90\" value=\"40\" style=\"flex:1\" oninput=\"setTemp(this.value)\">\n  <span id=\"temp-label\" style=\"min-width:36px;text-align:right\">40%</span>\n</div>\n<script>\nfunction setTemp(v) {\n  document.getElementById('gh').setAttribute('offset', v+'%');\n  document.getElementById('gc').setAttribute('offset', v+'%');\n  document.getElementById('temp-label').textContent = v+'%';\n}\nfunction toggleHeat(on) {\n  document.getElementById('flames').classList.toggle('off', !on);\n  document.getElementById('warm-glow').classList.toggle('off', !on);\n  document.querySelectorAll('.conv').forEach(p => p.classList.toggle('off', !on));\n}\n</script>\n```",
+      "zh": "类=“切换轨道”>\n      <input type=\"checkbox\" id=\"heat-toggle\" selected onchange=\"toggleHeat(this.checked)\" style=\"position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;margin:0\">\n      <span style=\"position:absolute;top:2px;left:2px;width:14px;height:14px;background:#fff;border-radius:50%;transition:transform .2s;pointer-events:none\"></span>\n    </span>\n    供暖\n  </标签>\n  <span>恒温器</span>\n  <input type=\"range\" id=\"temp-slider\" min=\"10\" max=\"90\" value=\"40\" style=\"flex:1\" oninput=\"setTemp(this.value)\">\n  <span id=\"temp-label\" style=\"min-width:36px;text-align:right\">40%</span>\n</div>\n<脚本>\n函数 setTemp(v) {\n  document.getElementById('gh').setAttribute('offset', v+'%');\n  document.getElementById('gc').setAttribute('offset', v+'%');\n  document.getElementById('temp-label').textContent = v+'%';\n}\n函数toggleHeat(on) {\n  document.getElementById('flames').classList.toggle('off', !on);\n  document.getElementById('warm-glow').classList.toggle('off', !on);\n  document.querySelectorAll('.conv').forEach(p => p.classList.toggle('off', !on));\n}\n</脚本>\n````",
+      "ok": true
+    },
+    {
+      "original": "**Illustrative example — abstract subject** (attention in a transformer). Same rules, no physical object. A row of tokens at the bottom, one query token highlighted, weight-scaled lines fanning to every other token. Caption sits below the fan — clear of every stroke — not inside it.\n```svg\n<rect class=\"c-purple\" x=\"60\" y=\"40\"  width=\"560\" height=\"26\" rx=\"6\" stroke-width=\"0.5\"/>\n<rect class=\"c-purple\" x=\"60\" y=\"80\"  width=\"560\" height=\"26\" rx=\"6\" stroke-width=\"0.5\"/>\n<rect class=\"c-purple\" x=\"60\" y=\"120\" width=\"560\" height=\"26\" rx=\"6\" stroke-width=\"0.5\"/>\n<text class=\"ts\" x=\"72\" y=\"57\" >Layer 3</text>\n<text class=\"ts\" x=\"72\" y=\"97\" >Layer 2</text>\n<text class=\"ts\" x=\"72\" y=\"137\">Layer 1</text>",
+      "zh": "**说明性示例 - 抽象主题**（变压器中的注意力）。相同的规则，没有物理对象。底部有一排标记，其中一个查询标记突出显示，权重线呈扇形散开到每个其他标记。标题位于扇形下方——远离每一笔画——而不是扇形内部。\n````svg\n<rect class =“c-purple”x =“60”y =“40”宽度=“560”高度=“26”rx =“6”笔画宽度=“0.5”/>\n<rect class =“c-purple”x =“60”y =“80”宽度=“560”高度=“26”rx =“6”笔画宽度=“0.5”/>\n<rect class =“c-purple”x =“60”y =“120”宽度=“560”高度=“26”rx =“6”笔画宽度=“0.5”/>\n<text class=\"ts\" x=\"72\" y=\"57\" >第 3 层</text>\n<text class=\"ts\" x=\"72\" y=\"97\" >第 2 层</text>\n<text class=\"ts\" x=\"72\" y=\"137\">第 1 层</text>",
+      "ok": true
+    },
+    {
+      "original": "<line stroke=\"#EF9F27\" stroke-linecap=\"round\" x1=\"340\" y1=\"230\" x2=\"116\" y2=\"146\" stroke-width=\"1\"   opacity=\"0.25\"/>\n<line stroke=\"#EF9F27\" stroke-linecap=\"round\" x1=\"340\" y1=\"230\" x2=\"228\" y2=\"146\" stroke-width=\"1.5\" opacity=\"0.4\"/>\n<line stroke=\"#EF9F27\" stroke-linecap=\"round\" x1=\"340\" y1=\"230\" x2=\"340\" y2=\"146\" stroke-width=\"4\"   opacity=\"1.0\"/>\n<line stroke=\"#EF9F27\" stroke-linecap=\"round\" x1=\"340\" y1=\"230\" x2=\"452\" y2=\"146\" stroke-width=\"2.5\" opacity=\"0.7\"/>\n<line stroke=\"#EF9F27\" stroke-linecap=\"round\" x1=\"340\" y1=\"230\" x2=\"564\" y2=\"146\" stroke-width=\"1\"   opacity=\"0.2\"/>",
+      "zh": "<line描边=“#EF9F27”描边-linecap=“圆形”x1=“340”y1=“230”x2=“116”y2=“146”描边宽度=“1”不透明度=“0.25”/>\n<line描边=“#EF9F27”描边-linecap=“圆形”x1=“340”y1=“230”x2=“228”y2=“146”描边宽度=“1.5”不透明度=“0.4”/>\n<line描边=“#EF9F27”描边-linecap=“圆形”x1=“340”y1=“230”x2=“340”y2=“146”描边宽度=“4”不透明度=“1.0”/>\n<line描边=“#EF9F27”描边-linecap=“圆形”x1=“340”y1=“230”x2=“452”y2=“146”描边宽度=“2.5”不透明度=“0.7”/>\n<line描边=“#EF9F27”描边-linecap=“圆形”x1=“340”y1=“230”x2=“564”y2=“146”描边宽度=“1”不透明度=“0.2”/>",
+      "ok": true
+    },
+    {
+      "original": "<g class=\"node\" onclick=\"sendPrompt('What do the attention weights mean?')\">\n  <rect class=\"c-gray\"  x=\"80\"  y=\"230\" width=\"72\" height=\"36\" rx=\"6\" stroke-width=\"0.5\"/>\n  <rect class=\"c-gray\"  x=\"192\" y=\"230\" width=\"72\" height=\"36\" rx=\"6\" stroke-width=\"0.5\"/>\n  <rect class=\"c-amber\" x=\"304\" y=\"230\" width=\"72\" height=\"36\" rx=\"6\" stroke-width=\"1\"/>\n  <rect class=\"c-gray\"  x=\"416\" y=\"230\" width=\"72\" height=\"36\" rx=\"6\" stroke-width=\"0.5\"/>\n  <rect class=\"c-gray\"  x=\"528\" y=\"230\" width=\"72\" height=\"36\" rx=\"6\" stroke-width=\"0.5\"/>\n  <text class=\"ts\" x=\"116\" y=\"252\" text-anchor=\"middle\">the</text>\n  <text class=\"ts\" x=\"228\" y=\"252\" text-anchor=\"middle\">cat</text>\n  <text class=\"th\" x=\"340\" y=\"252\" text-anchor=\"middle\">sat</text>\n  <text class=\"ts\" x=\"452\" y=\"252\" text-anchor=\"middle\">on</text>\n  <text class=\"ts\" x=\"564\" y=\"252\" text-anchor=\"middle\">the</text>\n</g>",
+      "zh": "<g class=\"node\" onclick=\"sendPrompt('注意力权重是什么意思？')\">\n  <rect class =“c-gray”x =“80”y =“230”宽度=“72”高度=“36”rx =“6”笔画宽度=“0.5”/>\n  <rect class =“c-gray”x =“192”y =“230”宽度=“72”高度=“36”rx =“6”笔画宽度=“0.5”/>\n  <rect class =“c-amber”x =“304”y =“230”宽度=“72”高度=“36”rx =“6”笔划宽度=“1”/>\n  <rect class =“c-gray”x =“416”y =“230”宽度=“72”高度=“36”rx =“6”笔画宽度=“0.5”/>\n  <rect class =“c-gray”x =“528”y =“230”宽度=“72”高度=“36”rx =“6”笔画宽度=“0.5”/>\n  <text class=\"ts\" x=\"116\" y=\"252\" text-anchor=\"middle\"></text>\n  <text class=\"ts\" x=\"228\" y=\"252\" text-anchor=\"middle\">猫</text>\n  <text class=\"th\" x=\"340\" y=\"252\" text-anchor=\"middle\">坐</text>\n  <text class=\"ts\" x=\"452\" y=\"252\" text-anchor=\"middle\">上</text>\n  <text class=\"ts\" x=\"564\" y=\"252\" text-anchor=\"middle\"></text>\n</g>",
+      "ok": true
+    },
+    {
+      "original": "<text class=\"ts\" x=\"340\" y=\"300\" text-anchor=\"middle\">Line thickness = attention weight from \"sat\" to each token</text>\n```",
+      "zh": "<text class=\"ts\" x=\"340\" y=\"300\" text-anchor=\"middle\">线条粗细 = 从“sat”到每个标记的注意力权重</text>\n````",
+      "ok": true
+    },
+    {
+      "original": "Note what's *not* here: no boxes labelled \"multi-head attention\", no arrows labelled \"Q/K/V\". Those belong in the structural diagram. This one is about the *feeling* of attention — one token looking at every other token with varying intensity.",
+      "zh": "请注意这里*不*的内容：没有标有“多头注意力”的框，没有标有“Q/K/V”的箭头。这些属于结构图中。这是关于关注的“感觉”——一个标记以不同的强度关注其他标记。",
+      "ok": true
+    },
+    {
+      "original": "These are starting points, not ceilings. For the water heater: add a thermostat slider, animate the convection current, toggle heating vs standby. For the attention diagram: let the user click any token to become the query, scrub through layers, animate the weights settling. The goal is always to *show* how the thing works, not just *label* it.",
+      "zh": "这些是起点，而不是天花板。对于热水器：添加恒温器滑块、设置对流动画、切换加热与待机。对于注意力图：让用户单击任何标记以成为查询，浏览各层，动画权重稳定。我们的目标始终是“展示”事物的工作原理，而不仅仅是为其“贴上标签”。",
+      "ok": true
+    },
+    {
+      "original": "## UI components",
+      "zh": "## 用户界面组件",
+      "ok": true
+    },
+    {
+      "original": "### Aesthetic\nFlat, clean, white surfaces. Minimal 0.5px borders. Generous whitespace. No gradients, no shadows (except functional focus rings). Everything should feel native to claude.ai — like it belongs on the page, not embedded from somewhere else.",
+      "zh": "### 审美\n平坦、干净、白色的表面。最小 0.5 像素边框。慷慨的空白。无渐变，无阴影（功能性对焦环除外）。一切都应该是 claude.ai 原生的——就像它属于页面，而不是从其他地方嵌入。",
+      "ok": true
+    },
+    {
+      "original": "### Tokens\n- Borders: always `0.5px solid var(--color-border-tertiary)` (or `-secondary` for emphasis)\n- Corner radius: `var(--border-radius-md)` for most elements, `var(--border-radius-lg)` for cards\n- Cards: white bg (`var(--color-background-primary)`), 0.5px border, radius-lg, padding 1rem 1.25rem\n- Form elements (input, select, textarea, button, range slider) are pre-styled — write bare tags. Text inputs are 36px with hover/focus built in; range sliders have 4px track + 18px thumb; buttons have outline style with hover/active. Only add inline styles to override (e.g., different width).\n- Buttons: pre-styled with transparent bg, 0.5px border-secondary, hover bg-secondary, active scale(0.98). If it triggers sendPrompt, append a ↗ arrow.\n- **Round every displayed number.** JS float math leaks artifacts — `0.1 + 0.2` gives `0.30000000000000004`, `7 * 1.1` gives `7.700000000000001`. Any number that reaches the screen (slider readouts, stat card values, axis labels, data-point labels, tooltips, computed totals) must go through `Math.round()`, `.toFixed(n)`, or `Intl.NumberFormat`. Pick the precision that makes sense for the context — integers for counts, 1–2 decimals for percentages,",
+      "zh": "### 代币\n- 边框：始终为“0.5px Solid var(--color-border-tertiary)”（或“-secondary”以强调）\n- 角半径：对于大多数元素为“var(--border-radius-md)”，对于卡片为“var(--border-radius-lg)”\n- 卡片：白色 bg (`var(--color-background-primary)`)、0.5px 边框、半径-lg、填充 1rem 1.25rem\n- 表单元素（输入、选择、文本区域、按钮、范围滑块）已预先设置样式 - 编写裸标签。文本输入为 36px，内置悬停/焦点；范围滑块有 4px 轨道 + 18px 拇指；按钮具有悬停/活动的轮廓样式。仅添加要覆盖的内联样式（例如，不同的宽度）。\n- 按钮：预先设置透明背景、0.5px 辅助边框、悬停背景辅助、活动比例 (0.98)。如果它触发 sendPrompt，请附加一个 ↗ 箭头。\n- **对每个显示的数字进行舍入。** JS 浮点数学泄漏工件 - `0.1 + 0.2` 给出 `0.30000000000000004`，`7 * 1.1` 给出 `7.700000000000001`。到达屏幕的任何数字（滑块读数、统计卡值、轴标签、数据点标签、工具提示、计算总计）都必须经过“Math.round()”、“.toFixed(n)”或“Intl.NumberFormat”。选择对上下文有意义的精度 - 计数用整数，百分比用 1-2 位小数，",
+      "ok": true
+    },
+    {
+      "original": "`toLocaleString()` for currency. For range sliders, also set `step=\"1\"` (or step=\"0.1\" etc.) so the input itself emits round values.\n- Spacing: use rem for vertical rhythm (1rem, 1.5rem, 2rem), px for component-internal gaps (8px, 12px, 16px)\n- Box-shadows: none, except `box-shadow: 0 0 0 Npx` focus rings on inputs",
+      "zh": "货币的“toLocaleString()”。对于范围滑块，还设置 `step=\"1\"`（或 step=\"0.1\" 等），以便输入本身发出舍入值。\n- 间距：使用 rem 表示垂直节奏（1rem、1.5rem、2rem），使用 px 表示组件内部间隙（8px、12px、16px）\n- 盒子阴影：无，除了输入上的“盒子阴影：0 0 0 Npx”聚焦环",
+      "ok": true
+    },
+    {
+      "original": "### Metric cards\nFor summary numbers (revenue, count, percentage) — surface card with muted 13px label above, 24px/500 number below. `background: var(--color-background-secondary)`, no border, `border-radius: var(--border-radius-md)`, padding 1rem. Use in grids of 2-4 with `gap: 12px`. Distinct from raised cards (which have white bg + border).",
+      "zh": "### 公制卡\n对于汇总数字（收入、计数、百分比）——表面卡片，上方带有静音 13 像素标签，下方带有 24 像素/500 数字。 `背景：var(--color-background-secondary)`，无边框，`边框半径：var(--border-radius-md)`，填充 1rem。在 2-4 个网格中使用，并带有“间隙：12px”。与凸起的卡片（具有白色背景+边框）不同。",
+      "ok": true
+    },
+    {
+      "original": "### Layout\n- Editorial (explanatory content): no card wrapper, prose flows naturally\n- Card (bounded objects like a contact record, receipt): single raised card wraps the whole thing\n- Don't put tables here — output them as markdown in your response text",
+      "zh": "### 布局\n- 社论（解释性内容）：没有卡片包装，散文自然流畅\n- 卡片（有界的物体，如联系记录、收据）：单张凸起的卡片包裹着整个东西\n- 不要将表格放在这里 - 在响应文本中将它们作为降价输出",
+      "ok": true
+    },
+    {
+      "original": "**Grid overflow:** `grid-template-columns: 1fr` has `min-width: auto` by default — children with large min-content push the column past the container. Use `minmax(0, 1fr)` to clamp.",
+      "zh": "**网格溢出：** `grid-template-columns: 1fr` 默认情况下具有 `min-width: auto` — 具有较大最小内容的子级将列推过容器。使用 `minmax(0, 1fr)` 来钳制。",
+      "ok": true
+    },
+    {
+      "original": "**Table overflow:** Tables with many columns auto-expand past `width: 100%` if cell contents exceed it. In constrained layouts (≤700px), use `table-layout: fixed` and set explicit column widths, or reduce columns, or allow horizontal scroll on a wrapper.",
+      "zh": "**表格溢出：** 如果单元格内容超过“宽度：100%”，具有许多列的表格会自动扩展。在受限布局（≤700px）中，使用“table-layout：fixed”并设置显式列宽，或减少列，或允许包装器上的水平滚动。",
+      "ok": true
+    },
+    {
+      "original": "### Mockup presentation\nContained mockups — mobile screens, chat threads, single cards, modals, small UI components — should sit on a background surface (`var(--color-background-secondary)` container with `border-radius: var(--border-radius-lg)` and padding, or a device frame) so they don't float naked on the widget canvas. Full-width mockups like dashboards, settings pages, or data tables that naturally fill the viewport do not need an extra wrapper.",
+      "zh": "### 样机演示\n包含的模型——移动屏幕、聊天线程、单卡、模态、小型 UI 组件——应该位于背景表面（带有“border-radius: var(--border-radius-lg)”和 padding 的“var(--color-background-secondary)”容器或设备框架），这样它们就不会裸露在小部件画布上。全宽模型（例如仪表板、设置页面或自然填充视口的数据表）不需要额外的包装器。",
+      "ok": true
+    },
+    {
+      "original": "### 1. Interactive explainer — learn how something works\n*\"Explain how compound interest works\" / \"Teach me about sorting algorithms\"*",
+      "zh": "### 1. 交互式解释器 — 了解某些东西是如何工作的\n*“解释复利如何运作”/“教我排序算法”*",
+      "ok": true
+    },
+    {
+      "original": "Use `imagine_html` for the interactive controls — sliders, buttons, live state displays, charts. Keep prose explanations in your normal response text (outside the tool call), not embedded in the HTML. No card wrapper. Whitespace is the container.",
+      "zh": "使用“imagine_html”作为交互式控件——滑块、按钮、实时状态显示、图表。将散文解释保留在正常响应文本中（在工具调用之外），而不是嵌入 HTML 中。没有卡片包装。空白是容器。",
+      "ok": true
+    },
+    {
+      "original": "```html\n<div style=\"display: flex; align-items: center; gap: 12px; margin: 0 0 1.5rem;\">\n  <label style=\"font-size: 14px; color: var(--color-text-secondary);\">Years</label>\n  <input type=\"range\" min=\"1\" max=\"40\" value=\"20\" id=\"years\" style=\"flex: 1;\" />\n  <span style=\"font-size: 14px; font-weight: 500; min-width: 24px;\" id=\"years-out\">20</span>\n</div>",
+      "zh": "````html\n<div style=\"display:flex;align-items:center;gap:12px;margin:0 0 1.5rem;\">\n  <label style=\"font-size: 14px; color: var(--color-text-secondary);\">年份</label>\n  <input type=\"range\" min=\"1\" max=\"40\" value=\"20\" id=\"years\" style=\"flex: 1;\" />\n  <span style=\"font-size: 14px; font-weight: 500; min-width: 24px;\" id=\"years-out\">20</span>\n</div>",
+      "ok": true
+    },
+    {
+      "original": "<div style=\"display: flex; align-items: baseline; gap: 8px; margin: 0 0 1.5rem;\">\n  <span style=\"font-size: 14px; color: var(--color-text-secondary);\">£1,000 →</span>\n  <span style=\"font-size: 24px; font-weight: 500;\" id=\"result\">£3,870</span>\n</div>",
+      "zh": "<div style=\"display:flex;align-items:baseline;gap:8px;margin:0 0 1.5rem;\">\n  <span style=\"font-size: 14px; color: var(--color-text-secondary);\">1,000 英镑 →</span>\n  <span style=\"font-size: 24px; font-weight: 500;\" id=\"结果\">3,870 英镑</span>\n</div>",
+      "ok": true
+    },
+    {
+      "original": "<div style=\"margin: 2rem 0; position: relative; height: 240px;\">\n  <canvas id=\"chart\"></canvas>\n</div>\n```",
+      "zh": "<div style=\"margin: 2rem 0; 位置: 相对; 高度: 240px;\">\n  <canvas id=\"图表\"></canvas>\n</div>\n````",
+      "ok": true
+    },
+    {
+      "original": "Use `sendPrompt()` to let users ask follow-ups: `sendPrompt('What if I increase the rate to 10%?')`",
+      "zh": "使用 `sendPrompt()` 让用户询问后续问题： `sendPrompt('What if I raise the rates to 10%?')`",
+      "ok": true
+    },
+    {
+      "original": "### 2. Compare options — decision making\n*\"Compare pricing and features of these products\" / \"Help me choose between React and Vue\"*",
+      "zh": "### 2. 比较选项——决策\n*“比较这些产品的定价和功能”/“帮我在 React 和 Vue 之间进行选择”*",
+      "ok": true
+    },
+    {
+      "original": "Use `imagine_html`. Side-by-side card grid for options. Highlight differences with semantic colors. Interactive elements for filtering or weighting.",
+      "zh": "使用“imagine_html”。并排的卡片网格用于选项。用语义颜色突出显示差异。用于过滤或加权的交互式元素。",
+      "ok": true
+    },
+    {
+      "original": "- Use `repeat(auto-fit, minmax(160px, 1fr))` for responsive columns\n- Each option in a card. Use badges for key differentiators.\n- Add `sendPrompt()` buttons: `sendPrompt('Tell me more about the Pro plan')`\n- Don't put comparison tables inside this tool — output them as regular markdown tables in your response text instead. The tool is for the visual card grid only.\n- When one option is recommended or \"most popular\", accent its card with `border: 2px solid var(--color-border-info)` only (2px is deliberate — the only exception to the 0.5px rule, used to accent featured items) — keep the same background and border as the other cards. Add a small badge (e.g. \"Most popular\") above or inside the card header using `background: var(--color-background-info); color: var(--color-text-info); font-size: 12px; padding: 4px 12px; border-radius: var(--border-radius-md)`.",
+      "zh": "- 对响应式列使用 `repeat(auto-fit, minmax(160px, 1fr))`\n- 卡片中的每个选项。使用徽章作为关键差异化因素。\n- 添加 `sendPrompt()` 按钮：`sendPrompt('告诉我有关 Pro 计划的更多信息')`\n- 不要将比较表放入此工具中 - 将它们作为常规降价表输出到您的响应文本中。该工具仅适用于视觉卡网格。\n- 当一个选项被推荐或“最受欢迎”时，仅使用“border: 2px Solid var(--color-border-info)”来强调其卡片（2px是故意的——0.5px规则的唯一例外，用于强调特色项目）——保持与其他卡片相同的背景和边框。使用 `background: var(--color-background-info); 在卡片标题上方或内部添加一个小徽章（例如“最受欢迎”）；颜色：var(--颜色文本信息);字体大小：12px；内边距：4px 12px；边框半径：var(--border-radius-md)`。",
+      "ok": true
+    },
+    {
+      "original": "### 3. Data record — bounded UI object\n*\"Show me a Salesforce contact card\" / \"Create a receipt for this order\"*",
+      "zh": "### 3.数据记录——有界UI对象\n*“向我显示 Salesforce 联系卡”/“为此订单创建收据”*",
+      "ok": true
+    },
+    {
+      "original": "Use `imagine_html`. Wrap the entire thing in a single raised card. All content is sans-serif since it's pure UI. Use an avatar/initials circle for people (see example below).",
+      "zh": "使用“imagine_html”。将整个事物包裹在一张凸起的卡片中。所有内容都是无衬线的，因为它是纯粹的用户界面。使用人物头像/姓名缩写圆圈（参见下面的示例）。",
+      "ok": true
+    },
+    {
+      "original": "```html\n<div style=\"background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px solid var(--color-border-tertiary); padding: 1rem 1.25rem;\">\n  <div style=\"display: flex; align-items: center; gap: 12px; margin-bottom: 16px;\">\n    <div style=\"width: 44px; height: 44px; border-radius: 50%; background: var(--color-background-info); display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 14px; color: var(--color-text-info);\">MR</div>\n    <div>\n      <p style=\"font-weight: 500; font-size: 15px; margin: 0;\">Maya Rodriguez</p>\n      <p style=\"font-size: 13px; color: var(--color-text-secondary); margin: 0;\">VP of Engineering</p>\n    </div>\n  </div>\n  <div style=\"border-top: 0.5px solid var(--color-border-tertiary); padding-top: 12px;\">\n    <table style=\"width: 100%; font-size: 13px;\">\n      <tr><td style=\"color: var(--color-text-secondary); padding: 4px 0;\">Email</td><td style=\"text-align: right; padding: 4px 0; color: var(--color-text-info);\">m.rodriguez@acme.com</td></tr>\n      <tr><td style=\"color: var(--color-text-secondary); padding: 4px 0;\">Phone</td><td style=\"text-align: right; padding: 4px 0;\">+1 (415) 555-017",
+      "zh": "````html\n<div style=\"background: var(--color-background-primary); border-radius: var(--border-radius-lg); border: 0.5px Solid var(--color-border-tertiary); padding: 1rem 1.25rem;\">\n  <div style=\"display: flex;align-items:center;gap:12px;margin-bottom:16px;\">\n    <div style=\"width: 44px; height: 44px; border-radius: 50%; background: var(--color-background-info); display: flex;align-items: center; justify-content: center; font-weight: 500; font-size: 14px; color: var(--color-text-info);\">MR</div>\n    <div>\n      <p style=\"font-weight: 500; font-size: 15px; margin: 0;\">玛雅·罗德里格斯</p>\n      <p style=\"font-size: 13px; color: var(--color-text-secondary); margin: 0;\">工程副总裁</p>\n    </div>\n  </div>\n  <div style=\"border-top: 0.5pxsolid var(--color-border-tertiary); padding-top: 12px;\">\n    <table style=\"width: 100%; font-size: 13px;\">\n      <tr><td style=\"color: var(--color-text-secondary); padding: 4px 0;\">电子邮件</td><td style=\"text-align: right; padding: 4px 0; color: var(--color-text-info);\">m.rodriguez@acme.com</td></tr>\n      <tr><td style=\"color: var(--color-text-secondary); padding: 4px 0;\">电话</td><td style=\"text-align: right; padding: 4px 0;\">+1 (415) 555-017",
+      "ok": true
+    },
+    {
+      "original": "2</td></tr>\n    </table>\n  </div>\n</div>\n```",
+      "zh": "2</td></tr>\n    </表>\n  </div>\n</div>\n````",
+      "ok": true
+    },
+    {
+      "original": "## Charts (Chart.js)\n```html\n<div style=\"position: relative; width: 100%; height: 300px;\">\n  <canvas id=\"myChart\"></canvas>\n</div>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js\"></script>\n<script>\n  new Chart(document.getElementById('myChart'), {\n    type: 'bar',\n    data: { labels: ['Q1','Q2','Q3','Q4'], datasets: [{ label: 'Revenue', data: [12,19,8,15] }] },\n    options: { responsive: true, maintainAspectRatio: false }\n  });\n</script>\n```",
+      "zh": "## 图表 (Chart.js)\n````html\n<div style=\"位置：相对；宽度：100%；高度：300px；\">\n  <canvas id=\"myChart\"></canvas>\n</div>\n<脚本 src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js\"></脚本>\n<脚本>\n  新图表（document.getElementById（'myChart'），{\n    类型：'酒吧'，\n    数据：{ 标签：['Q1'，'Q2'，'Q3'，'Q4']，数据集：[{ 标签：'收入'，数据：[12,19,8,15] }] }，\n    选项：{ 响应式：true，maintainAspectRatio：false }\n  });\n</脚本>\n````",
+      "ok": true
+    },
+    {
+      "original": "**Chart.js rules**:\n- Canvas cannot resolve CSS variables. Use hardcoded hex or Chart.js defaults.\n- Wrap `<canvas>` in `<div>` with explicit `height` and `position: relative`.\n- **Canvas sizing**: set height ONLY on the wrapper div, never on the canvas element itself. Use position: relative on the wrapper and responsive: true, maintainAspectRatio: false in Chart.js options. Never set CSS height directly on canvas — this causes wrong dimensions, especially for horizontal bar charts.\n- For horizontal bar charts: wrapper div height should be at least (number_of_bars * 40) + 80 pixels.\n- Load UMD build via `<script src=\"https://cdnjs.cloudflare.com/ajax/libs/...\">` — sets `window.Chart` global. Follow with plain `<script>` (no `type=\"module\"`).\n- Multiple charts: use unique IDs (`myChart1`, `myChart2`). Each gets its own canvas+div pair.\n- For bubble and scatter charts: bubble radii extend past their center points, so points near axis boundaries get clipped. Pad the scale range — set `scales.y.min` and `scales.y.max` ~10% beyond your data range (same for x). Or use `layout: { padding: 20 }` as a blunt fallback.\n- Chart.js auto-skips x-axis labels when they'd overlap. If you have ≤12 c",
+      "zh": "**Chart.js 规则**：\n- Canvas 无法解析 CSS 变量。使用硬编码的十六进制或 Chart.js 默认值。\n- 使用明确的“height”和“position:relative”将“<canvas>”包裹在“<div>”中。\n- **画布大小调整**：仅在包装器 div 上设置高度，而不是在画布元素本身上设置高度。在包装器上使用position:relative，并在Chart.js选项中使用responsive:true,maintainAspectRatio:false。切勿直接在画布上设置 CSS 高度 - 这会导致尺寸错误，尤其是对于水平条形图。\n- 对于水平条形图：包装器 div 高度应至少为 (number_of_bars * 40) + 80 像素。\n- 通过 `<script src=\"https://cdnjs.cloudflare.com/ajax/libs/...\">` 加载 UMD 构建 — 将 `window.Chart` 设置为全局。后面跟着普通的 `<script>` （没有 `type=\"module\"`）。\n- 多个图表：使用唯一 ID（“myChart1”、“myChart2”）。每个都有自己的 canvas+div 对。\n- 对于气泡图和散点图：气泡半径延伸超过其中心点，因此轴边界附近的点会被剪裁。填充比例范围 - 将 `scales.y.min` 和 `scales.y.max` 设置为超出数据范围约 10%（x 相同）。或者使用“layout: { padding: 20 }”作为生硬的后备。\n- Chart.js 在 x 轴标签重叠时自动跳过它们。如果您的 ≤12 c",
+      "ok": true
+    },
+    {
+      "original": "ategories and need all labels visible (waterfall, monthly series), set `scales.x.ticks: { autoSkip: false, maxRotation: 45 }` — missing labels make bars unidentifiable.",
+      "zh": "类别并且需要所有标签可见（瀑布、每月系列），设置 `scales.x.ticks: { autoSkip: false, maxRotation: 45 }` — 缺少标签会使条形无法识别。",
+      "ok": true
+    },
+    {
+      "original": "**Number formatting**: negative values are `-$5M` not `$-5M` — sign before currency symbol. Use a formatter: `(v) => (v < 0 ? '-' : '') + '$' + Math.abs(v) + 'M'`.",
+      "zh": "**数字格式**：负值是 `-$5M` 而不是 `$-5M` — 货币符号前的符号。使用格式化程序：`(v) => (v < 0 ? '-' : '') + '$' + Math.abs(v) + 'M'`。",
+      "ok": true
+    },
+    {
+      "original": "**Legends** — always disable Chart.js default and build custom HTML. The default uses round dots and no values; custom HTML gives small squares, tight spacing, and percentages:",
+      "zh": "**图例** — 始终禁用 Chart.js 默认值并构建自定义 HTML。默认使用圆点且无值；自定义 HTML 提供小方块、紧密间距和百分比：",
+      "ok": true
+    },
+    {
+      "original": "```js\nplugins: { legend: { display: false } }\n```",
+      "zh": "````js\n插件：{ 图例：{ 显示： false } }\n````",
+      "ok": true
+    },
+    {
+      "original": "```html\n<div style=\"display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 8px; font-size: 12px; color: var(--color-text-secondary);\">\n  <span style=\"display: flex; align-items: center; gap: 4px;\"><span style=\"width: 10px; height: 10px; border-radius: 2px; background: #3266ad;\"></span>Chrome 65%</span>\n  <span style=\"display: flex; align-items: center; gap: 4px;\"><span style=\"width: 10px; height: 10px; border-radius: 2px; background: #73726c;\"></span>Safari 18%</span>\n</div>\n```",
+      "zh": "````html\n<div style=\"显示：flex；flex-wrap：wrap；间隙：16px；margin-bottom：8px；字体大小：12px；颜色：var(--color-text-secondary);\">\n  <span style=\"display:flex;align-items:center;gap:4px;\"><spanstyle=\"width:10px;height:10px;border-radius:2px;background:#3266ad;\"></span>Chrome 65%</span>\n  <span style=\"display:flex;align-items:center;gap:4px;\"><spanstyle=\"width:10px;height:10px;border-radius:2px;background:#73726c;\"></span>Safari 18%</span>\n</div>\n````",
+      "ok": true
+    },
+    {
+      "original": "Include the value/percentage in each label when the data is categorical (pie, donut, single-series bar). Position the legend above the chart (`margin-bottom`) or below (`margin-top`) — not inside the canvas.",
+      "zh": "当数据是分类数据（饼图、圆环图、单系列条形图）时，在每个标签中包含值/百分比。将图例放置在图表上方（“margin-bottom”）或下方（“margin-top”），而不是在画布内。",
+      "ok": true
+    },
+    {
+      "original": "**Dashboard layout** — wrap summary numbers in metric cards (see UI fragment) above the chart. Chart canvas flows below without a card wrapper. Use `sendPrompt()` for drill-down: `sendPrompt('Break down Q4 by region')`.",
+      "zh": "**仪表板布局** — 将摘要数字包装在图表上方的指标卡中（请参阅 UI 片段）。图表画布在下面流动，没有卡片包装。使用“sendPrompt()”进行向下钻取：“sendPrompt('按地区细分第四季度')”。",
+      "ok": true
+    },
+    {
+      "original": "## Art and illustration\n*\"Draw me a sunset\" / \"Create a geometric pattern\"*",
+      "zh": "## 艺术和插图\n*“给我画一个日落”/“创建一个几何图案”*",
+      "ok": true
+    },
+    {
+      "original": "Use `imagine_svg`. Same technical rules (viewBox, safe area) but the aesthetic is different:\n- Fill the canvas — art should feel rich, not sparse\n- Bold colors: mix `--color-text-*` categories for variety (info blue, success green, warning amber)\n- Art is the one place custom `<style>` color blocks are fine — freestyle colors, `prefers-color-scheme` for dark mode variants if you want them\n- Layer overlapping opaque shapes for depth\n- Organic forms with `<path>` curves, `<ellipse>`, `<circle>`\n- Texture via repetition (parallel lines, dots, hatching) not raster effects\n- Geometric patterns with `<g transform=\"rotate()\">` for radial symmetry",
+      "zh": "使用“imagine_svg”。相同的技术规则（viewBox、安全区域）但审美不同：\n- 填充画布——艺术应该让人感觉丰富，而不是稀疏\n- 粗体颜色：混合“--color-text-*”类别以实现多样化（信息蓝色、成功绿色、警告琥珀色）\n- 艺术是一个可以自定义“<style>”色块的地方 - 自由式颜色，“prefers-color-scheme”用于深色模式变体（如果您需要）\n- 层重叠不透明形状的深度\n- 具有“<路径>”曲线、“<椭圆>”、“<圆>”的有机形式\n- 通过重复（平行线、点、阴影线）的纹理，而不是光栅效果\n- 具有径向对称性的几何图案“<gtransform=\"rotate()\">”",
+      "ok": true
+    }
+  ]
+}

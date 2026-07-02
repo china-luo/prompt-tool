@@ -1,0 +1,226 @@
+{
+  "id": "c9e0202b43c4149c",
+  "relativePath": "Anthropic/Claude Code/bundled-skills/run-skill-generator/template.md",
+  "generatedAt": "2026-07-01T09:36:40.931Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 43,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "---\nname: run-<unit-name>\ndescription: Build, run, and drive <unit-name>. Use when asked to start <unit-name>, run its tests, build it, take a screenshot of its UI, or interact with the running app.\n---",
+      "zh": "---\n名称：运行-<单位名称>\n描述：构建、运行和驱动<unit-name>。当要求启动 <unit-name>、运行其测试、构建它、截取其 UI 的屏幕截图或与正在运行的应用程序交互时使用。\n---",
+      "ok": true
+    },
+    {
+      "original": "<One-sentence description: what this is and how an agent drives it.\nName the handle here — \"drive it via\n`.claude/skills/run-<unit-name>/driver.mjs` under xvfb\" for a desktop\napp, or \"start the dev server then drive it via `chromium-cli`\" for a\nweb app — so an agent knows where to look first.>",
+      "zh": "<一句话描述：这是什么以及代理如何驱动它。\n在这里命名句柄 - “通过\n对于桌面，xvfb 下的 `.claude/skills/run-<unit-name>/driver.mjs`\n应用程序，或“启动开发服务器，然后通过 `chromium-cli` 驱动它”\n网络应用程序 - 这样代理就知道首先要查看哪里。>",
+      "ok": true
+    },
+    {
+      "original": "<If the unit isn't at repo root:>\nAll paths below are relative to `<unit-dir>/`.",
+      "zh": "<如果该单元不在存储库根目录：>\n下面的所有路径都是相对于 `<unit-dir>/` 的。",
+      "ok": true
+    },
+    {
+      "original": "## Prerequisites",
+      "zh": "## 先决条件",
+      "ok": true
+    },
+    {
+      "original": "<System-level requirements. The exact `apt-get install` line you ran —\nnot a generic list, the one that actually worked. Target Ubuntu.>",
+      "zh": "<系统级要求。您运行的确切“apt-get install”行 -\n不是一个通用的列表，而是真正有效的列表。目标 Ubuntu。>",
+      "ok": true
+    },
+    {
+      "original": "```bash\nsudo apt-get update\nsudo apt-get install -y <packages-you-actually-installed>\n```",
+      "zh": "````bash\nsudo apt-get 更新\nsudo apt-get install -y <您实际安装的软件包>\n````",
+      "ok": true
+    },
+    {
+      "original": "<Runtime versions if they matter:>",
+      "zh": "<运行时版本（如果重要的话）：>",
+      "ok": true
+    },
+    {
+      "original": "```bash\n# Example: Node 20 via nvm, Python 3.12 via uv, etc.\n```",
+      "zh": "````bash\n# 示例：通过 nvm 的节点 20、通过 uv 的 Python 3.12 等。\n````",
+      "ok": true
+    },
+    {
+      "original": "## Setup",
+      "zh": "＃＃ 设置",
+      "ok": true
+    },
+    {
+      "original": "<One-time setup after clone: install deps, configure, apply any\npatches (feature-gate overrides, config stubs) with the exact command.>",
+      "zh": "<克隆后一次性安装：安装依赖项、配置、应用任何\n使用确切的命令打补丁（功能门覆盖、配置存根）。>",
+      "ok": true
+    },
+    {
+      "original": "```bash\n<commands>\n```",
+      "zh": "````bash\n<命令>\n````",
+      "ok": true
+    },
+    {
+      "original": "<Env vars — required vs optional, with sensible defaults:>",
+      "zh": "<环境变量 - 必需与可选，具有合理的默认值：>",
+      "ok": true
+    },
+    {
+      "original": "```bash\nexport FOO_API_KEY=...   # required — get from <where>\nexport BAR_MODE=dev      # optional — default is prod\n```",
+      "zh": "````bash\n导出 FOO_API_KEY=... # 必需 — 从 <where> 获取\nexport BAR_MODE=dev # 可选 — 默认为 prod\n````",
+      "ok": true
+    },
+    {
+      "original": "## Build",
+      "zh": "＃＃ 建造",
+      "ok": true
+    },
+    {
+      "original": "<Skip if no separate build step. Otherwise the exact command:>",
+      "zh": "<如果没有单独的构建步骤，则跳过。否则确切的命令：>",
+      "ok": true
+    },
+    {
+      "original": "```bash\n<command>\n```",
+      "zh": "````bash\n<命令>\n````",
+      "ok": true
+    },
+    {
+      "original": "## Run (agent path)",
+      "zh": "## 运行（代理路径）",
+      "ok": true
+    },
+    {
+      "original": "<This is the section a future agent actually uses. If you built a\ndriver/REPL/smoke script, this documents how to launch it and what it\ndoes. If the app is simple enough that `curl` or a one-liner suffices,\nthat one-liner goes here.>",
+      "zh": "<这是未来代理实际使用的部分。如果您构建了一个\ndriver/REPL/smoke 脚本，此文档记录了如何启动它以及它的用途\n确实如此。如果应用程序足够简单，“curl”或一行代码就足够了，\n那句台词就放在这里。>",
+      "ok": true
+    },
+    {
+      "original": "```bash\n<launch-the-driver-or-smoke-script>\n```",
+      "zh": "````bash\n<启动驱动程序或烟雾脚本>\n````",
+      "ok": true
+    },
+    {
+      "original": "<For REPL-style drivers, show the tmux wrapping. Poll for a ready marker\nbetween send-keys and capture-pane — faster than a fixed sleep and fails\nloudly instead of capturing a half-rendered screen:>",
+      "zh": "<对于 REPL 风格的驱动程序，显示 tmux 包装。轮询准备好的标记\n在发送键和捕获窗格之间 - 比固定睡眠更快并且失败\n大声地而不是捕获半渲染的屏幕：>",
+      "ok": true
+    },
+    {
+      "original": "```bash\ntmux new-session -d -s app -x 200 -y 50\ntmux send-keys -t app '<launch command>' Enter\ntimeout 30 bash -c 'until tmux capture-pane -t app -p | grep -q \"<ready-marker>\"; do sleep 0.2; done'\ntmux send-keys -t app '<first driver command>' Enter\ntmux capture-pane -t app -p\n```",
+      "zh": "````bash\ntmux 新会话 -d -s 应用程序 -x 200 -y 50\ntmux send-keys -t app '<启动命令>' Enter\n超时 30 bash -c '直到 tmux capture-pane -t app -p | grep -q \"<就绪标记>\";睡0.2；完成'\ntmux send-keys -t app '<第一个驱动程序命令>' Enter\ntmux 捕获窗格 -t 应用程序 -p\n````",
+      "ok": true
+    },
+    {
+      "original": "<Where artifacts land (screenshots, logs) — absolute paths:>",
+      "zh": "<工件所在的位置（屏幕截图、日志）——绝对路径：>",
+      "ok": true
+    },
+    {
+      "original": "Screenshots → `/tmp/shots/`. Logs → `/tmp/<app>.log`.",
+      "zh": "屏幕截图 → `/tmp/shots/`。日志 → `/tmp/<app>.log`。",
+      "ok": true
+    },
+    {
+      "original": "<If the driver has commands, a table:>",
+      "zh": "<如果驱动程序有命令，则有一个表：>",
+      "ok": true
+    },
+    {
+      "original": "| command | what it does |\n|---|---|\n| `<cmd>` | <description> |",
+      "zh": "|命令 |它是做什么的 |\n|---|---|\n| `<cmd>` | <描述> |",
+      "ok": true
+    },
+    {
+      "original": "## Run (human path)",
+      "zh": "## 运行（人类路径）",
+      "ok": true
+    },
+    {
+      "original": "<If meaningfully different from the agent path. Brief — agents won't\nuse this, humans can figure it out.>",
+      "zh": "<如果与代理路径明显不同。简述——代理商不会\n使用这个，人类可以弄清楚。>",
+      "ok": true
+    },
+    {
+      "original": "```bash\n<command>   # → <what happens>. <how to stop>.\n```",
+      "zh": "````bash\n<命令> # → <发生了什么>。 <如何停止>。\n````",
+      "ok": true
+    },
+    {
+      "original": "## Test",
+      "zh": "＃＃ 测试",
+      "ok": true
+    },
+    {
+      "original": "```bash\n<command>\n```",
+      "zh": "````bash\n<命令>\n````",
+      "ok": true
+    },
+    {
+      "original": "<Expected result — \"N suites pass\", or specific known-flaky tests.>",
+      "zh": "<预期结果 - “N 个套件通过”，或特定的已知不稳定测试。>",
+      "ok": true
+    },
+    {
+      "original": "---",
+      "zh": "---",
+      "ok": true
+    },
+    {
+      "original": "<Optional sections below — include only if relevant and only with\ncontent you actually hit, not generic advice.>",
+      "zh": "<下面的可选部分 - 仅在相关且仅与\n您实际点击的内容，而不是一般建议。>",
+      "ok": true
+    },
+    {
+      "original": "## Gotchas",
+      "zh": "## 陷阱",
+      "ok": true
+    },
+    {
+      "original": "<Non-obvious traps. The things that look like they should work but\ndon't, with the workaround. If this section is generic, delete it.>",
+      "zh": "<不明显的陷阱。那些看起来应该有用的东西，但是\n不要，有解决方法。如果此部分是通用的，请将其删除。>",
+      "ok": true
+    },
+    {
+      "original": "- **<specific thing>** — <why it breaks> → <what to do instead>",
+      "zh": "- **<特定事物>** — <为什么会损坏> → <该怎么做>",
+      "ok": true
+    },
+    {
+      "original": "## Troubleshooting",
+      "zh": "## 故障排除",
+      "ok": true
+    },
+    {
+      "original": "<Symptom → fix. Only errors you actually encountered.>",
+      "zh": "<症状→修复。仅是您实际遇到的错误。>",
+      "ok": true
+    },
+    {
+      "original": "- **<exact error message or symptom>**: <cause>. <fix>.",
+      "zh": "- **<确切的错误消息或症状>**：<原因>。 <修复>。",
+      "ok": true
+    },
+    {
+      "original": "<!---",
+      "zh": "<!---",
+      "ok": true
+    },
+    {
+      "original": "NOTE ON THE FRONTMATTER ABOVE:\n- Replace <unit-name> in both `name:` and `description:`. The `name:`\n  becomes the slash command (/run-<unit-name>) and must match the\n  directory name.\n- The `description:` is what Claude scans to decide whether to load this\n  skill automatically. Keep the verbs — \"start,\" \"run,\" \"build,\" \"test,\"\n  \"screenshot\" — they're what an asking agent will actually type.",
+      "zh": "关于上述前沿问题的注释：\n- 替换“名称：”和“描述：”中的<单位名称>。 “名称：”\n  成为斜杠命令 (/run-<unit-name>) 并且必须匹配\n  目录名称。\n- “描述：”是克劳德扫描的内容以决定是否加载它\n  自动技能。保留动词——“开始”、“运行”、“构建”、“测试”\n  “屏幕截图”——它们是询问代理实际输入的内容。",
+      "ok": true
+    },
+    {
+      "original": "NOTE ON THE DRIVER:\n- If you wrote a driver script, it lives in this same directory (next\n  to this file) by default. Reference it from the Run section.\n- For a web app there's usually no driver file — the `chromium-cli`\n  heredoc in the Run section is the harness.\n- If the driver grows into something the project's test suite wants —\n  shared launch helpers, a real e2e harness — move it to scripts/ or\n  e2e/ in the unit, and update the paths here. The skill stays put.",
+      "zh": "驾驶员注意事项：\n- 如果您编写了驱动程序脚本，它位于同一目录中（下一步\n  默认情况下到此文件）。从“运行”部分引用它。\n- 对于网络应用程序来说，通常没有驱动程序文件——“chromium-cli”\n  运行部分中的heredoc是线束。\n- 如果驱动程序成长为项目测试套件想要的东西 -\n  共享启动助手，真正的 e2e 工具 - 将其移动到脚本/或\n  e2e/ 单元中，并更新此处的路径。技能保持不变。",
+      "ok": true
+    },
+    {
+      "original": "Delete everything from `---` above onwards before committing. --->",
+      "zh": "在提交之前删除上面从`---`开始的所有内容。 --->",
+      "ok": true
+    }
+  ]
+}

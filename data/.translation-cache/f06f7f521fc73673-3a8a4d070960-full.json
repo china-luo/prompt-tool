@@ -1,0 +1,431 @@
+{
+  "id": "f06f7f521fc73673",
+  "relativePath": "Google/gemini-3.5-flash-tools.json",
+  "generatedAt": "2026-07-01T09:46:32.463Z",
+  "translationProvider": "google",
+  "truncated": false,
+  "totalBlocks": 84,
+  "failedBlocks": 0,
+  "blocks": [
+    {
+      "original": "[",
+      "zh": "[",
+      "ok": true
+    },
+    {
+      "original": "{",
+      "zh": "{",
+      "ok": true
+    },
+    {
+      "original": "\"name\": \"google:ds_python_interpreter\",",
+      "zh": "“名称”：“谷歌：ds_python_interpreter”，",
+      "ok": true
+    },
+    {
+      "original": "\"description\": \"Execute Python code in a secure, isolated sandboxed Linux container (gVisor). It comes pre-installed with major data science, scientific computing, and machine learning libraries (such as NumPy, Pandas, Scipy, Scikit-learn, PyTorch, TensorFlow). Used for advanced computations, data analysis, and algorithmic scripting.\",",
+      "zh": "\"description\": \"在安全、隔离的沙盒 Linux 容器 (gVisor) 中执行 Python 代码。它预装了主要的数据科学、科学计算和机器学习库（例如 NumPy、Pandas、Scipy、Scikit-learn、PyTorch、TensorFlow）。用于高级计算、数据分析和算法脚本。\",",
+      "ok": true
+    },
+    {
+      "original": "\"parameters\": {",
+      "zh": "“参数”： {",
+      "ok": true
+    },
+    {
+      "original": "\"properties\": {",
+      "zh": "“特性”： {",
+      "ok": true
+    },
+    {
+      "original": "\"code\": {",
+      "zh": "“代码”： {",
+      "ok": true
+    },
+    {
+      "original": "\"description\": \"The exact Python code script to be executed within the environment.\",",
+      "zh": "\"description\": \"要在环境中执行的确切 Python 代码脚本。\",",
+      "ok": true
+    },
+    {
+      "original": "\"type\": \"STRING\"",
+      "zh": "“类型”：“字符串”",
+      "ok": true
+    },
+    {
+      "original": "}",
+      "zh": "}",
+      "ok": true
+    },
+    {
+      "original": "},",
+      "zh": "},",
+      "ok": true
+    },
+    {
+      "original": "\"required\": [",
+      "zh": "“必需的”： [",
+      "ok": true
+    },
+    {
+      "original": "\"code\"",
+      "zh": "“代码”",
+      "ok": true
+    },
+    {
+      "original": "],",
+      "zh": "],",
+      "ok": true
+    },
+    {
+      "original": "\"type\": \"OBJECT\"",
+      "zh": "“类型”：“对象”",
+      "ok": true
+    },
+    {
+      "original": "}",
+      "zh": "}",
+      "ok": true
+    },
+    {
+      "original": "},",
+      "zh": "},",
+      "ok": true
+    },
+    {
+      "original": "{",
+      "zh": "{",
+      "ok": true
+    },
+    {
+      "original": "\"name\": \"google:search\",",
+      "zh": "“名称”：“谷歌：搜索”，",
+      "ok": true
+    },
+    {
+      "original": "\"description\": \"Search the web for relevant information when up-to-date knowledge or factual verification is needed. The results will include relevant snippets from web pages.\",",
+      "zh": "\"description\": \"当需要最新知识或事实验证时，在网络上搜索相关信息。结果将包括网页中的相关片段。\",",
+      "ok": true
+    },
+    {
+      "original": "\"parameters\": {",
+      "zh": "“参数”： {",
+      "ok": true
+    },
+    {
+      "original": "\"properties\": {",
+      "zh": "“特性”： {",
+      "ok": true
+    },
+    {
+      "original": "\"queries\": {",
+      "zh": "“查询”：{",
+      "ok": true
+    },
+    {
+      "original": "\"description\": \"The list of queries to issue searches with\",",
+      "zh": "\"description\": \"用于发出搜索的查询列表\",",
+      "ok": true
+    },
+    {
+      "original": "\"items\": {",
+      "zh": "“项目”： {",
+      "ok": true
+    },
+    {
+      "original": "\"type\": \"STRING\"",
+      "zh": "“类型”：“字符串”",
+      "ok": true
+    },
+    {
+      "original": "},",
+      "zh": "},",
+      "ok": true
+    },
+    {
+      "original": "\"type\": \"ARRAY\"",
+      "zh": "“类型”：“数组”",
+      "ok": true
+    },
+    {
+      "original": "}",
+      "zh": "}",
+      "ok": true
+    },
+    {
+      "original": "},",
+      "zh": "},",
+      "ok": true
+    },
+    {
+      "original": "\"required\": [",
+      "zh": "“必需的”： [",
+      "ok": true
+    },
+    {
+      "original": "\"queries\"",
+      "zh": "“查询”",
+      "ok": true
+    },
+    {
+      "original": "],",
+      "zh": "],",
+      "ok": true
+    },
+    {
+      "original": "\"type\": \"OBJECT\"",
+      "zh": "“类型”：“对象”",
+      "ok": true
+    },
+    {
+      "original": "}",
+      "zh": "}",
+      "ok": true
+    },
+    {
+      "original": "},",
+      "zh": "},",
+      "ok": true
+    },
+    {
+      "original": "{",
+      "zh": "{",
+      "ok": true
+    },
+    {
+      "original": "\"name\": \"gemkick_corpus:search\",",
+      "zh": "\"name\": \"gemkick_corpus:搜索\",",
+      "ok": true
+    },
+    {
+      "original": "\"description\": \"This operation queries and fetches content of user's Google Workspace items based on the user query. Right now, only Gmail and Google Drive are supported.\\n\",",
+      "zh": "\"description\": \"此操作根据用户查询查询并获取用户的 Google Workspace 项目内容。目前仅支持 Gmail 和 Google 云端硬盘。\\n\",",
+      "ok": true
+    },
+    {
+      "original": "\"parameters\": {",
+      "zh": "“参数”： {",
+      "ok": true
+    },
+    {
+      "original": "\"properties\": {",
+      "zh": "“特性”： {",
+      "ok": true
+    },
+    {
+      "original": "\"corpus\": {",
+      "zh": "“语料库”：{",
+      "ok": true
+    },
+    {
+      "original": "\"description\": \"Which Google Workspace corpus to search over, right now, only `GMAIL` and `GOOGLE_DRIVE` are supported.\\n\",",
+      "zh": "\"description\": \"要搜索哪个 Google Workspace 语料库，目前仅支持 `GMAIL` 和 `GOOGLE_DRIVE`。\\n\",",
+      "ok": true
+    },
+    {
+      "original": "\"nullable\": true,",
+      "zh": "“可为空”：正确，",
+      "ok": true
+    },
+    {
+      "original": "\"type\": \"STRING\"",
+      "zh": "“类型”：“字符串”",
+      "ok": true
+    },
+    {
+      "original": "},",
+      "zh": "},",
+      "ok": true
+    },
+    {
+      "original": "\"query\": {",
+      "zh": "“询问”： {",
+      "ok": true
+    },
+    {
+      "original": "\"description\": \"Query used to fetch information from Gmail or Google Drive. This should be a natural language query and it should only contain information relevant to emails or files from Google Workspace. Include keywords from the conversation history if they are relevant to the current search.\\n\",",
+      "zh": "\"description\": \"用于从 Gmail 或 Google 云端硬盘获取信息的查询。这应该是自然语言查询，并且应仅包含与 Google Workspace 中的电子邮件或文件相关的信息。如果对话历史记录中的关键字与当前搜索相关，则包括这些关键字。\\n\",",
+      "ok": true
+    },
+    {
+      "original": "\"type\": \"STRING\"",
+      "zh": "“类型”：“字符串”",
+      "ok": true
+    },
+    {
+      "original": "}",
+      "zh": "}",
+      "ok": true
+    },
+    {
+      "original": "},",
+      "zh": "},",
+      "ok": true
+    },
+    {
+      "original": "\"required\": [",
+      "zh": "“必需的”： [",
+      "ok": true
+    },
+    {
+      "original": "\"query\"",
+      "zh": "“询问”",
+      "ok": true
+    },
+    {
+      "original": "],",
+      "zh": "],",
+      "ok": true
+    },
+    {
+      "original": "\"type\": \"OBJECT\"",
+      "zh": "“类型”：“对象”",
+      "ok": true
+    },
+    {
+      "original": "}",
+      "zh": "}",
+      "ok": true
+    },
+    {
+      "original": "},",
+      "zh": "},",
+      "ok": true
+    },
+    {
+      "original": "{",
+      "zh": "{",
+      "ok": true
+    },
+    {
+      "original": "\"name\": \"youtube:search\",",
+      "zh": "“名称”：“youtube：搜索”，",
+      "ok": true
+    },
+    {
+      "original": "\"description\": \"Search for videos, channels or playlists on Youtube. Search cannot filter by popularity. Search can find relevant videos, channels, and playlists for a given query string. Please use this endpoint for finding relevant videos for a given open ended question, e.g., \\\"funny cats and dog videos.\\\" Always use youtube for queries about videos, except for questions relating to video popularity.\",",
+      "zh": "\"description\": \"在 Youtube 上搜索视频、频道或播放列表。搜索无法按流行度进行过滤。搜索可以查找给定查询字符串的相关视频、频道和播放列表。请使用此端点查找给定开放式问题的相关视频，例如，\\\"有趣的猫和狗视频\\\"。请始终使用 YouTube 查询有关视频的查询，与视频流行度相关的问题除外。\",",
+      "ok": true
+    },
+    {
+      "original": "\"parameters\": {",
+      "zh": "“参数”： {",
+      "ok": true
+    },
+    {
+      "original": "\"properties\": {",
+      "zh": "“特性”： {",
+      "ok": true
+    },
+    {
+      "original": "\"query\": {",
+      "zh": "“询问”： {",
+      "ok": true
+    },
+    {
+      "original": "\"description\": \"The query with which search should be performed.\",",
+      "zh": "\"description\": \"应执行搜索的查询。\",",
+      "ok": true
+    },
+    {
+      "original": "\"type\": \"STRING\"",
+      "zh": "“类型”：“字符串”",
+      "ok": true
+    },
+    {
+      "original": "},",
+      "zh": "},",
+      "ok": true
+    },
+    {
+      "original": "\"result_type\": {",
+      "zh": "“结果类型”：{",
+      "ok": true
+    },
+    {
+      "original": "\"description\": \"Enum to specify search result type. Set to VIDEO to search for videos, CHANNEL to search for channels, artists or users, and PLAYLIST to search for playlist, radio or mix.\",",
+      "zh": "\"description\": \"指定搜索结果类型的枚举。设置为 VIDEO 搜索视频，设置为 CHANNEL 搜索频道、艺术家或用户，设置为 PLAYLIST 搜索播放列表、广播或混音。\",",
+      "ok": true
+    },
+    {
+      "original": "\"enum\": [",
+      "zh": "“枚举”：[",
+      "ok": true
+    },
+    {
+      "original": "\"VIDEO\",",
+      "zh": "“视频”，",
+      "ok": true
+    },
+    {
+      "original": "\"CHANNEL\",",
+      "zh": "“渠道”，",
+      "ok": true
+    },
+    {
+      "original": "\"PLAYLIST\"",
+      "zh": "“播放列表”",
+      "ok": true
+    },
+    {
+      "original": "],",
+      "zh": "],",
+      "ok": true
+    },
+    {
+      "original": "\"nullable\": true,",
+      "zh": "“可为空”：正确，",
+      "ok": true
+    },
+    {
+      "original": "\"type\": \"STRING\"",
+      "zh": "“类型”：“字符串”",
+      "ok": true
+    },
+    {
+      "original": "}",
+      "zh": "}",
+      "ok": true
+    },
+    {
+      "original": "},",
+      "zh": "},",
+      "ok": true
+    },
+    {
+      "original": "\"required\": [",
+      "zh": "“必需的”： [",
+      "ok": true
+    },
+    {
+      "original": "\"query\"",
+      "zh": "“询问”",
+      "ok": true
+    },
+    {
+      "original": "],",
+      "zh": "],",
+      "ok": true
+    },
+    {
+      "original": "\"type\": \"OBJECT\"",
+      "zh": "“类型”：“对象”",
+      "ok": true
+    },
+    {
+      "original": "}",
+      "zh": "}",
+      "ok": true
+    },
+    {
+      "original": "}",
+      "zh": "}",
+      "ok": true
+    },
+    {
+      "original": "]",
+      "zh": "]",
+      "ok": true
+    }
+  ]
+}
